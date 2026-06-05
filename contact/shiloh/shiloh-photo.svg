@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="38%" r="72%">
+      <stop offset="0" stop-color="#2c3342"/>
+      <stop offset=".42" stop-color="#111318"/>
+      <stop offset="1" stop-color="#050506"/>
+    </radialGradient>
+    <radialGradient id="goldAura" cx="50%" cy="34%" r="52%">
+      <stop offset="0" stop-color="#ffe29a" stop-opacity=".55"/>
+      <stop offset=".5" stop-color="#d6aa45" stop-opacity=".14"/>
+      <stop offset="1" stop-color="#d6aa45" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="blueAura" cx="50%" cy="56%" r="48%">
+      <stop offset="0" stop-color="#49ccff" stop-opacity=".42"/>
+      <stop offset=".55" stop-color="#156eff" stop-opacity=".15"/>
+      <stop offset="1" stop-color="#156eff" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="circle"><circle cx="600" cy="385" r="245"/></clipPath>
+    <filter id="glow"><feGaussianBlur stdDeviation="10" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1200" height="900" fill="url(#bg)"/>
+  <rect width="1200" height="900" fill="url(#goldAura)"/>
+  <rect width="1200" height="900" fill="url(#blueAura)"/>
+  <g opacity=".42" stroke="#ffe29a" stroke-width="3">
+    <path d="M120 640 C310 560 440 610 600 548 C760 610 900 560 1080 640" fill="none"/>
+    <path d="M170 700 C340 625 470 655 600 608 C730 655 870 625 1030 700" fill="none"/>
+  </g>
+  <g opacity=".22" stroke="#49ccff" stroke-width="4">
+    <circle cx="600" cy="385" r="305" fill="none"/>
+    <circle cx="600" cy="385" r="355" fill="none"/>
+  </g>
+  <circle cx="600" cy="385" r="270" fill="none" stroke="#d6aa45" stroke-width="7" filter="url(#glow)"/>
+  <circle cx="600" cy="385" r="252" fill="#0b0d10" opacity=".85"/>
+  <image href="data:image/jpeg;base64,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" x="355" y="140" width="490" height="490" preserveAspectRatio="xMidYMid slice" clip-path="url(#circle)"/>
+  <circle cx="600" cy="385" r="245" fill="none" stroke="#ffe29a" stroke-width="5"/>
+  <text x="600" y="735" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="74" font-weight="1000" fill="#f7f4ec" letter-spacing="-3">Shiloh</text>
+  <text x="600" y="790" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="900" fill="#f5cf70" letter-spacing="8">UNTD SOLAR</text>
+</svg>
