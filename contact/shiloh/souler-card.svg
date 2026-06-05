@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="22%" r="78%">
+      <stop offset="0" stop-color="#ffb84d"/>
+      <stop offset=".32" stop-color="#141825"/>
+      <stop offset="1" stop-color="#050506"/>
+    </radialGradient>
+    <radialGradient id="aura" cx="50%" cy="48%" r="48%">
+      <stop offset="0" stop-color="#69d7ff" stop-opacity=".95"/>
+      <stop offset=".35" stop-color="#156eff" stop-opacity=".45"/>
+      <stop offset="1" stop-color="#156eff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" x2="1"><stop offset="0" stop-color="#ffe29a"/><stop offset=".55" stop-color="#d6aa45"/><stop offset="1" stop-color="#ff6a2a"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1200" height="1200" fill="url(#bg)"/>
+  <circle cx="600" cy="190" r="205" fill="#ffc04a" opacity=".95"/>
+  <g stroke="#ffd36b" stroke-width="9" opacity=".75" filter="url(#glow)">
+    <path d="M600 170 L600 695"/><path d="M430 210 L530 670"/><path d="M770 210 L670 670"/><path d="M250 330 L500 700"/><path d="M950 330 L700 700"/>
+  </g>
+  <rect x="112" y="430" width="265" height="170" rx="12" fill="#151617" stroke="#4678ff" stroke-width="10" transform="skewY(-10)"/>
+  <rect x="823" y="430" width="265" height="170" rx="12" fill="#151617" stroke="#4678ff" stroke-width="10" transform="skewY(10) translate(-88 -158)"/>
+  <g opacity=".62" stroke="#ffe29a" stroke-width="5"><path d="M120 800 C280 725 405 755 600 700 C790 750 940 730 1080 800" fill="none"/><path d="M155 870 C335 795 445 825 600 770 C755 825 900 795 1045 870" fill="none"/></g>
+  <circle cx="600" cy="585" r="330" fill="url(#aura)"/>
+  <g filter="url(#glow)">
+    <circle cx="600" cy="330" r="64" fill="#0a0d12" stroke="#62d7ff" stroke-width="9"/>
+    <path d="M520 408 Q600 360 680 408 L725 670 Q600 730 475 670 Z" fill="#f8f1df" stroke="#62d7ff" stroke-width="7"/>
+    <ellipse cx="600" cy="655" rx="250" ry="56" fill="none" stroke="#62d7ff" stroke-width="8"/>
+    <path d="M418 610 Q285 560 220 640" fill="none" stroke="#f8f1df" stroke-width="34" stroke-linecap="round"/>
+    <path d="M782 610 Q915 560 980 640" fill="none" stroke="#f8f1df" stroke-width="34" stroke-linecap="round"/>
+    <circle cx="212" cy="650" r="38" fill="#ffb84d"/><circle cx="988" cy="650" r="38" fill="#ffb84d"/>
+  </g>
+  <path d="M500 780 C560 730 640 730 700 780 C670 825 530 825 500 780Z" fill="none" stroke="#5ddaff" stroke-width="8" filter="url(#glow)"/>
+  <text x="600" y="990" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="118" font-weight="1000" letter-spacing="-5" fill="url(#gold)" stroke="#391d07" stroke-width="4">SOULER</text>
+  <text x="600" y="1080" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="34" font-weight="900" letter-spacing="8" fill="#f7f4ec">SHILOH • UNTD SOLAR</text>
+</svg>
