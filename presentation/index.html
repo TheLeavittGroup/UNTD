@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>The Leavitt Group | Presentation</title>
+  <meta name="description" content="Customizable in-home solar presentation command center for sales reps." />
+  <meta property="og:title" content="The Leavitt Group | Presentation" />
+  <meta property="og:description" content="A premium rep-branded solar presentation tool with discovery, savings math, proof, objections, and close." />
+  <meta property="og:url" content="https://theleavittgroup.github.io/UNTD/presentation/" />
+  <meta name="theme-color" content="#050507" />
+  <link rel="stylesheet" href="styles.css?v=1" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#hero" aria-label="Presentation home">
+        <span class="company-logo" data-logo>LG</span>
+        <span>
+          <strong data-company>The Leavitt Group</strong>
+          <small><span data-rep>Aidan Leavitt</span> · <span data-role>Solar Consultant</span></small>
+        </span>
+      </a>
+      <nav class="nav">
+        <a href="#discover">Discover</a>
+        <a href="#money">Money</a>
+        <a href="#solution">Solution</a>
+        <a href="#proof">Proof</a>
+        <a href="#close">Close</a>
+      </nav>
+      <button class="button primary" id="openSettings">Customize</button>
+    </div>
+  </header>
+
+  <aside class="settings" id="settingsPanel" aria-label="Presentation settings">
+    <div class="settings-head">
+      <div>
+        <p class="eyebrow">Rep profile</p>
+        <h2>Customize the deck</h2>
+      </div>
+      <button class="button" id="closeSettings">Close</button>
+    </div>
+    <label>Company name<input id="companyInput" placeholder="The Leavitt Group" /></label>
+    <label>Rep name<input id="repInput" placeholder="Aidan Leavitt" /></label>
+    <label>Rep title<input id="roleInput" placeholder="Solar Consultant" /></label>
+    <label>Rep bio<textarea id="bioInput" placeholder="Add a short trust-building bio."></textarea></label>
+    <label>Proof link / intro video<input id="proofLinkInput" placeholder="https://..." /></label>
+    <label>Accent color<input id="accentInput" type="color" value="#f4c76b" /></label>
+    <label>Company logo<input id="logoInput" type="file" accept="image/*" /></label>
+    <label>Rep photo<input id="photoInput" type="file" accept="image/*" /></label>
+    <div class="settings-actions">
+      <button class="button primary" id="saveSettings">Save</button>
+      <button class="button" id="resetSettings">Reset</button>
+      <button class="button" id="exportSettings">Export</button>
+      <label class="button import-button">Import<input id="importSettings" type="file" accept="application/json" hidden /></label>
+    </div>
+  </aside>
+
+  <main>
+    <section class="hero" id="hero">
+      <div class="hero-copy">
+        <p class="eyebrow live-dot">Live kitchen-table command center</p>
+        <h1>Turn the sales appointment into a decision room.</h1>
+        <p class="lead">A customizable in-home solar presentation that helps reps diagnose the homeowner’s pain, show the money, explain the plan, prove the company, handle objections, and close clean.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#discover">Start presentation</a>
+          <button class="button" id="fullscreenButton">Full screen</button>
+          <button class="button" id="copySummaryTop">Copy deal summary</button>
+          <button class="button" onclick="window.print()">Print snapshot</button>
+        </div>
+        <div class="metric-grid">
+          <article><span>Flow</span><strong>8 stages</strong></article>
+          <article><span>Tools</span><strong>Live calc</strong></article>
+          <article><span>Branding</span><strong>Rep-ready</strong></article>
+        </div>
+      </div>
+      <div class="device-card">
+        <div class="window-dots"><i></i><i></i><i></i></div>
+        <div class="device-content">
+          <div class="rep-card">
+            <span class="rep-photo" data-photo></span>
+            <div>
+              <h2 data-rep>Aidan Leavitt</h2>
+              <p><span data-company>The Leavitt Group</span> · Custom solar plan</p>
+            </div>
+          </div>
+          <div class="confidence-meter"><i></i></div>
+          <p class="muted">Confidence rises when the homeowner sees their exact problem, exact math, and exact next step.</p>
+          <div class="mini-grid">
+            <article><span>Current bill</span><strong id="previewBill">$285</strong></article>
+            <article><span>Projected delta</span><strong id="previewSavings">$42k</strong></article>
+            <article><span>Pain points</span><strong id="previewPains">0</strong></article>
+            <article><span>Next step</span><strong>Survey</strong></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="discover">
+      <div class="section-head">
+        <div><p class="eyebrow">Stage 1</p><h2>Diagnose before pitching.</h2></div>
+        <p>Make the homeowner feel understood first. The later close should sound like a recap of what they already told you, not a random pitch.</p>
+      </div>
+      <div class="cards four">
+        <article><b>01</b><h3>Frame the visit</h3><p>“I’m going to understand the home, bill, and goals first. Then I’ll show whether solar actually makes sense.”</p></article>
+        <article><b>02</b><h3>Find pain</h3><p>Rate hikes, summer bills, fixed income, AC usage, EV charging, outages, or previous bad quotes.</p></article>
+        <article><b>03</b><h3>Build the gap</h3><p>Compare what they do now against what they want: lower cost, control, backup, predictability, and ownership.</p></article>
+        <article><b>04</b><h3>Earn permission</h3><p>“If the house qualifies and the numbers are clearly better, is there any reason we wouldn’t reserve it tonight?”</p></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div><p class="eyebrow">Live board</p><h2>Homeowner discovery.</h2></div>
+        <p>Use this during the appointment. These fields feed the closing script and copied deal summary.</p>
+      </div>
+      <div class="split">
+        <article class="panel">
+          <h3>Customer profile</h3>
+          <label>Homeowner name<input id="customerName" placeholder="Customer name" /></label>
+          <label>Address / area<input id="customerAddress" placeholder="City, neighborhood, or address" /></label>
+          <label>Main goal<textarea id="customerGoal" placeholder="Lower payment, protect against rate hikes, backup, home upgrade..."></textarea></label>
+        </article>
+        <article class="panel">
+          <h3>Pain-point checklist</h3>
+          <div class="check-grid" id="painChecks">
+            <label><input type="checkbox" value="High summer bills">High summer bills</label>
+            <label><input type="checkbox" value="Rate hikes">Rate hikes</label>
+            <label><input type="checkbox" value="Backup power">Backup power</label>
+            <label><input type="checkbox" value="EV charging">EV charging</label>
+            <label><input type="checkbox" value="Fixed income">Fixed income</label>
+            <label><input type="checkbox" value="Home upgrade">Home upgrade</label>
+            <label><input type="checkbox" value="Past bad quote">Past bad quote</label>
+            <label><input type="checkbox" value="Predictable payment">Predictable payment</label>
+          </div>
+          <label>Exact words they used<textarea id="painNotes" placeholder="Write their words. Use those words later."></textarea></label>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="money">
+      <div class="section-head">
+        <div><p class="eyebrow">Stage 2</p><h2>Make the money obvious.</h2></div>
+        <p>A clean visual comparison turns the utility bill from a monthly complaint into a long-term decision.</p>
+      </div>
+      <div class="calculator panel">
+        <div class="calc-inputs">
+          <h3>Live savings calculator</h3>
+          <label>Average monthly utility bill<input id="billInput" type="number" value="285" min="0" /></label>
+          <label>Proposed solar payment<input id="solarInput" type="number" value="195" min="0" /></label>
+          <label>Utility annual increase %<input id="utilityEscInput" type="number" value="6" min="0" step=".1" /></label>
+          <label>Solar annual escalator %<input id="solarEscInput" type="number" value="2.99" min="0" step=".01" /></label>
+          <label>Years shown<input id="yearsInput" type="number" value="25" min="1" max="30" /></label>
+          <label>Battery<select id="batteryInput"><option value="0">No battery included</option><option value="1">Battery / backup included</option></select></label>
+        </div>
+        <div>
+          <div class="results">
+            <article><span>Current monthly</span><strong id="currentMonthly">$285</strong></article>
+            <article><span>Starting solar</span><strong id="solarMonthly">$195</strong></article>
+            <article><span>Year 1 savings</span><strong id="yearOneSavings">$1,080</strong></article>
+            <article class="green"><span>Lifetime delta</span><strong id="lifetimeSavings">$42,000</strong></article>
+          </div>
+          <div class="chart-wrap"><canvas id="savingsCanvas" width="900" height="360"></canvas></div>
+          <p class="tiny">Use this as a visual guide. Final numbers should always come from the approved proposal and utility data.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="solution">
+      <div class="section-head"><div><p class="eyebrow">Stage 3</p><h2>Present the plan like a premium product.</h2></div><p>Each slide is designed to keep the rep in control while keeping the homeowner focused on what matters.</p></div>
+      <div class="slides">
+        <article class="slide"><p class="eyebrow">Current reality</p><h2>Your utility bill is not a bill. It is a subscription that keeps repricing itself.</h2><p>Set the contrast: right now the homeowner rents power from the utility with no control over future pricing. Solar turns that uncertainty into a structured home-energy plan.</p><blockquote>“The problem is not only what you paid last month. The problem is that you have no control over what they charge you later.”</blockquote></article>
+        <article class="slide"><p class="eyebrow">Custom design</p><h2>This is built around usage, roof, shade, utility rules, and goals.</h2><p>Explain system size, roof planes, battery logic, production guarantee, warranty, installer credibility, and what happens if usage changes.</p><blockquote>“I don’t need you to love solar. I need the design to solve the exact problem you said you wanted solved.”</blockquote></article>
+        <article class="slide"><p class="eyebrow">Protection stack</p><h2>The real close is confidence: warranty, install process, monitoring, and support.</h2><p>Remove risk by covering workmanship, roof penetrations, production monitoring, inspections, permission to operate, and the rep’s role after signature.</p><blockquote>“The panels are only part of this. What matters is the install, the guarantee, and who still answers the phone after today.”</blockquote></article>
+      </div>
+    </section>
+
+    <section class="section" id="proof">
+      <div class="section-head"><div><p class="eyebrow">Stage 4</p><h2>Proof and credibility.</h2></div><p>Personal branding, company proof, and simple process clarity reduce buyer anxiety.</p></div>
+      <div class="split">
+        <article class="panel proof-card">
+          <span class="rep-photo large" data-photo></span>
+          <div><h3 data-rep>Aidan Leavitt</h3><p><span data-role>Solar Consultant</span> · <span data-company>The Leavitt Group</span></p><p id="bioOutput" class="muted"></p></div>
+        </article>
+        <article class="panel">
+          <span class="company-logo big" data-logo>LG</span>
+          <h3 data-company>The Leavitt Group</h3>
+          <p class="muted">Company logo and rep identity apply across the full presentation. Add a proof link for reviews, an intro video, or a company page.</p>
+          <a class="button" id="proofLink" href="#" target="_blank" rel="noopener" hidden>Open proof link</a>
+        </article>
+      </div>
+      <div class="timeline">
+        <article><b>1</b><h3>Reserve</h3><p>Confirm homeowner package and lock in the proposal path.</p></article>
+        <article><b>2</b><h3>Survey</h3><p>Roof, attic, electrical, shade, and site conditions.</p></article>
+        <article><b>3</b><h3>Design</h3><p>Engineering, utility paperwork, permitting, and final checks.</p></article>
+        <article><b>4</b><h3>Install</h3><p>Panels, inverter, battery if selected, and quality control.</p></article>
+        <article><b>5</b><h3>PTO</h3><p>Utility approval, activation, monitoring, and support.</p></article>
+      </div>
+    </section>
+
+    <section class="section" id="close">
+      <div class="section-head"><div><p class="eyebrow">Stage 5</p><h2>Close without sounding pushy.</h2></div><p>Objections get answered by returning to the homeowner’s own words and the math they already saw.</p></div>
+      <div class="split">
+        <article class="panel objection-stack">
+          <details open><summary>“I need to think about it.”</summary><p>“That makes sense. Usually that means either the numbers, the trust, or the timing is not clear yet. Which one is it for you?”</p></details>
+          <details><summary>“I want to compare quotes.”</summary><p>“You should compare. Just compare payment, escalator, production, battery, installer, warranty, and what the utility bill looks like after solar.”</p></details>
+          <details><summary>“What if I move?”</summary><p>“Then the buyer gets a home with a lower operating cost. The real question is whether you would rather keep renting power while you are here.”</p></details>
+          <details><summary>“I don’t like contracts.”</summary><p>“Totally fair. Your utility is already a contract with no price protection. This is deciding whether you want control over the terms.”</p></details>
+        </article>
+        <article class="panel">
+          <h3>Closing script builder</h3>
+          <p id="closeScript" class="script"></p>
+          <div class="hero-actions"><button class="button primary" id="copyClose">Copy close</button><button class="button" id="copySummary">Copy full summary</button></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div class="deal-bar">
+    <div><small>Active deal</small><strong id="summaryLine">Customer: not set · Bill: $285 · Solar: $195 · Est. lifetime delta: $42,000</strong></div>
+    <button class="button primary" id="copySummaryFloat">Copy</button>
+  </div>
+  <div class="toast" id="toast">Saved</div>
+  <script src="app.js?v=1"></script>
+</body>
+</html>
