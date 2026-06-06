@@ -3,6 +3,7 @@ const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
 const key='leavitt-presentation-v1';
 const defaults={company:'The Leavitt Group',rep:'Aidan Leavitt',role:'Home Energy Consultant',bio:'I help homeowners compare their current utility path against a custom solar plan built around their usage, roof, and long-term savings goals.',proofLink:'',accent:'#f4c76b',logo:'',photo:''};
 let state={...defaults,...JSON.parse(localStorage.getItem(key)||'{}')};
+const quoteTouched=new Set();
 function money(n){return (Number(n)||0).toLocaleString(undefined,{style:'currency',currency:'USD',maximumFractionDigits:0})}
 function showToast(t){const e=$('#toast');if(!e)return;e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1400)}
 function selectedPains(){const box=$('#painChecks');return box?$$('input:checked',box).map(i=>i.value):[]}
@@ -59,12 +60,30 @@ function repRecap(){
   const n=numbers();const customer=value('customerName','Not set');const address=value('customerAddress','Not set');const goal=value('customerGoal','Not set');const notes=value('painNotes','None');const pains=selectedPains();
   return `Internal rep recap\n\nCustomer: ${customer}\nAddress/area: ${address}\nMain goal: ${goal}\nPain points/priorities: ${pains.join(', ')||'None selected'}\nConversation notes: ${notes}\n\nNumbers shown:\n- Current utility bill: ${$('#currentMonthly')?.textContent||'$0'}/month\n- Estimated solar payment: ${$('#solarMonthly')?.textContent||'$0'}/month\n- Year 1 difference: ${$('#yearOneSavings')?.textContent||'$0'}\n- Estimated ${n.years}-year difference: ${$('#lifetimeSavings')?.textContent||'$0'}\n- Utility increase used: ${(n.utilityEsc*100).toFixed(2)}%\n- Solar adjustment used: ${(n.solarEsc*100).toFixed(2)}%\n- Battery: ${n.battery?'Included':'Not included'}\n\nFollow-up angle:\nTie the next conversation back to ${pains.length?pains.join(', '):'their stated goal and the cost comparison'}. Keep it simple and confirm the home survey as the next step.\n\nRep: ${state.rep} · ${state.company}`;
 }
+function updateQuoteBar(){
+  const bar=$('.deal-bar');const summary=$('#summaryLine');if(!bar||!summary)return;
+  const parts=[];const customer=value('customerName','');const address=value('customerAddress','');const goal=value('customerGoal','');const pains=selectedPains();const n=numbers();
+  if(customer)parts.push(customer);if(address)parts.push(address);if(goal)parts.push(`Goal: ${goal.length>48?goal.slice(0,48)+'...':goal}`);if(pains.length)parts.push(`${pains.length} priorities`);
+  const billTouched=quoteTouched.has('billInput'),solarTouched=quoteTouched.has('solarInput'),batteryTouched=quoteTouched.has('batteryInput');
+  if(billTouched)parts.push(`Bill ${$('#currentMonthly')?.textContent||money(n.bill)}`);if(solarTouched)parts.push(`Solar ${$('#solarMonthly')?.textContent||money(n.solar)}`);
+  if(billTouched||solarTouched)parts.push(`Difference ${$('#lifetimeSavings')?.textContent||'$0'}`);if(batteryTouched)parts.push(n.battery?'Battery included':'No battery');
+  const has=parts.length>0;summary.textContent=has?parts.join(' · '):'';bar.classList.toggle('empty',!has);bar.classList.toggle('has-details',has);
+}
 function updateScripts(){
-  text('closeScript',closeScript());text('previewPains',String(selectedPains().length));text('customerRecapPreview',customerRecap());text('repRecapPreview',repRecap());
-  const customer=value('customerName','not set');text('summaryLine',`Customer: ${customer} · Bill: ${$('#currentMonthly')?.textContent||'$0'} · Solar: ${$('#solarMonthly')?.textContent||'$0'} · Est. long-term difference: ${$('#lifetimeSavings')?.textContent||'$0'}`);
+  text('closeScript',closeScript());text('previewPains',String(selectedPains().length));text('customerRecapPreview',customerRecap());text('repRecapPreview',repRecap());updateQuoteBar();
 }
 async function copyText(t){try{await navigator.clipboard.writeText(t);showToast('Copied')}catch(e){showToast('Copy failed')}}
 function bind(id,fn){const e=$('#'+id);if(e)e.addEventListener('click',fn)}
+function initPresentationTabs(){
+  const css=document.createElement('style');css.textContent=`body.tabbed-presentation{padding-top:76px;padding-bottom:104px}.tabbed-presentation .topbar{position:fixed;top:0;left:0;right:0;z-index:1000;box-shadow:0 18px 45px rgba(0,0,0,.28)}.stage-hidden{display:none!important}.tabbed-presentation main>section:not(.stage-hidden){animation:stageFade .18s ease-out}.tabbed-presentation .nav a.active{background:var(--gold,#f4c76b);border-color:var(--gold,#f4c76b);color:#090805}.deal-bar.empty .hero-actions{display:none}.deal-bar.empty strong{display:none}.deal-bar.empty{justify-content:flex-start}.deal-bar.empty small:after{content:'  Add details as you go';color:#8f887d;font-weight:700;margin-left:8px}@keyframes stageFade{from{opacity:.25;transform:translateY(8px)}to{opacity:1;transform:none}}@media(max-width:900px){body.tabbed-presentation{padding-top:118px}.tabbed-presentation .topbar-inner{height:auto;min-height:0;flex-wrap:wrap;padding-top:8px;padding-bottom:8px}.tabbed-presentation .nav{display:flex!important;order:3;width:100%;overflow-x:auto;padding-bottom:2px}.tabbed-presentation .nav a{flex:0 0 auto}.tabbed-presentation .brand{min-width:0;flex:1}.tabbed-presentation .brand small{display:none}.tabbed-presentation .topbar .button{flex:0 0 auto}.deal-bar.has-details{align-items:flex-start}}@media(max-width:520px){body.tabbed-presentation{padding-top:112px}.tabbed-presentation .nav a{font-size:11px;padding:9px 10px}.tabbed-presentation .deal-bar .hero-actions{display:grid;grid-template-columns:1fr 1fr;width:100%}.tabbed-presentation .deal-bar .button{width:100%}}`;
+  document.head.appendChild(css);document.body.classList.add('tabbed-presentation');
+  const sections=$$('main>section');if(sections[2]&&!sections[2].id)sections[2].id='home-details';
+  const groups={hero:['hero'],discover:['discover','home-details'],money:['money'],solution:['solution'],proof:['proof'],close:['close']};
+  const links=$$('.nav a');
+  function showStage(id){const stage=groups[id]?id:'hero';sections.forEach(s=>s.classList.add('stage-hidden'));groups[stage].forEach(sectionId=>$('#'+sectionId)?.classList.remove('stage-hidden'));links.forEach(a=>a.classList.toggle('active',(a.getAttribute('href')||'').replace('#','')===stage));if(location.hash!==`#${stage}`)history.replaceState(null,'',`#${stage}`);window.scrollTo({top:0,behavior:'smooth'});}
+  links.forEach(a=>a.addEventListener('click',e=>{e.preventDefault();showStage((a.getAttribute('href')||'#hero').replace('#',''))}));
+  showStage((location.hash||'#hero').replace('#',''));
+}
 bind('openSettings',()=>$('#settingsPanel')?.classList.add('open'));
 bind('closeSettings',()=>$('#settingsPanel')?.classList.remove('open'));
 bind('saveSettings',saveProfile);
@@ -74,9 +93,9 @@ const photo=$('#photoInput');if(photo)photo.onchange=e=>handleImage(e.target,'ph
 bind('exportSettings',()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='leavitt-presentation-settings.json';a.click();URL.revokeObjectURL(url)});
 const importer=$('#importSettings');if(importer)importer.onchange=async e=>{const file=e.target.files&&e.target.files[0];if(!file)return;state={...defaults,...JSON.parse(await file.text())};localStorage.setItem(key,JSON.stringify(state));applyProfile();updateScripts();showToast('Imported')};
 bind('fullscreenButton',()=>document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen());
-['billInput','solarInput','utilityEscInput','solarEscInput','yearsInput','batteryInput'].forEach(id=>$('#'+id)?.addEventListener('input',calculate));
+['billInput','solarInput','utilityEscInput','solarEscInput','yearsInput','batteryInput'].forEach(id=>$('#'+id)?.addEventListener('input',()=>{quoteTouched.add(id);calculate()}));
 ['customerName','customerAddress','customerGoal','painNotes'].forEach(id=>$('#'+id)?.addEventListener('input',updateScripts));
 $$('#painChecks input').forEach(i=>i.addEventListener('change',updateScripts));
 ['copyCustomerTop','copyCustomerRecap','copyCustomerRecapBottom','copyCustomerFloat'].forEach(id=>bind(id,()=>copyText(customerRecap())));
 ['copyRepRecap','copyRepRecapBottom','copyRepFloat'].forEach(id=>bind(id,()=>copyText(repRecap())));
-applyProfile();calculate();
+applyProfile();calculate();initPresentationTabs();updateQuoteBar();
