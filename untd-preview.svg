@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#050506"/>
+      <stop offset="1" stop-color="#1b160b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="600" cy="220" r="94" fill="#f5cf70"/>
+  <circle cx="600" cy="220" r="54" fill="#050506"/>
+  <text x="600" y="380" fill="#f7f4ec" font-size="82" font-family="Arial, Helvetica, sans-serif" font-weight="900" text-anchor="middle">UNTD HUB</text>
+  <text x="600" y="445" fill="#f5cf70" font-size="34" font-family="Arial, Helvetica, sans-serif" font-weight="700" text-anchor="middle">THE LEAVITT GROUP • UNITED SOLAR</text>
+  <text x="600" y="510" fill="#b9b6ad" font-size="28" font-family="Arial, Helvetica, sans-serif" text-anchor="middle">Tools • Contact Card • Presentation • Recruiting</text>
+</svg>
