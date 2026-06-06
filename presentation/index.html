@@ -4,12 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>The Leavitt Group | Presentation</title>
-  <meta name="description" content="Customizable in-home solar presentation command center for sales reps." />
+  <meta name="description" content="Customer-facing home energy review and quote snapshot tool." />
   <meta property="og:title" content="The Leavitt Group | Presentation" />
-  <meta property="og:description" content="A customer-facing home energy review with savings math, priorities, plan breakdown, and next steps." />
+  <meta property="og:description" content="A clean home energy review with quote details, battery strategy, print recap, and sendable snapshot." />
   <meta property="og:url" content="https://theleavittgroup.github.io/UNTD/presentation/" />
   <meta name="theme-color" content="#050507" />
-  <link rel="stylesheet" href="styles.css?v=2" />
+  <link rel="stylesheet" href="styles.css?v=4" />
 </head>
 <body>
   <header class="topbar">
@@ -35,10 +35,7 @@
 
   <aside class="settings" id="settingsPanel" aria-label="Presentation settings">
     <div class="settings-head">
-      <div>
-        <p class="eyebrow">Consultant profile</p>
-        <h2>Personalize this review</h2>
-      </div>
+      <div><p class="eyebrow">Consultant profile</p><h2>Personalize this review</h2></div>
       <button class="button" id="closeSettings">Close</button>
     </div>
     <label>Company name<input id="companyInput" placeholder="The Leavitt Group" /></label>
@@ -64,10 +61,8 @@
         <h1>A clear side-by-side look at what fits your home.</h1>
         <p class="lead">We will look at your home, your current electric costs, your priorities, and the plan options available so you can see whether this makes sense before moving forward.</p>
         <div class="hero-actions">
-          <a class="button primary" href="#discover">Begin review</a>
-          <button class="button" id="fullscreenButton">Full screen</button>
-          <button class="button" id="copyCustomerTop">Copy customer recap</button>
-          <button class="button" onclick="window.print()">Print snapshot</button>
+          <button class="button primary" id="copyCustomerTop">Send Snapshot</button>
+          <button class="button" id="printSnapshotButton">Print Recap</button>
         </div>
         <div class="metric-grid">
           <article><span>Review</span><strong>6 steps</strong></article>
@@ -78,13 +73,7 @@
       <div class="device-card">
         <div class="window-dots"><i></i><i></i><i></i></div>
         <div class="device-content">
-          <div class="rep-card">
-            <span class="rep-photo" data-photo></span>
-            <div>
-              <h2 data-rep>Aidan Leavitt</h2>
-              <p><span data-company>The Leavitt Group</span> · Custom home energy review</p>
-            </div>
-          </div>
+          <div class="rep-card"><span class="rep-photo" data-photo></span><div><h2 data-rep>Aidan Leavitt</h2><p><span data-company>The Leavitt Group</span> · Custom home energy review</p></div></div>
           <div class="confidence-meter"><i></i></div>
           <p class="muted">The goal is simple: compare your current path with a cleaner, more predictable option for the home.</p>
           <div class="mini-grid">
@@ -98,10 +87,7 @@
     </section>
 
     <section class="section" id="discover">
-      <div class="section-head">
-        <div><p class="eyebrow">Your home</p><h2>First, we make sure the plan matches what you actually care about.</h2></div>
-        <p>This part is about understanding the home, the electric bill, and what would make a new energy plan worth considering.</p>
-      </div>
+      <div class="section-head"><div><p class="eyebrow">Your home</p><h2>First, we make sure the plan matches what you actually care about.</h2></div><p>This part is about understanding the home, the electric bill, and what would make a new energy plan worth considering.</p></div>
       <div class="cards four">
         <article><b>01</b><h3>The home</h3><p>Roof layout, shade, electrical setup, usage, and whether the house is a good fit.</p></article>
         <article><b>02</b><h3>Your priorities</h3><p>Lower monthly cost, protection from rate changes, backup power, EV charging, or long-term savings.</p></article>
@@ -110,16 +96,14 @@
       </div>
     </section>
 
-    <section class="section">
-      <div class="section-head">
-        <div><p class="eyebrow">What we learned</p><h2>Facts about your home and what matters to you.</h2></div>
-        <p>These notes keep the review focused on your actual situation instead of a generic presentation.</p>
-      </div>
+    <section class="section" id="home-details">
+      <div class="section-head"><div><p class="eyebrow">What we learned</p><h2>Facts about your home and what matters to you.</h2></div><p>These notes keep the review focused on your actual situation instead of a generic presentation.</p></div>
       <div class="split">
         <article class="panel">
           <h3>About this home</h3>
           <label>Homeowner name<input id="customerName" placeholder="Customer name" /></label>
           <label>Address / area<input id="customerAddress" placeholder="City, neighborhood, or address" /></label>
+          <label>Site survey date<input id="siteSurveyDate" type="date" /></label>
           <label>Main goal<textarea id="customerGoal" placeholder="Lower payment, protect against rate changes, backup power, home upgrade..."></textarea></label>
         </article>
         <article class="panel">
@@ -140,15 +124,14 @@
     </section>
 
     <section class="section" id="money">
-      <div class="section-head">
-        <div><p class="eyebrow">Your costs</p><h2>Now we compare the cost of doing nothing with the cost of changing paths.</h2></div>
-        <p>This shows a simple side-by-side estimate of your utility path versus a custom solar path.</p>
-      </div>
+      <div class="section-head"><div><p class="eyebrow">Your costs</p><h2>Now we compare the cost of doing nothing with the cost of changing paths.</h2></div><p>This shows a simple side-by-side estimate of your utility path versus a custom solar path.</p></div>
       <div class="calculator panel">
         <div class="calc-inputs">
           <h3>Energy cost comparison</h3>
           <label>Average monthly utility bill<input id="billInput" type="number" value="285" min="0" /></label>
           <label>Estimated solar payment<input id="solarInput" type="number" value="195" min="0" /></label>
+          <label>Panel count<input id="panelCountInput" type="number" min="0" placeholder="Example: 24" /></label>
+          <label>System size kW<input id="systemSizeInput" type="number" min="0" step="0.01" placeholder="Example: 9.72" /></label>
           <label>Estimated yearly utility increase %<input id="utilityEscInput" type="number" value="6" min="0" step=".1" /></label>
           <label>Estimated solar yearly adjustment %<input id="solarEscInput" type="number" value="2.99" min="0" step=".01" /></label>
           <label>Years shown<input id="yearsInput" type="number" value="25" min="1" max="30" /></label>
@@ -179,23 +162,15 @@
     <section class="section" id="proof">
       <div class="section-head"><div><p class="eyebrow">Support</p><h2>Who is helping you through the process.</h2></div><p>A clear point of contact and a simple timeline make the project easier to understand.</p></div>
       <div class="split">
-        <article class="panel proof-card">
-          <span class="rep-photo large" data-photo></span>
-          <div><h3 data-rep>Aidan Leavitt</h3><p><span data-role>Home Energy Consultant</span> · <span data-company>The Leavitt Group</span></p><p id="bioOutput" class="muted"></p></div>
-        </article>
-        <article class="panel">
-          <span class="company-logo big" data-logo>LG</span>
-          <h3 data-company>The Leavitt Group</h3>
-          <p class="muted">Company logo and consultant identity apply across the full review. Add a review, intro video, or company page when useful.</p>
-          <a class="button" id="proofLink" href="#" target="_blank" rel="noopener" hidden>Open helpful link</a>
-        </article>
+        <article class="panel proof-card"><span class="rep-photo large" data-photo></span><div><h3 data-rep>Aidan Leavitt</h3><p><span data-role>Home Energy Consultant</span> · <span data-company>The Leavitt Group</span></p><p id="bioOutput" class="muted"></p></div></article>
+        <article class="panel"><span class="company-logo big" data-logo>LG</span><h3 data-company>The Leavitt Group</h3><p class="muted">Company logo and consultant identity apply across the full review. Add a review, intro video, or company page when useful.</p><a class="button" id="proofLink" href="#" target="_blank" rel="noopener" hidden>Open helpful link</a></article>
       </div>
       <div class="timeline">
         <article><b>1</b><h3>Reserve</h3><p>Confirm the plan details and reserve the project path.</p></article>
-        <article><b>2</b><h3>Survey</h3><p>Roof, attic, electrical, shade, and site conditions.</p></article>
-        <article><b>3</b><h3>Design</h3><p>Engineering, utility paperwork, permitting, and final checks.</p></article>
-        <article><b>4</b><h3>Install</h3><p>Panels, inverter, battery if selected, and quality control.</p></article>
-        <article><b>5</b><h3>Activate</h3><p>Utility approval, activation, monitoring, and support.</p></article>
+        <article><b>2</b><h3>Survey</h3><p>Site survey: TBD. Roof, attic, electrical, shade, and site conditions.</p></article>
+        <article><b>3</b><h3>Design</h3><p>Design usually comes back about 2 weeks after survey.</p></article>
+        <article><b>4</b><h3>Install</h3><p>Install is typically another 2–4 weeks after design approval.</p></article>
+        <article><b>5</b><h3>Activate</h3><p>Activation/PTO is typically 3–4 weeks after install and inspection.</p></article>
       </div>
     </section>
 
@@ -208,34 +183,20 @@
           <details><summary>“What if I move?”</summary><p>Then the next buyer is looking at a home with a different monthly energy picture. We can review how that transfer process works.</p></details>
           <details><summary>“I don’t like long-term agreements.”</summary><p>That is fair. The utility path is also long-term, but without much control over future pricing. This is about choosing which path gives the home more predictability.</p></details>
         </article>
-        <article class="panel">
-          <h3>Based on what you shared</h3>
-          <p id="closeScript" class="script"></p>
-          <div class="hero-actions"><button class="button primary" id="copyCustomerRecap">Copy customer recap</button><button class="button" id="copyRepRecap">Copy rep recap</button></div>
-        </article>
+        <article class="panel"><h3>Based on what you shared</h3><p id="closeScript" class="script"></p><div class="hero-actions"><button class="button primary" id="copyCustomerRecap">Copy Snapshot</button><button class="button" id="copyRepRecap">Copy Rep Notes</button></div></article>
       </div>
       <div class="split" style="margin-top:16px">
-        <article class="panel">
-          <h3>Customer-friendly quote recap</h3>
-          <p class="muted">Clean version to text or email the homeowner after the appointment.</p>
-          <p id="customerRecapPreview" class="script"></p>
-          <button class="button primary" id="copyCustomerRecapBottom">Copy for customer</button>
-        </article>
-        <article class="panel">
-          <h3>Internal rep notes</h3>
-          <p class="muted">Use this for yourself, a setter, manager, or follow-up handoff.</p>
-          <p id="repRecapPreview" class="script"></p>
-          <button class="button" id="copyRepRecapBottom">Copy for rep</button>
-        </article>
+        <article class="panel"><h3>Quote snapshot</h3><p class="muted">Short version to send when the customer wants the basics.</p><p id="customerRecapPreview" class="script"></p><button class="button primary" id="copyCustomerRecapBottom">Copy Snapshot</button></article>
+        <article class="panel"><h3>Internal rep notes</h3><p class="muted">Use this for yourself, a setter, manager, or follow-up handoff.</p><p id="repRecapPreview" class="script"></p><button class="button" id="copyRepRecapBottom">Copy Rep Notes</button></article>
       </div>
     </section>
   </main>
 
-  <div class="deal-bar">
-    <div><small>Plan recap</small><strong id="summaryLine"></strong></div>
-    <div class="hero-actions" style="margin-top:0"><button class="button primary" id="copyCustomerFloat">Customer</button><button class="button" id="copyRepFloat">Rep</button></div>
+  <div class="deal-bar empty">
+    <div><small>Quote Details</small><strong id="summaryLine">Add quote details as you go</strong></div>
+    <div class="hero-actions" style="margin-top:0"><button class="button primary" id="copyCustomerFloat">Snapshot</button><button class="button" id="copyRepFloat">Rep Notes</button></div>
   </div>
   <div class="toast" id="toast">Saved</div>
-  <script src="final.js?v=1"></script>
+  <script src="app.js?v=8"></script>
 </body>
 </html>
