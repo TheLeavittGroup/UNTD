@@ -1,1 +1,1 @@
-(()=>{const s=document.createElement('script');s.src='final.js?v=1';s.defer=false;document.head.appendChild(s);})();
+(()=>{const finalScript=document.createElement('script');finalScript.src='final.js?v=1';finalScript.onload=()=>{const snapshotPatch=document.createElement('script');snapshotPatch.src='snapshot-patch.js?v=1';document.head.appendChild(snapshotPatch)};document.head.appendChild(finalScript);})();
