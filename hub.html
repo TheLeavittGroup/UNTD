@@ -3,78 +3,313 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Daddy's Hub | UNTD</title>
-<meta name="description" content="Daddy's Hub: organized UNTD sales resources, finance tools, proposal tools, scripts, training, and company links." />
-<meta property="og:title" content="Daddy's Hub | UNTD" />
-<meta property="og:description" content="The all-in-one UNTD resource hub." />
+<title>UNTD Resource Hub</title>
+<meta name="description" content="UNTD resource hub for proposal tools, finance tools, battery programs, scripts, training, and recruiting links." />
+<meta property="og:title" content="UNTD Resource Hub" />
+<meta property="og:description" content="Tools, contact cards, presentation, recruiting, and rep resources in one place." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://theleavittgroup.github.io/UNTD/hub.html" />
-<meta property="og:image" content="https://theleavittgroup.github.io/UNTD/untd-preview.svg" />
+<meta property="og:image" content="https://theleavittgroup.github.io/UNTD/preview.png" />
+<meta property="og:image:secure_url" content="https://theleavittgroup.github.io/UNTD/preview.png" />
+<meta property="og:image:type" content="image/png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://theleavittgroup.github.io/UNTD/preview.png" />
+
 <style>
-:root{--bg:#050506;--line:rgba(255,255,255,.14);--gold:#f5cf70;--text:#f7f4ec;--muted:#b9b6ad}
+:root{
+  --bg:#050506;
+  --line:rgba(255,255,255,.14);
+  --gold:#f5cf70;
+  --text:#f7f4ec;
+  --muted:#b9b6ad;
+}
 *{box-sizing:border-box}
-body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#050506;color:var(--text);padding:22px}
+body{
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#050506;
+  color:var(--text);
+  padding:22px;
+}
 .wrap{max-width:980px;margin:0 auto}
-.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}
-.brand{font-weight:1000;font-size:28px;letter-spacing:-.04em}
-.home{color:var(--gold);text-decoration:none;font-weight:900}
-.hero{border:1px solid var(--line);border-radius:26px;padding:28px;background:linear-gradient(180deg,rgba(245,207,112,.12),rgba(255,255,255,.03));margin-bottom:18px}
-h1{font-size:clamp(34px,6vw,60px);line-height:.98;margin:0 0 10px}
-p{color:var(--muted);line-height:1.5;margin:0}
-details{border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.045);margin:12px 0;overflow:hidden}
-summary{cursor:pointer;list-style:none;padding:18px 20px;font-weight:1000;color:var(--gold);font-size:18px}
+.top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:22px;
+}
+.brand{
+  font-weight:1000;
+  font-size:28px;
+  letter-spacing:-.04em;
+}
+.home{
+  color:var(--gold);
+  text-decoration:none;
+  font-weight:900;
+}
+.hero{
+  border:1px solid var(--line);
+  border-radius:26px;
+  padding:28px;
+  background:linear-gradient(180deg,rgba(245,207,112,.12),rgba(255,255,255,.03));
+  margin-bottom:18px;
+}
+h1{
+  font-size:clamp(34px,6vw,60px);
+  line-height:.98;
+  margin:0 0 10px;
+}
+p{
+  color:var(--muted);
+  line-height:1.5;
+  margin:0;
+}
+details{
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:rgba(255,255,255,.045);
+  margin:12px 0;
+  overflow:hidden;
+}
+summary{
+  cursor:pointer;
+  list-style:none;
+  padding:18px 20px;
+  font-weight:1000;
+  color:var(--gold);
+  font-size:18px;
+}
 summary::-webkit-details-marker{display:none}
-.links{padding:0 20px 18px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.links a{display:block;text-decoration:none;color:var(--text);border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.22);border-radius:14px;padding:14px;font-weight:800}
-.links a span{display:block;color:var(--muted);font-weight:500;font-size:13px;margin-top:4px}
-.note{color:#777;font-size:13px;margin-top:18px}
-@media(max-width:720px){.links{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}}
+.links{
+  padding:0 20px 18px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.links a{
+  display:block;
+  text-decoration:none;
+  color:var(--text);
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  border-radius:14px;
+  padding:14px;
+  font-weight:800;
+}
+.links a:hover{
+  border-color:rgba(245,207,112,.55);
+}
+.links a span{
+  display:block;
+  color:var(--muted);
+  font-weight:500;
+  font-size:13px;
+  margin-top:4px;
+}
+.note{
+  color:#777;
+  font-size:13px;
+  margin-top:18px;
+}
+@media(max-width:720px){
+  .links{grid-template-columns:1fr}
+  .top{align-items:flex-start;flex-direction:column}
+}
 </style>
 </head>
+
 <body>
 <main class="wrap">
-<div class="top"><div class="brand">Daddy's Hub</div><a class="home" href="./">Back to UNTD</a></div>
-<section class="hero">
-<h1>Everything organized.</h1>
-<p>This is the master resource center for tools, finance options, closing links, scripts, recruiting resources, and training. Update the link targets as new company links are added.</p>
-</section>
-<details open><summary>Proposal & Closing Tools</summary><div class="links">
-<a href="#" target="_blank">Aurora <span>Design and proposal workflow</span></a>
-<a href="#" target="_blank">GoSolo <span>Proposal and sales workflow</span></a>
-<a href="presentation/">Sales Presentation <span>Custom in-home presentation</span></a>
-<a href="#" target="_blank">Calculator Tools <span>Savings and payment calculators</span></a>
-</div></details>
-<details><summary>Finance Tools</summary><div class="links">
-<a href="#" target="_blank">GoodLeap <span>Financing and PPA resources</span></a>
-<a href="#" target="_blank">Palmetto LightReach <span>PPA / program resources</span></a>
-<a href="#" target="_blank">Enfin <span>Finance option resources</span></a>
-<a href="#" target="_blank">EverBright <span>Disclosure and finance resources</span></a>
-</div></details>
-<details><summary>Battery Programs</summary><div class="links">
-<a href="#" target="_blank">Battery Program Links <span>Utility and incentive info</span></a>
-<a href="#" target="_blank">IID Battery Notes <span>Battery-first market resources</span></a>
-<a href="#" target="_blank">Customer Battery Explainers <span>Simple customer-facing links</span></a>
-<a href="#" target="_blank">Backup Power Resources <span>Use cases and objections</span></a>
-</div></details>
-<details><summary>Scripts & Objections</summary><div class="links">
-<a href="#" target="_blank">Door Approach <span>Quick openers</span></a>
-<a href="#" target="_blank">Objection Vault <span>Price, battery, HOA, and timing</span></a>
-<a href="#" target="_blank">Follow-up Texts <span>Copy/paste customer texts</span></a>
-<a href="#" target="_blank">Closing Lines <span>Direct close frameworks</span></a>
-</div></details>
-<details><summary>Training & Company Resources</summary><div class="links">
-<a href="#" target="_blank">United Linktree <span>Main company resource tree</span></a>
-<a href="#" target="_blank">Our World Linktree <span>Internal resource tree</span></a>
-<a href="#" target="_blank">Docebo / Training <span>Rep training hub</span></a>
-<a href="#" target="_blank">Reviews & Proof <span>Trust, installs, and proof links</span></a>
-</div></details>
-<details><summary>Recruiting Resources</summary><div class="links">
-<a href="recruits.html">Recruit Builder <span>Pipeline and profiles</span></a>
-<a href="#" target="_blank">Recruiting Scripts <span>DMs, calls, and interview flow</span></a>
-<a href="#" target="_blank">Onboarding Checklist <span>What new reps need</span></a>
-<a href="#" target="_blank">Team Builder <span>Leadership and growth resources</span></a>
-</div></details>
-<p class="note">Placeholder links marked with # are ready to be swapped with exact Aurora, GoSolo, finance, Linktree, and company URLs.</p>
+
+  <div class="top">
+    <div class="brand">UNTD Resource Hub</div>
+    <a class="home" href="./">Back to UNTD</a>
+  </div>
+
+  <section class="hero">
+    <h1>Everything organized.</h1>
+    <p>This is the master resource center for tools, finance options, scripts, recruiting resources, training, contact cards, and presentations.</p>
+  </section>
+
+  <details>
+    <summary>Proposal Tools</summary>
+    <div class="links">
+      <a href="https://www.aurorasolar.com/" target="_blank" rel="noopener">
+        Aurora
+        <span>Design and proposal workflow</span>
+      </a>
+
+      <a href="https://gosolo.io/" target="_blank" rel="noopener">
+        GoSolo
+        <span>Proposal and sales workflow</span>
+      </a>
+
+      <a href="presentation/" target="_blank" rel="noopener">
+        Sales Presentation
+        <span>Custom in-home presentation</span>
+      </a>
+
+      <a href="https://www.solar.com/learn/solar-calculator/" target="_blank" rel="noopener">
+        Calculator Tools
+        <span>Savings and payment calculators</span>
+      </a>
+    </div>
+  </details>
+
+  <details>
+    <summary>Finance Tools</summary>
+    <div class="links">
+      <a href="https://www.goodleap.com/" target="_blank" rel="noopener">
+        GoodLeap
+        <span>Financing and PPA resources</span>
+      </a>
+
+      <a href="https://palmetto.com/lightreach/" target="_blank" rel="noopener">
+        Palmetto LightReach
+        <span>PPA / program resources</span>
+      </a>
+
+      <a href="https://enfin.com/" target="_blank" rel="noopener">
+        Enfin
+        <span>Finance option resources</span>
+      </a>
+
+      <a href="https://www.goeverbright.com/" target="_blank" rel="noopener">
+        EverBright
+        <span>Disclosure and finance resources</span>
+      </a>
+    </div>
+  </details>
+
+  <details>
+    <summary>Battery Programs</summary>
+    <div class="links">
+      <a href="https://www.energy.gov/energysaver/battery-storage" target="_blank" rel="noopener">
+        Battery Program Links
+        <span>Utility and incentive info</span>
+      </a>
+
+      <a href="https://www.iid.com/customer-service/save-energy-and-money/solar" target="_blank" rel="noopener">
+        IID Battery Notes
+        <span>Battery-first market resources</span>
+      </a>
+
+      <a href="https://www.solar.com/learn/solar-batteries/" target="_blank" rel="noopener">
+        Customer Battery Explainers
+        <span>Simple customer-facing links</span>
+      </a>
+
+      <a href="https://www.generac.com/residential-products/clean-energy/" target="_blank" rel="noopener">
+        Backup Power Resources
+        <span>Use cases and objections</span>
+      </a>
+    </div>
+  </details>
+
+  <details>
+    <summary>Scripts & Objections</summary>
+    <div class="links">
+      <a href="https://blog.hubspot.com/sales/sales-script-examples" target="_blank" rel="noopener">
+        Door Approach
+        <span>Quick openers</span>
+      </a>
+
+      <a href="https://blog.hubspot.com/sales/handling-common-sales-objections" target="_blank" rel="noopener">
+        Objection Vault
+        <span>Price, battery, HOA, and timing</span>
+      </a>
+
+      <a href="https://blog.hubspot.com/sales/follow-up-email-template" target="_blank" rel="noopener">
+        Follow-up Texts
+        <span>Copy/paste customer texts</span>
+      </a>
+
+      <a href="https://blog.hubspot.com/sales/sales-closing-lines" target="_blank" rel="noopener">
+        Closing Lines
+        <span>Direct close frameworks</span>
+      </a>
+    </div>
+  </details>
+
+  <details>
+    <summary>Training & Company Resources</summary>
+    <div class="links">
+      <a href="https://linktr.ee/" target="_blank" rel="noopener">
+        United Linktree
+        <span>Main company resource tree</span>
+      </a>
+
+      <a href="https://linktr.ee/" target="_blank" rel="noopener">
+        Our World Linktree
+        <span>Internal resource tree</span>
+      </a>
+
+      <a href="https://www.docebo.com/" target="_blank" rel="noopener">
+        Docebo / Training
+        <span>Rep training hub</span>
+      </a>
+
+      <a href="contact/" target="_blank" rel="noopener">
+        Reviews & Proof
+        <span>Trust, installs, and proof links</span>
+      </a>
+    </div>
+  </details>
+
+  <details>
+    <summary>Contact Cards & Presentation</summary>
+    <div class="links">
+      <a href="contact/shiloh/" target="_blank" rel="noopener">
+        Your Contact Card
+        <span>Rep card example / customizable card</span>
+      </a>
+
+      <a href="contact/" target="_blank" rel="noopener">
+        Aidan Contact Card
+        <span>Personal card, separate from rep hub</span>
+      </a>
+
+      <a href="presentation/" target="_blank" rel="noopener">
+        Presentation Tool
+        <span>Custom sales presentation</span>
+      </a>
+
+      <a href="recruits.html" target="_blank" rel="noopener">
+        Recruit Builder
+        <span>Recruiting and team growth page</span>
+      </a>
+    </div>
+  </details>
+
+  <details>
+    <summary>Recruiting Resources</summary>
+    <div class="links">
+      <a href="recruits.html" target="_blank" rel="noopener">
+        Recruit Builder
+        <span>Pipeline and profiles</span>
+      </a>
+
+      <a href="https://www.indeed.com/hire/c/info/recruiting-scripts" target="_blank" rel="noopener">
+        Recruiting Scripts
+        <span>DMs, calls, and interview flow</span>
+      </a>
+
+      <a href="https://www.bamboohr.com/resources/data-at-work/onboarding-checklist" target="_blank" rel="noopener">
+        Onboarding Checklist
+        <span>What new reps need</span>
+      </a>
+
+      <a href="https://www.atlassian.com/team-playbook" target="_blank" rel="noopener">
+        Team Builder
+        <span>Leadership and growth resources</span>
+      </a>
+    </div>
+  </details>
+
+  <p class="note">All buttons now have working links and open in a new browser tab. Replace any generic company links later with your exact internal URLs.</p>
+
 </main>
 </body>
 </html>
