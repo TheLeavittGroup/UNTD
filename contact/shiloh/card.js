@@ -2,7 +2,7 @@ const $ = id => document.getElementById(id);
 
 const D = {
   name: 'Rep Name',
-  company: 'UNTD Solar',
+  company: 'Company',
   phone: '',
   email: '',
   booking: '',
@@ -118,7 +118,7 @@ function read() {
 
 function put(c) {
   $('setName').value = c.name === 'Rep Name' ? '' : c.name;
-  $('setCompany').value = c.company === 'UNTD Solar' ? 'UNTD Solar' : c.company;
+  $('setCompany').value = c.company || D.company;
   $('setPhone').value = displayPhone(c.phone);
   $('setEmail').value = c.email;
   $('setBooking').value = c.booking || '';
@@ -136,6 +136,7 @@ function apply() {
   const c = read();
   const p = c.phone;
   const booking = c.booking;
+  const badgeCompany = $('badgeCompany');
 
   $('topInitial').textContent = initials(c.name).slice(0, 1);
   $('topName').textContent = c.name;
@@ -144,7 +145,7 @@ function apply() {
   $('photoName').textContent = first(c.name);
   $('photoCompany').textContent = c.company.toUpperCase();
   $('photoInitials').textContent = initials(c.name);
-  $('badgeCompany').textContent = c.company;
+  if (badgeCompany) badgeCompany.textContent = c.company;
   $('repSubtitle').textContent = c.subtitle;
   $('ctaTitle').textContent = booking ? 'Book, text, call, or email ' + first(c.name) + '.' : 'Text, call, or email ' + first(c.name) + '.';
 
@@ -380,7 +381,7 @@ function calc() {
   const solarStart = Math.max(0, num('solarPayment'));
   const yrs = Math.max(1, Math.min(30, parseInt($('yearsRange').value || '25', 10)));
   const uEsc = Math.max(0, Math.min(1, num('utilityEsc', .09)));
-  const sEsc = Math.max(0, Math.min(1, num('solarEsc', .0299)));
+  const sEsc = Math.max(0, Math.min(1, num('solarEsc', 0)));
   let uT = 0;
   let sT = 0;
   let last = 0;
