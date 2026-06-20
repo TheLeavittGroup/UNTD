@@ -5,6 +5,7 @@ const D = {
   company: 'UNTD Solar',
   phone: '',
   email: '',
+  booking: '',
   subtitle: 'Solar + battery consultant for homeowners who want clear numbers and a simple explanation.',
   photo: ''
 };
@@ -43,6 +44,20 @@ function normalizePhone(value) {
   }
 
   return `+${digits}`;
+}
+
+function normalizeBookingUrl(value) {
+  const v = (value || '').trim();
+
+  if (!v) {
+    return '';
+  }
+
+  if (/^https?:\/\//i.test(v)) {
+    return v;
+  }
+
+  return 'https://' + v.replace(/^\/+/, '');
 }
 
 function formatPhoneInput() {
@@ -95,6 +110,7 @@ function read() {
     company: $('setCompany').value.trim() || D.company,
     phone: normalizePhone($('setPhone').value.trim()) || D.phone,
     email: $('setEmail').value.trim() || D.email,
+    booking: normalizeBookingUrl($('setBooking').value.trim()) || D.booking,
     subtitle: $('setSubtitle').value.trim() || D.subtitle,
     photo: $('setPhoto').value.trim() || photoData || ''
   };
@@ -105,6 +121,7 @@ function put(c) {
   $('setCompany').value = c.company === 'UNTD Solar' ? 'UNTD Solar' : c.company;
   $('setPhone').value = displayPhone(c.phone);
   $('setEmail').value = c.email;
+  $('setBooking').value = c.booking || '';
   $('setSubtitle').value = c.subtitle;
   $('setPhoto').value = c.photo && c.photo.startsWith('http') ? c.photo : '';
   photoData = c.photo && !c.photo.startsWith('http') ? c.photo : '';
@@ -118,6 +135,7 @@ function safeHref(kind, value) {
 function apply() {
   const c = read();
   const p = c.phone;
+  const booking = c.booking;
 
   $('topInitial').textContent = initials(c.name).slice(0, 1);
   $('topName').textContent = c.name;
@@ -128,7 +146,14 @@ function apply() {
   $('photoInitials').textContent = initials(c.name);
   $('badgeCompany').textContent = c.company;
   $('repSubtitle').textContent = c.subtitle;
-  $('ctaTitle').textContent = 'Text, call, or email ' + first(c.name) + '.';
+  $('ctaTitle').textContent = booking ? 'Book, text, call, or email ' + first(c.name) + '.' : 'Text, call, or email ' + first(c.name) + '.';
+
+  ['bookBtn', 'ctaBook'].forEach(id => {
+    const el = $(id);
+    if (!el) return;
+    el.href = booking || '#';
+    el.hidden = !booking;
+  });
 
   ['textBtn', 'ctaText'].forEach(id => $(id).href = safeHref('sms:', p));
   ['callBtn', 'ctaCall'].forEach(id => $(id).href = safeHref('tel:', p));
@@ -275,7 +300,7 @@ async function buildCardImage() {
   ctx.fillText(c.email || 'email@example.com', 540, 1140);
   ctx.fillStyle = 'rgba(255,255,255,.58)';
   ctx.font = '700 24px Inter,Arial';
-  ctx.fillText('Text, call, email, view proof links, or run a quick estimate.', 540, 1210);
+  ctx.fillText(c.booking ? 'Book, text, call, email, view proof links, or run an estimate.' : 'Text, call, email, view proof links, or run a quick estimate.', 540, 1210);
 
   const blob = await toBlob(canvas);
   return new File([blob], (c.name || 'contact-card').toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.png', { type: 'image/png' });
@@ -285,7 +310,9 @@ async function shareCard() {
   if (!location.hash.startsWith('#card=')) lockCard();
   const c = read();
   const link = location.href;
-  const msg = 'Nice meeting you. Here is my business card with my contact info and a few helpful solar and battery resources.';
+  const msg = c.booking
+    ? 'Nice meeting you. Here is my business card with my contact info, appointment link, and a few helpful solar and battery resources.'
+    : 'Nice meeting you. Here is my business card with my contact info and a few helpful solar and battery resources.';
 
   try {
     const file = await buildCardImage();
@@ -333,6 +360,7 @@ function load() {
       company: q.get('company') || D.company,
       phone: q.get('phone') || D.phone,
       email: q.get('email') || D.email,
+      booking: normalizeBookingUrl(q.get('booking') || D.booking),
       subtitle: q.get('subtitle') || D.subtitle,
       photo: q.get('photo') || ''
     });
@@ -375,6 +403,7 @@ function calc() {
 
 document.addEventListener('DOMContentLoaded', () => {
   $('setPhone').placeholder = '959-929-8585';
+  $('setBooking').placeholder = 'https://cal.com/your-link';
   $('openMenu').onclick = openDrawer;
   $('closeMenu').onclick = closeDrawer;
   $('shade').onclick = closeDrawer;
@@ -392,7 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (f) fileToPhoto(f);
   };
 
-  ['setName', 'setCompany', 'setEmail', 'setSubtitle', 'setPhoto'].forEach(id => $(id).addEventListener('input', apply));
+  ['setName', 'setCompany', 'setEmail', 'setBooking', 'setSubtitle', 'setPhoto'].forEach(id => $(id).addEventListener('input', apply));
   $('setPhone').addEventListener('input', () => {
     formatPhoneInput();
     apply();
