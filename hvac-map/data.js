@@ -1,0 +1,1 @@
+window.HVAC_LEADS = [];
