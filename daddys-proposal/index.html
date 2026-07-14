@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Daddy's Proposal Tool</title>
+<style>
+:root{color-scheme:dark;--gold:#f5cf70;--bg:#050506}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:Arial,Helvetica,sans-serif}.app{height:100%;display:grid;grid-template-rows:1fr auto}.stage{position:relative;min-height:0;display:grid;place-items:center;background:radial-gradient(circle at 50% 20%,#20232b,#050506 70%)}.slide{position:relative;width:min(100vw,calc((100vh - 66px)*2));aspect-ratio:2/1;background:#fff;box-shadow:0 20px 80px #000;border-radius:8px;overflow:hidden}.slide iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff;pointer-events:none}.hotspots{display:none;position:absolute;inset:0;z-index:3}.hotspots.active{display:block}.hotspot{position:absolute;top:29%;height:15%;border-radius:10px;border:2px solid transparent;transition:.18s}.hotspot:hover,.hotspot:focus{border-color:var(--gold);background:rgba(245,207,112,.13);outline:0}.google{left:7%;width:13%}.top100{left:24%;width:16%}.award{left:43%;width:11%}.inc{left:56%;width:12%}.bbb{left:68%;width:17%}.nabcep{left:86%;width:12%}.nav{position:absolute;top:50%;translate:0 -50%;z-index:5;width:52px;height:76px;border:1px solid rgba(255,255,255,.25);border-radius:18px;background:rgba(5,5,6,.72);color:#fff;font-size:45px;cursor:pointer;backdrop-filter:blur(10px)}.nav:hover{background:var(--gold);color:#050506}.prev{left:12px}.next{right:12px}.bar{height:66px;display:flex;align-items:center;justify-content:center;gap:12px;padding:9px 14px;background:#0b0b0d;border-top:1px solid rgba(255,255,255,.12)}.bar button,.bar a{height:46px;min-width:46px;padding:0 15px;border-radius:13px;border:1px solid rgba(255,255,255,.18);background:#17171b;color:#fff;text-decoration:none;font-weight:900;display:grid;place-items:center;cursor:pointer}.bar button:hover,.bar a:hover{background:var(--gold);color:#050506}.counter{min-width:78px;text-align:center;font-weight:900;color:#fff}.hint{position:absolute;left:50%;bottom:12px;translate:-50% 0;z-index:4;padding:7px 13px;border-radius:999px;background:rgba(0,0,0,.75);color:#fff;font-size:12px;font-weight:800;opacity:0;transition:.2s;pointer-events:none}.hint.show{opacity:1}@media(max-width:700px){.nav{width:40px;height:60px;font-size:36px}.prev{left:4px}.next{right:4px}.slide{border-radius:0}.bar{height:58px}.bar button,.bar a{height:40px;padding:0 11px}.app{grid-template-rows:1fr 58px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <main class="stage" id="stage">
+    <section class="slide" id="slide" aria-label="Solar proposal slide">
+      <iframe id="pdf" title="Daddy's Proposal Tool slide"></iframe>
+      <div class="hotspots" id="hotspots" aria-label="Installer credentials links">
+        <a class="hotspot google" href="https://www.google.com/search?q=Our+World+Energy+reviews" target="_blank" rel="noopener" aria-label="Our World Energy Google reviews"></a>
+        <a class="hotspot top100" href="https://www.solarpowerworldonline.com/2024-top-solar-contractors/" target="_blank" rel="noopener" aria-label="Top Solar Contractors"></a>
+        <a class="hotspot award" href="https://www.google.com/search?q=Our+World+Energy+award+Arizona+solar" target="_blank" rel="noopener" aria-label="Our World Energy awards"></a>
+        <a class="hotspot inc" href="https://www.inc.com/profile/our-world-energy" target="_blank" rel="noopener" aria-label="Our World Energy Inc. 5000 profile"></a>
+        <a class="hotspot bbb" href="https://www.bbb.org/us/az/phoenix/profile/solar-energy-products/our-world-energy-llc-1126-1000055984" target="_blank" rel="noopener" aria-label="Our World Energy BBB profile"></a>
+        <a class="hotspot nabcep" href="https://directories.nabcep.org/" target="_blank" rel="noopener" aria-label="NABCEP certification directory"></a>
+      </div>
+    </section>
+    <button class="nav prev" id="prev" aria-label="Previous slide">‹</button>
+    <button class="nav next" id="next" aria-label="Next slide">›</button>
+    <div class="hint" id="hint">Tap a credential logo to open its proof link</div>
+  </main>
+  <footer class="bar">
+    <a href="../proposal.html" aria-label="Back to proposal tools">Back</a>
+    <button id="first" aria-label="First slide">⌂</button>
+    <span class="counter" id="counter">1 / 16</span>
+    <button id="full" aria-label="Full screen">⛶</button>
+  </footer>
+</div>
+<script>
+const PDF='https://untd.solar/joinus/wp-content/uploads/2024/03/Owe-Arizona-PP-.pdf';
+const total=16;let page=1;
+const frame=document.getElementById('pdf'),counter=document.getElementById('counter'),hotspots=document.getElementById('hotspots'),hint=document.getElementById('hint');
+function render(){frame.src=PDF+'#page='+page+'&zoom=page-fit&toolbar=0&navpanes=0&scrollbar=0&view=Fit';counter.textContent=page+' / '+total;const proof=page===9;hotspots.classList.toggle('active',proof);hint.classList.toggle('show',proof);document.getElementById('prev').disabled=page===1;document.getElementById('next').disabled=page===total;}
+function move(n){page=Math.max(1,Math.min(total,page+n));render()}
+document.getElementById('prev').onclick=()=>move(-1);document.getElementById('next').onclick=()=>move(1);document.getElementById('first').onclick=()=>{page=1;render()};document.getElementById('full').onclick=()=>document.documentElement.requestFullscreen?.();
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();move(1)}if(e.key==='ArrowLeft'){e.preventDefault();move(-1)}if(e.key==='Home'){page=1;render()}if(e.key==='End'){page=total;render()}});
+let x=0;document.getElementById('stage').addEventListener('touchstart',e=>x=e.changedTouches[0].screenX,{passive:true});document.getElementById('stage').addEventListener('touchend',e=>{const d=e.changedTouches[0].screenX-x;if(Math.abs(d)>55)move(d<0?1:-1)},{passive:true});
+render();
+</script>
+</body>
+</html>
