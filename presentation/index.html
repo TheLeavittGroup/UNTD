@@ -6,64 +6,30 @@
   <title>Daddy's Proposal Tool</title>
   <meta name="theme-color" content="#000000">
   <style>
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth;background:#000}
-    body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-serif}
-    .deck-shell{width:100%;height:100vh;min-height:720px;background:#000}
-    .deck-shell iframe{display:block;width:100%;height:100%;border:0;background:#000}
-    .credential-section{background:#fff;color:#111;padding:34px max(18px,5vw) 38px;border-top:12px solid #000}
-    .credential-section h2{margin:0 0 8px;font-size:clamp(28px,4vw,48px);letter-spacing:-.035em}
-    .credential-section>p{margin:0 0 20px;color:#596274;font-weight:700;line-height:1.45}
-    .credential-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:11px}
-    .credential-grid a{min-height:96px;display:flex;align-items:center;justify-content:center;text-align:center;padding:14px;border:1px solid #d7deeb;border-radius:16px;background:#f6f8fc;color:#17213a;text-decoration:none;font-weight:950;box-shadow:0 8px 24px rgba(25,45,82,.08)}
-    .credential-grid a:active,.credential-grid a:focus{outline:4px solid #2456cc}
-    .tools-head{text-align:center;padding:58px 20px 28px;background:#050507;border-top:8px solid #f4c76b}
-    .tools-head h2{margin:0 0 10px;font-size:clamp(32px,6vw,68px)}
-    .tools-head p{max-width:850px;margin:auto;color:#bbb;line-height:1.5}
-    .legacy{width:100%;height:1900px;border:0;display:block;background:#050507}
-    .floating{position:fixed;z-index:100;right:12px;bottom:max(14px,env(safe-area-inset-bottom));display:flex;gap:8px}
-    .floating a{padding:10px 13px;border-radius:999px;text-decoration:none;font-weight:950;box-shadow:0 8px 28px rgba(0,0,0,.55)}
-    .credentials-button{background:#17181d;color:#fff;border:1px solid #484950}
-    .tools-button{background:#f4c76b;color:#111}
-    @media(max-width:900px){.credential-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-    @media(max-width:600px){
-      .deck-shell{height:100vh;min-height:680px}
-      .credential-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .credential-grid a{min-height:82px;font-size:13px}
-      .legacy{height:2300px}
-      .floating{right:8px;bottom:max(10px,env(safe-area-inset-bottom))}
-      .floating a{padding:9px 10px;font-size:11px}
-    }
+    *{box-sizing:border-box}html{scroll-behavior:smooth;background:#000}body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-serif}.deck{width:100%;max-width:1500px;margin:0 auto;padding:0 0 14px}.page{position:relative;width:100%;aspect-ratio:2/1;margin:0 0 14px;background:#fff;overflow:hidden}.page iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff;pointer-events:none}.page-number{position:absolute;z-index:4;top:12px;left:12px;padding:6px 11px;border-radius:999px;background:rgba(0,0,0,.58);color:#fff;font-weight:900;font-size:13px;backdrop-filter:blur(8px)}.hotspots{position:absolute;inset:0;z-index:5}.hotspot{position:absolute;top:29%;height:16%;border-radius:10px;border:2px solid transparent}.hotspot:active,.hotspot:focus{border-color:#f4c76b;background:rgba(244,199,107,.18);outline:0}.google{left:7%;width:13%}.top100{left:23%;width:17%}.award{left:42%;width:12%}.inc{left:55%;width:12%}.bbb{left:68%;width:17%}.nabcep{left:86%;width:12%}.proof-note{position:absolute;z-index:6;left:50%;bottom:12px;transform:translateX(-50%);padding:7px 13px;border-radius:999px;background:rgba(0,0,0,.75);font-size:12px;font-weight:900;white-space:nowrap}.tools-head{text-align:center;padding:58px 20px 28px;background:#050507;border-top:8px solid #f4c76b}.tools-head h2{margin:0 0 10px;font-size:clamp(32px,6vw,68px)}.tools-head p{max-width:850px;margin:auto;color:#bbb;line-height:1.5}.tools-frame{display:block;width:100%;height:2100px;border:0;background:#050507}.floating{position:fixed;z-index:100;right:10px;bottom:max(12px,env(safe-area-inset-bottom));display:flex;gap:8px}.floating a{padding:10px 13px;border-radius:999px;text-decoration:none;font-weight:950;box-shadow:0 8px 28px rgba(0,0,0,.55)}.top-button{background:#17181d;color:#fff;border:1px solid #484950}.tools-button{background:#f4c76b;color:#111}@media(max-width:700px){.deck{padding-bottom:7px}.page{margin-bottom:7px}.page-number{top:7px;left:7px;font-size:11px;padding:5px 9px}.proof-note{font-size:10px;bottom:7px}.tools-frame{height:2600px}.floating{right:7px}.floating a{padding:9px 10px;font-size:11px}}
   </style>
 </head>
-<body>
-  <section class="deck-shell" aria-label="OWE Arizona sales deck">
-    <iframe title="OWE Arizona proposal" src="https://untd.solar/joinus/wp-content/uploads/2024/03/Owe-Arizona-PP-.pdf?v=20260714#view=FitH&toolbar=0&navpanes=0"></iframe>
-  </section>
-
-  <section class="credential-section" id="credentials">
-    <h2>Arizona's Largest Installer: proof and credentials</h2>
-    <p>These match the six credential logos shown on the installer slide. Each one opens its proof source.</p>
-    <div class="credential-grid">
-      <a href="https://www.google.com/search?q=Our+World+Energy+reviews" target="_blank" rel="noopener">Google Reviews</a>
-      <a href="https://www.solarpowerworldonline.com/2024-top-solar-contractors/" target="_blank" rel="noopener">Top 100 Solar Contractors</a>
-      <a href="https://www.google.com/search?q=Our+World+Energy+award+Arizona+solar" target="_blank" rel="noopener">Solar Industry Award</a>
-      <a href="https://www.inc.com/profile/our-world-energy" target="_blank" rel="noopener">Inc. 5000</a>
-      <a href="https://www.bbb.org/us/az/phoenix/profile/solar-energy-products/our-world-energy-llc-1126-1000055984" target="_blank" rel="noopener">BBB A+ Profile</a>
-      <a href="https://directories.nabcep.org/" target="_blank" rel="noopener">NABCEP Certification</a>
-    </div>
-  </section>
-
-  <section class="tools-head" id="tools">
-    <h2>Calculators, Auto-Texts & Rep Tools</h2>
-    <p>The original calculator, customer snapshot buttons, rep notes, quote details, follow-up copy, personalization and next-step tools are preserved below.</p>
-  </section>
-
-  <iframe class="legacy" title="Original Daddy's Proposal Tool features" src="https://cdn.jsdelivr.net/gh/TheLeavittGroup/UNTD@57d2c7ab9f72ee8718834405cd3cae1b0da2c465/presentation/index.html?v=20260714"></iframe>
-
-  <nav class="floating" aria-label="Proposal shortcuts">
-    <a class="credentials-button" href="#credentials">Credentials</a>
-    <a class="tools-button" href="#tools">Tools & Calculators</a>
-  </nav>
+<body id="top">
+  <main class="deck" aria-label="OWE Arizona sales deck">
+    <section class="page"><span class="page-number">1 / 16</span><iframe title="Slide 1" src="https://untd.solar/joinus/wp-content/uploads/2024/03/Owe-Arizona-PP-.pdf#page=1&view=FitH&toolbar=0&navpanes=0&scrollbar=0"></iframe></section>
+    <section class="page"><span class="page-number">2 / 16</span><iframe title="Slide 2" src="https://untd.solar/joinus/wp-content/uploads/2024/03/Owe-Arizona-PP-.pdf#page=2&view=FitH&toolbar=0&navpanes=0&scrollbar=0"></iframe></section>
+    <section class="page"><span class="page-number">3 / 16</span><iframe title="Slide 3" src="https://untd.solar/joinus/wp-content/uploads/2024/03/Owe-Arizona-PP-.pdf#page=3&view=FitH&toolbar=0&navpanes=0&scrollbar=0"></iframe></section>
+    <section class="page"><span class="page-number">4 / 16</span><iframe title="Slide 4" src="https://untd.solar/joinus/wp-content/uploads/2024/03/Owe-Arizona-PP-.pdf#page=4&view=FitH&toolbar=0&navpanes=0&scrollbar=0"></iframe></section>
+    <section class="page"><span class="page-number">5 / 16</span><iframe title="Slide 5" src="https://untd.solar/joinus/wp-content/uploads/2024/03/Owe-Arizona-PP-.pdf#page=5&view=FitH&toolbar=0&navpanes=0&scrollbar=0"></iframe></section>
+    <section class="page"><span class="page-number">6 / 16</span><iframe title="Slide 6" src="https://untd.solar/joinus/wp-content/uploads/2024/03/Owe-Arizona-PP-.pdf#page=6&view=FitH&toolbar=0&navpanes=0&scrollbar=0"></iframe></section>
+    <section class="page"><span class="page-number">7 / 16</span><iframe title="Slide 7" src="https://untd.solar/joinus/wp-content/uploads/2024/03/Owe-Arizona-PP-.pdf#page=7&view=FitH&toolbar=0&navpanes=0&scrollbar=0"></iframe></section>
+    <section class="page"><span class="page-number">8 / 16</span><iframe title="Slide 8" src="https://untd.solar/joinus/wp-content/uploads/2024/03/Owe-Arizona-PP-.pdf#page=8&view=FitH&toolbar=0&navpanes=0&scrollbar=0"></iframe></section>
+    <section class="page" id="credentials"><span class="page-number">9 / 16</span><iframe title="Slide 9" src="https://untd.solar/joinus/wp-content/uploads/2024/03/Owe-Arizona-PP-.pdf#page=9&view=FitH&toolbar=0&navpanes=0&scrollbar=0"></iframe><div class="hotspots"><a class="hotspot google" href="https://www.google.com/search?q=Our+World+Energy+reviews" target="_blank" rel="noopener" aria-label="Google Reviews"></a><a class="hotspot top100" href="https://www.solarpowerworldonline.com/2024-top-solar-contractors/" target="_blank" rel="noopener" aria-label="Top 100 Solar Contractors"></a><a class="hotspot award" href="https://www.google.com/search?q=Our+World+Energy+award+Arizona+solar" target="_blank" rel="noopener" aria-label="Solar Industry Award"></a><a class="hotspot inc" href="https://www.inc.com/profile/our-world-energy" target="_blank" rel="noopener" aria-label="Inc. 5000"></a><a class="hotspot bbb" href="https://www.bbb.org/us/az/phoenix/profile/solar-energy-products/our-world-energy-llc-1126-1000055984" target="_blank" rel="noopener" aria-label="BBB A Plus Profile"></a><a class="hotspot nabcep" href="https://directories.nabcep.org/" target="_blank" rel="noopener" aria-label="NABCEP Certification"></a></div><div class="proof-note">Tap any credential logo to open its proof</div></section>
+    <section class="page"><span class="page-number">10 / 16</span><iframe title="Slide 10" src="https://untd.solar/joinus/wp-content/uploads/2024/03/Owe-Arizona-PP-.pdf#page=10&view=FitH&toolbar=0&navpanes=0&scrollbar=0"></iframe></section>
+    <section class="page"><span class="page-number">11 / 16</span><iframe title="Slide 11" src="https://untd.solar/joinus/wp-content/uploads/2024/03/Owe-Arizona-PP-.pdf#page=11&view=FitH&toolbar=0&navpanes=0&scrollbar=0"></iframe></section>
+    <section class="page"><span class="page-number">12 / 16</span><iframe title="Slide 12" src="https://untd.solar/joinus/wp-content/uploads/2024/03/Owe-Arizona-PP-.pdf#page=12&view=FitH&toolbar=0&navpanes=0&scrollbar=0"></iframe></section>
+    <section class="page"><span class="page-number">13 / 16</span><iframe title="Slide 13" src="https://untd.solar/joinus/wp-content/uploads/2024/03/Owe-Arizona-PP-.pdf#page=13&view=FitH&toolbar=0&navpanes=0&scrollbar=0"></iframe></section>
+    <section class="page"><span class="page-number">14 / 16</span><iframe title="Slide 14" src="https://untd.solar/joinus/wp-content/uploads/2024/03/Owe-Arizona-PP-.pdf#page=14&view=FitH&toolbar=0&navpanes=0&scrollbar=0"></iframe></section>
+    <section class="page"><span class="page-number">15 / 16</span><iframe title="Slide 15" src="https://untd.solar/joinus/wp-content/uploads/2024/03/Owe-Arizona-PP-.pdf#page=15&view=FitH&toolbar=0&navpanes=0&scrollbar=0"></iframe></section>
+    <section class="page"><span class="page-number">16 / 16</span><iframe title="Slide 16" src="https://untd.solar/joinus/wp-content/uploads/2024/03/Owe-Arizona-PP-.pdf#page=16&view=FitH&toolbar=0&navpanes=0&scrollbar=0"></iframe></section>
+  </main>
+  <section class="tools-head" id="tools"><h2>Calculators, Auto-Texts & Rep Tools</h2><p>The calculator, customer snapshots, rep notes, quote details, follow-up copy, personalization and next-step tools remain available below in the live same-site tool.</p></section>
+  <iframe class="tools-frame" title="Daddy's calculators and rep tools" src="../contact/"></iframe>
+  <nav class="floating" aria-label="Proposal shortcuts"><a class="top-button" href="#top">Top</a><a class="tools-button" href="#tools">Tools & Calculators</a></nav>
 </body>
 </html>
