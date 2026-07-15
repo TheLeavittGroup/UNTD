@@ -42,7 +42,7 @@ function install(){
     proof.textContent='View Zillow Study';
     zillow.appendChild(proof);
    }
-   const options=[...d.querySelectorAll('.slide')].find(s=>/^\s*The Options/i.test(s.textContent||''));
+   const options=[...d.querySelectorAll('.slide')].find(s=>/The Options/i.test(s.textContent||'')&&s.querySelector('.options-grid'));
    if(options){
     const optionsStyle=d.createElement('style');
     optionsStyle.textContent=`
