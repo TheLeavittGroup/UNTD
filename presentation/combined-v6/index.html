@@ -7,7 +7,7 @@
 <style>*{box-sizing:border-box}html,body{margin:0;background:#000}#base{display:block;width:100%;height:22000px;border:0;background:#000}</style>
 </head>
 <body>
-<iframe id="base" src="../combined-v5/?v=grid-white-background" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<iframe id="base" src="../combined-v5/?v=stability-fix" scrolling="no" title="Daddy's Sales Deck"></iframe>
 <script>
 const base=document.getElementById('base');
 function getDeck(){
@@ -26,47 +26,105 @@ function resizeAll(ctx){
   if(base.contentDocument)base.style.height=base.contentDocument.documentElement.scrollHeight+'px';
  }catch(e){}
 }
-function patchDeck(){
- const ctx=getDeck(),d=ctx.deck;if(!d)return;
- const aurora=d.querySelector('.aurora-transition');
- if(aurora){aurora.style.setProperty('aspect-ratio','4 / 3','important');aurora.style.setProperty('min-height','760px','important');aurora.style.setProperty('height','auto','important')}
- const grid=d.querySelector('.slide.grid-v4,.slide.grid-slide,.slide.grid-live-retry')||[...d.querySelectorAll('.slide')].find(s=>{const h=s.querySelector('h1');return h&&/^The Grid$/i.test(h.textContent.trim())});
- if(grid&&!grid.classList.contains('grid-live-retry')){
-  if(!d.getElementById('gridRetryStyles')){
-   const style=d.createElement('style');style.id='gridRetryStyles';style.textContent=`
-   .grid-live-retry{padding:0!important;background:#fff!important;color:#15253a!important;overflow:hidden!important}
-   .grid-retry-shell{position:absolute;inset:0;padding:3% 4%;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:2.1%}
-   .grid-retry-head h1{margin:0;font-size:clamp(38px,4.8vw,74px);line-height:.95;letter-spacing:-.045em;color:#172a45}.grid-retry-head p{margin:1% 0 0;font-size:clamp(12px,1.12vw,18px);line-height:1.35;color:#526a86;font-weight:750}
-   .grid-retry-chain{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:1.2%;min-height:0;padding:1.5% 0}
-   .grid-retry-chain:before{content:"";position:absolute;left:7%;right:7%;top:48%;height:8px;border-radius:999px;background:#415a75;box-shadow:0 0 0 4px rgba(255,255,255,.75);z-index:0}
-   .grid-retry-card{position:relative;z-index:1;border:0;background:transparent;padding:0;perspective:1000px;cursor:pointer;min-width:0}
-   .grid-retry-inner{position:relative;width:100%;height:100%;min-height:245px;transition:transform .48s;transform-style:preserve-3d}.grid-retry-card.flipped .grid-retry-inner{transform:rotateY(180deg)}
-   .grid-retry-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:22px;border:1px solid #d7d7d7;background:#fff;box-shadow:0 14px 30px rgba(25,54,89,.12);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:9% 7%}
-   .grid-retry-face.back{transform:rotateY(180deg);background:#173b67;color:#fff;border-color:#173b67}.grid-retry-icon{width:78%;height:45%;display:grid;place-items:center;margin-bottom:7%}.grid-retry-icon svg{width:100%;height:100%}
-   .grid-retry-face strong{font-size:clamp(15px,1.5vw,24px);line-height:1.08;color:#183658}.grid-retry-face small{margin-top:7%;font-size:clamp(9px,.75vw,12px);font-weight:850;color:#6a7f96}.grid-retry-face.back strong{color:#fff;font-size:clamp(14px,1.3vw,21px);line-height:1.28}.grid-retry-face.back small{color:#bdd4ed}
-   .grid-retry-arrow{position:absolute;right:-9%;top:44%;z-index:5;font-size:clamp(22px,2.5vw,39px);font-weight:950;color:#173b67;pointer-events:none}
-   .grid-retry-reasons{display:grid;grid-template-columns:auto 1fr 1fr;gap:1.2%;padding:1.4%;border-radius:20px;background:#173b67;color:#fff}.grid-retry-reasons-title{display:flex;align-items:center;padding:0 1em;font-size:clamp(16px,1.5vw,24px);font-weight:950;color:#9fd0ff;white-space:nowrap}.grid-retry-reason{display:flex;align-items:center;gap:.7em;padding:1em 1.1em;border-radius:15px;background:rgba(255,255,255,.1);font-size:clamp(13px,1.2vw,20px);line-height:1.2;font-weight:900}.grid-retry-reason b{font-size:1.35em;color:#8ee4a4}
-   @media(max-width:1100px){.grid-retry-shell{padding:2.5% 3.4%}.grid-retry-inner{min-height:210px}.grid-retry-face{border-radius:17px}}
-   `;d.head.appendChild(style)
-  }
-  const cards=[
-   ['Generation','Big breasts you see when driving from San Diego to Newport.',`<svg viewBox="0 0 150 100"><rect x="7" y="76" width="136" height="15" rx="4" fill="#65778b"/><path d="M17 76V40h27v36M54 76V25h25v51M88 76V47h30v29" fill="#8193a5"/><path d="M28 39c-11-20 8-31 18-15 5-20 29-15 27 4 17-6 30 16 14 25" fill="#cbd4dd"/><path d="M107 76V29h22v47" fill="#74869a"/></svg>`],
-   ['Transmission','The large metal poles and lines that cause all those fires.',`<svg viewBox="0 0 150 100"><path d="M20 90 47 8 73 90M78 90 105 16 132 90" fill="none" stroke="#52657a" stroke-width="6"/><path d="M10 47h72M27 30h42M68 54h74M88 36h35" stroke="#52657a" stroke-width="5"/><path d="M47 8v82M105 16v74" stroke="#52657a" stroke-width="3"/></svg>`],
-   ['Distribution','Those tree-looking poles you sometimes see in the road during storms.',`<svg viewBox="0 0 150 100"><path d="M34 92V16M108 92V29" stroke="#755839" stroke-width="8"/><path d="M13 33h48M84 45h47" stroke="#755839" stroke-width="7"/><path d="M14 33c29 21 62 7 94 12" fill="none" stroke="#334258" stroke-width="4"/></svg>`],
-   ['Transformer','The things your neighbors run into, causing all the power outages.',`<svg viewBox="0 0 150 100"><rect x="32" y="29" width="86" height="58" rx="9" fill="#557360"/><rect x="42" y="38" width="66" height="39" rx="5" fill="#71927a"/><path d="M48 17v13M64 17v13M86 17v13M102 17v13" stroke="#374b3d" stroke-width="6"/><path d="M22 90h106" stroke="#45576c" stroke-width="6"/></svg>`],
-   ['Your Home','Do you really not know what your home is?',`<svg viewBox="0 0 150 100"><path d="M24 91V48L75 10l51 38v43Z" fill="#f1dfc4" stroke="#53657b" stroke-width="6"/><path d="M17 52 75 7l58 45" fill="none" stroke="#53657b" stroke-width="8"/><rect x="62" y="64" width="26" height="27" fill="#b8784e"/><rect x="96" y="56" width="19" height="17" fill="#cce9ff" stroke="#53657b" stroke-width="3"/></svg>`]
-  ];
-  grid.className='slide grid-live-retry';
-  grid.innerHTML=`<div class="grid-retry-shell"><div class="grid-retry-head"><h1>The Grid</h1><p>Power travels through one long connected chain before it reaches your home. Tap any stage to flip it over.</p></div><div class="grid-retry-chain">${cards.map((c,i)=>`<button type="button" class="grid-retry-card"><div class="grid-retry-inner"><div class="grid-retry-face front"><div class="grid-retry-icon">${c[2]}</div><strong>${c[0]}</strong><small>Tap to flip</small></div><div class="grid-retry-face back"><strong>${c[1]}</strong><small>Tap again to flip back</small></div></div>${i<4?'<span class="grid-retry-arrow">→</span>':''}</button>`).join('')}</div><div class="grid-retry-reasons"><div class="grid-retry-reasons-title">Main Reasons</div><div class="grid-retry-reason"><b>✓</b><span>Reduce peak demand and expensive grid strain</span></div><div class="grid-retry-reason"><b>✓</b><span>Delay costly infrastructure upgrades and maintenance</span></div></div></div>`;
-  grid.querySelectorAll('.grid-retry-card').forEach(card=>card.addEventListener('click',()=>card.classList.toggle('flipped')));
+function fixAurora(d){
+ const aurora=d.querySelector('.aurora-transition');if(!aurora)return false;
+ if(!d.getElementById('auroraStableStyles')){
+  const style=d.createElement('style');style.id='auroraStableStyles';style.textContent=`
+   .aurora-transition{aspect-ratio:4/3!important;min-height:760px!important;height:auto!important;padding:0!important;background:#f4f4f6!important;overflow:hidden!important}
+   .aurora-live-shell{position:absolute!important;inset:0!important;display:grid!important;grid-template-rows:10% minmax(0,1fr) 6%!important;background:#f4f4f6!important}
+   .aurora-live-top{grid-row:1!important}
+   .aurora-live-stage{grid-row:2!important;position:relative!important;min-height:0!important;background:#fff!important}
+   .aurora-sizing-bar{grid-row:3!important;display:grid!important;grid-template-columns:1.15fr 1fr 1.3fr!important;gap:1px!important;min-height:0!important;background:#dddde4!important;border-top:1px solid #d5d5dc!important;border-bottom:0!important;z-index:5!important}
+   .aurora-sizing-item{min-height:0!important;padding:0 .9em!important}
+   .aurora-sizing-item label{font-size:clamp(8px,.62vw,11px)!important}
+   .aurora-sizing-item input{padding:.3em .55em!important;font-size:clamp(10px,.78vw,13px)!important}
+   .aurora-sizing-result{font-size:clamp(10px,.82vw,14px)!important}.aurora-sizing-result small{font-size:clamp(7px,.52vw,9px)!important}
+  `;d.head.appendChild(style)
  }
- if(grid)grid.style.setProperty('background','#fff','important');
- const net=[...d.querySelectorAll('.slide')].find(s=>/The Power of Net Metering/i.test(s.textContent||''));
- if(net)net.style.setProperty('background','#fff','important');
- resizeAll(ctx);
+ const shell=aurora.querySelector('.aurora-live-shell');
+ const stage=aurora.querySelector('.aurora-live-stage');
+ const bar=aurora.querySelector('.aurora-sizing-bar');
+ if(shell&&stage&&bar&&stage.nextElementSibling!==bar)shell.appendChild(bar);
+ aurora.dataset.stableAurora='1';
+ return true;
 }
-function install(){let n=0;const timer=setInterval(()=>{patchDeck();if(++n>80)clearInterval(timer)},250)}
-base.addEventListener('load',install);window.addEventListener('resize',()=>setTimeout(patchDeck,120));install();
+function fixSavings(d){
+ const savings=[...d.querySelectorAll('.slide')].find(s=>/Be your own power company/i.test(s.textContent||''));if(!savings)return false;
+ if(savings.dataset.calculatorStable==='1')return false;
+ const oldCard=savings.querySelector('.input-card');if(!oldCard)return false;
+ const card=oldCard.cloneNode(true);oldCard.replaceWith(card);
+ let totalBtn=savings.querySelector('#utility25Button');
+ if(totalBtn){const clean=totalBtn.cloneNode(true);totalBtn.replaceWith(clean);totalBtn=clean}else{
+  const oldRate=savings.querySelector('#rateResult');
+  if(oldRate){totalBtn=d.createElement('button');totalBtn.type='button';totalBtn.id='utility25Button';totalBtn.textContent='Total 25-Year Utility Cost';oldRate.replaceWith(totalBtn)}
+ }
+ if(!d.getElementById('stableCalculatorStyles')){
+  const style=d.createElement('style');style.id='stableCalculatorStyles';style.textContent=`
+   #utility25Button{width:100%;margin-top:7px;border:0;border-radius:12px;padding:10px 9px;background:#174f91;color:#fff;font-size:clamp(9px,.76vw,12px);line-height:1.15;font-weight:950;cursor:pointer;box-shadow:0 7px 16px rgba(23,79,145,.22)}
+   #utility25Button:active{transform:scale(.98)}#utility25Button.result{background:#123b74}
+  `;d.head.appendChild(style)
+ }
+ const entries=[...card.querySelectorAll('.month-entry')],bill=card.querySelector('#recentBill'),kwh=card.querySelector('#recentKwh'),buttons=[...card.querySelectorAll('.mode-toggle button')];
+ if(!entries.length||!bill||!kwh)return false;
+ let mode=(buttons.find(b=>b.classList.contains('active'))||buttons[0]||{}).dataset?.mode||'usage';
+ const money=n=>Number.isFinite(n)?new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n):'$0';
+ const setText=(id,text)=>{const el=savings.querySelector('#'+id)||d.getElementById(id);if(el)el.textContent=text};
+ let lastMonthly=0;
+ const resetTotal=()=>{if(totalBtn){totalBtn.classList.remove('result');totalBtn.textContent='Total 25-Year Utility Cost'}};
+ const clear=()=>{lastMonthly=0;['monthlyAvg','y5','y10','y15','y25'].forEach(id=>setText(id,'$0'));resetTotal()};
+ const calculate=()=>{
+  const vals=entries.map(el=>parseFloat(el.value)||0),b=parseFloat(bill.value),k=parseFloat(kwh.value),current=(b>0&&k>0)?b/k:0;
+  let annual=0,monthly=0;
+  if(mode==='usage'){
+   annual=vals.reduce((a,v)=>a+v,0);setText('annualUsage',Math.round(annual).toLocaleString()+' kWh');
+   if(!(annual>0&&current>0)){clear();return}
+   monthly=annual*(current+.16)/12;
+  }else{
+   const annualBills=vals.reduce((a,v)=>a+v,0);annual=current>0?annualBills/current:0;setText('annualUsage',Math.round(annual).toLocaleString()+' kWh');
+   if(!(annualBills>0&&current>0)){clear();return}
+   monthly=(annualBills+annual*.16)/12;
+  }
+  lastMonthly=monthly;setText('monthlyAvg',money(monthly));
+  [[5,'y5'],[10,'y10'],[15,'y15'],[25,'y25']].forEach(([yr,id])=>setText(id,money(monthly*Math.pow(1.06,yr))));
+  const label=savings.querySelector('.graph-label');if(label)label.textContent='WITHOUT SOLAR • '+money(monthly)+'/MO';
+  resetTotal();
+ };
+ buttons.forEach(btn=>btn.addEventListener('click',()=>{
+  mode=btn.dataset.mode;buttons.forEach(b=>b.classList.toggle('active',b===btn));
+  const title=card.querySelector('#modeTitle');if(title)title.textContent=mode==='usage'?'Enter monthly electricity use':'Enter monthly power bills';
+  entries.forEach(el=>{el.value='';el.placeholder=mode==='usage'?'kWh':'$'});setText('annualUsage','0 kWh');clear();
+ }));
+ [...entries,bill,kwh].forEach(el=>el.addEventListener('input',calculate));
+ if(totalBtn)totalBtn.addEventListener('click',()=>{
+  calculate();if(!(lastMonthly>0)){totalBtn.textContent='Enter all monthly and latest bill details first';return}
+  let total=0;for(let year=0;year<25;year++)total+=lastMonthly*12*Math.pow(1.06,year);
+  totalBtn.classList.add('result');totalBtn.textContent=money(total)+' total over 25 years';
+ });
+ savings.dataset.calculatorStable='1';
+ return true;
+}
+function patchGrid(d){
+ const grid=d.querySelector('.slide.grid-v4,.slide.grid-slide,.slide.grid-live-retry')||[...d.querySelectorAll('.slide')].find(s=>{const h=s.querySelector('h1');return h&&/^The Grid$/i.test(h.textContent.trim())});
+ if(!grid)return false;
+ if(!grid.classList.contains('grid-live-retry'))return false;
+ grid.style.setProperty('background','#fff','important');
+ const backs=[...grid.querySelectorAll('.grid-retry-face.back strong')];if(backs[1])backs[1].textContent='The large metal poles and lines that cause all those fires.';
+ return true;
+}
+function patchDeck(){
+ const ctx=getDeck(),d=ctx.deck;if(!d)return false;
+ let changed=false;
+ changed=fixAurora(d)||changed;
+ changed=fixSavings(d)||changed;
+ changed=patchGrid(d)||changed;
+ const net=[...d.querySelectorAll('.slide')].find(s=>/The Power of Net Metering/i.test(s.textContent||''));if(net)net.style.setProperty('background','#fff','important');
+ if(changed)resizeAll(ctx);
+ return changed;
+}
+function install(){
+ let tries=0;const run=()=>{patchDeck();tries++;if(tries<16)setTimeout(run,500);else resizeAll(getDeck())};run();
+}
+base.addEventListener('load',install);window.addEventListener('resize',()=>setTimeout(()=>resizeAll(getDeck()),120));install();
 </script>
 </body>
 </html>
