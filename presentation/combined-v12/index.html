@@ -16,7 +16,7 @@ html,body{margin:0;background:#000;min-height:100%}
 <body>
 <iframe id="base" scrolling="no" title="Daddy's Sales Deck"></iframe>
 <script>
-const BUILD='20260715-stable-1';
+const BUILD='20260715-stable-2';
 const base=document.getElementById('base');
 base.src='../combined-v5/?build='+BUILD;
 let resizeTimer=0;
@@ -89,6 +89,14 @@ function patchDeck(){
    .savings-graph.chart-ready{opacity:1!important}
    .savings-graph .graph-red{transition:height .25s ease,clip-path .25s ease!important}
    .savings-graph .graph-yellow{transition:width .25s ease!important}
+   .aurora-transition .aurora-live-shell{grid-template-rows:10% minmax(0,1fr) 6%!important}
+   .aurora-recommendation-bar{grid-row:3!important;min-height:0!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;background:#fff!important;border-top:1px solid #d8dde5!important;box-shadow:0 -5px 14px rgba(20,43,73,.07)!important;z-index:5!important;color:#162b47!important}
+   .aurora-recommendation-item{min-width:0!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:.55em!important;padding:0 1em!important;text-align:left!important}
+   .aurora-recommendation-item+.aurora-recommendation-item{border-left:1px solid #e0e5ec!important}
+   .aurora-recommendation-label{font-size:clamp(8px,.62vw,11px)!important;line-height:1!important;font-weight:900!important;color:#708096!important;white-space:nowrap!important}
+   .aurora-recommendation-value{font-size:clamp(12px,1.05vw,17px)!important;line-height:1!important;font-weight:950!important;color:#174f91!important;white-space:nowrap!important}
+   .aurora-recommendation-value small{display:block!important;margin-top:2px!important;font-size:clamp(6px,.48vw,8px)!important;line-height:1!important;font-weight:750!important;color:#8491a1!important}
+   @media(max-width:760px){.aurora-recommendation-item{padding:0 .45em!important;gap:.25em!important}.aurora-recommendation-label{white-space:normal!important}.aurora-recommendation-value{font-size:clamp(9px,2.1vw,13px)!important}}
   `;
   d.head.appendChild(style);
  }
@@ -107,8 +115,20 @@ function patchDeck(){
   }
  }
 
+ const aurora=d.querySelector('.aurora-transition');
+ if(aurora){
+  const shell=aurora.querySelector('.aurora-live-shell');
+  if(shell&&!shell.querySelector('#auroraRecommendationBar')){
+   const bar=d.createElement('div');
+   bar.id='auroraRecommendationBar';
+   bar.className='aurora-recommendation-bar';
+   bar.innerHTML=`<div class="aurora-recommendation-item"><span class="aurora-recommendation-label">Annual Usage</span><span class="aurora-recommendation-value" id="recommendedAnnualUsage">—<small>From utility inputs</small></span></div><div class="aurora-recommendation-item"><span class="aurora-recommendation-label">Recommended Batteries</span><span class="aurora-recommendation-value" id="recommendedBatteryCount">—<small>11.5 kWh each</small></span></div><div class="aurora-recommendation-item"><span class="aurora-recommendation-label">Recommended Panels</span><span class="aurora-recommendation-value" id="recommendedPanelCount">—<small>400W backup/recharge</small></span></div>`;
+   shell.appendChild(bar);
+  }
+ }
+
  const savings=[...d.querySelectorAll('.slide')].find(s=>/Be your own power company/i.test(s.textContent||''));
- if(savings&&!savings.dataset.stableChartBound){
+ if(savings&&!savings.dataset.stableOutputsBound){
   const graph=savings.querySelector('.savings-graph');
   const entries=[...savings.querySelectorAll('.month-entry')];
   const bill=savings.querySelector('#recentBill');
@@ -116,35 +136,60 @@ function patchDeck(){
   const red=graph&&graph.querySelector('.graph-red');
   const yellow=graph&&graph.querySelector('.graph-yellow');
   const label=graph&&graph.querySelector('.graph-label');
-  const updateChart=()=>{
-   if(!graph)return;
+  const annualOutput=d.getElementById('recommendedAnnualUsage');
+  const batteryOutput=d.getElementById('recommendedBatteryCount');
+  const panelOutput=d.getElementById('recommendedPanelCount');
+
+  const getUtilityData=()=>{
    const values=entries.map(el=>parseFloat(el.value)||0);
    const b=parseFloat((bill||{}).value)||0;
    const k=parseFloat((kwh||{}).value)||0;
-   const hasInput=values.some(v=>v>0)||b>0||k>0;
-   graph.classList.toggle('chart-ready',hasInput);
    const rate=b>0&&k>0?b/k:0;
    const mode=(savings.querySelector('.mode-toggle button.active')||{}).dataset?.mode||'usage';
+   let annual=0;
    let monthly=0;
    if(mode==='usage'){
-    const annual=values.reduce((a,v)=>a+v,0);
+    annual=values.reduce((a,v)=>a+v,0);
     if(annual>0&&rate>0)monthly=annual*(rate+.16)/12;
    }else{
     const annualBills=values.reduce((a,v)=>a+v,0);
-    const annual=rate>0?annualBills/rate:0;
+    annual=rate>0?annualBills/rate:0;
     if(annualBills>0&&rate>0)monthly=(annualBills+annual*.16)/12;
    }
-   if(monthly>0){
-    const intensity=Math.max(0,Math.min(1,(monthly-100)/650));
-    if(red)red.style.height=(68+intensity*14)+'%';
-    if(yellow)yellow.style.width=(62+intensity*5)+'%';
-    if(label)label.textContent='WITHOUT SOLAR • '+new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(monthly)+'/MO';
-   }
+   return{values,b,k,annual,monthly};
   };
-  [...entries,bill,kwh].filter(Boolean).forEach(el=>el.addEventListener('input',updateChart));
-  savings.querySelectorAll('.mode-toggle button').forEach(btn=>btn.addEventListener('click',()=>setTimeout(updateChart,0)));
-  savings.dataset.stableChartBound='1';
-  updateChart();
+
+  const updateOutputs=()=>{
+   const data=getUtilityData();
+   if(graph){
+    const hasInput=data.values.some(v=>v>0)||data.b>0||data.k>0;
+    graph.classList.toggle('chart-ready',hasInput);
+    if(data.monthly>0){
+     const intensity=Math.max(0,Math.min(1,(data.monthly-100)/650));
+     if(red)red.style.height=(68+intensity*14)+'%';
+     if(yellow)yellow.style.width=(62+intensity*5)+'%';
+     if(label)label.textContent='WITHOUT SOLAR • '+new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(data.monthly)+'/MO';
+    }
+   }
+
+   if(!annualOutput||!batteryOutput||!panelOutput)return;
+   if(!(data.annual>0)){
+    annualOutput.firstChild.nodeValue='—';
+    batteryOutput.firstChild.nodeValue='—';
+    panelOutput.firstChild.nodeValue='—';
+    return;
+   }
+   const batteries=Math.max(1,Math.ceil(data.annual/30000));
+   const panels=batteries*4;
+   annualOutput.firstChild.nodeValue=Math.round(data.annual).toLocaleString()+' kWh';
+   batteryOutput.firstChild.nodeValue=batteries+' '+(batteries===1?'battery':'batteries');
+   panelOutput.firstChild.nodeValue=panels+' panels';
+  };
+
+  [...entries,bill,kwh].filter(Boolean).forEach(el=>el.addEventListener('input',updateOutputs));
+  savings.querySelectorAll('.mode-toggle button').forEach(btn=>btn.addEventListener('click',()=>setTimeout(updateOutputs,0)));
+  savings.dataset.stableOutputsBound='1';
+  updateOutputs();
  }
 
  patched=true;
