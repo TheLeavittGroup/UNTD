@@ -13,7 +13,7 @@
 <iframe id="base" scrolling="no" title="Daddy's Sales Deck"></iframe>
 <script>
 const base=document.getElementById('base');
-base.src='../combined-v14/?build=iphone-polish-v15-4&refresh='+Date.now();
+base.src='../combined-v14/?build=iphone-polish-v15-5&refresh='+Date.now();
 let resizeTimer=0;
 
 function setHeight(frame,height){
@@ -60,10 +60,13 @@ function patchDeck(){
  const grid=d.querySelector('.slide.grid-interactive,.slide.grid-live-retry,.slide.grid-v4,.slide.grid-slide')||[...d.querySelectorAll('.slide')].find(s=>{const h=s.querySelector('h1');return h&&/^The Grid$/i.test((h.textContent||'').trim())});
  const moving=d.querySelector('.slide.move')||[...d.querySelectorAll('.slide')].find(s=>/Moving with Solar/i.test(s.textContent||''));
  const options=d.querySelector('.slide.options-upgrade')||[...d.querySelectorAll('.slide')].find(s=>/The Options/i.test(s.textContent||''));
- if(!grid||!moving||!options)return false;
+ const savings=d.querySelector('.slide.savings-upgrade')||[...d.querySelectorAll('.slide')].find(s=>/Be your own power company/i.test(s.textContent||''));
+ if(!grid||!moving||!options||!savings)return false;
 
  const label=grid.querySelector('.main-reasons-title,.grid-retry-reasons-title,.why-incentive-title');
  if(label)label.textContent='Main Reason: APS and SRP pay homeowners to have their own storage';
+ const utilitySubtitle=savings.querySelector('.monthly-card span');
+ if(utilitySubtitle)utilitySubtitle.remove();
 
  let style=d.getElementById('batteryCopyV15Styles');
  if(!style){style=d.createElement('style');style.id='batteryCopyV15Styles'}
