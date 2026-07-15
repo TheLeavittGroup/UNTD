@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Daddy's Sales Deck</title>
+<style>*{box-sizing:border-box}html,body{margin:0;background:#000}#base{display:block;width:100%;height:23500px;border:0;background:#000}</style>
+</head>
+<body>
+<iframe id="base" src="../combined-v8/?v=dynamic-savings" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<script>
+const base=document.getElementById('base');
+function getDeck(){try{const docs=[];let doc=base.contentDocument;while(doc){docs.push(doc);const frame=doc.getElementById('base');if(!frame||!frame.contentDocument)break;doc=frame.contentDocument}const outer=docs[docs.length-1],deckFrame=outer&&outer.getElementById('deckFrame'),deck=deckFrame&&deckFrame.contentDocument;return{docs,deckFrame,deck}}catch(e){return{}}}
+function resizeAll(ctx){try{const{docs,deckFrame,deck}=ctx;if(deckFrame&&deck)deckFrame.style.height=deck.documentElement.scrollHeight+'px';if(docs)for(let i=docs.length-1;i>0;i--){const f=docs[i-1].getElementById('base');if(f)f.style.height=docs[i].documentElement.scrollHeight+'px'}if(base.contentDocument)base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
+function patchDeck(){
+ const ctx=getDeck(),d=ctx.deck;if(!d)return;
+ const savings=[...d.querySelectorAll('.slide')].find(s=>/Be your own power company/i.test(s.textContent||''));
+ if(!savings)return;
+ if(!d.getElementById('dynamicSavingsV9')){
+  const style=d.createElement('style');style.id='dynamicSavingsV9';style.textContent=`
+   .dynamic-utility-chart{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+   .dynamic-grid line{stroke:#dbe4ee;stroke-width:.7}.dynamic-axis{fill:#74869b;font-size:3.5px;font-weight:800}.utility-area{fill:url(#utilityGradient);transition:d .42s ease}.utility-line{fill:none;stroke:#e5583e;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 2px 2px rgba(146,46,29,.18));transition:d .42s ease}.utility-dot{fill:#fff;stroke:#e5583e;stroke-width:1.8;transition:cx .42s ease,cy .42s ease}.utility-label{fill:#c84732;font-size:4.3px;font-weight:950}.utility-value{fill:#a93625;font-size:5.5px;font-weight:950}.solar-live-bar{position:absolute;left:4%;bottom:10%;width:63%;height:18%;min-height:32px;border-radius:8px;background:linear-gradient(90deg,#f5bd28,#ffd85a);display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;font-size:clamp(13px,1.45vw,23px);font-weight:950;letter-spacing:.01em;box-shadow:0 10px 22px rgba(139,91,0,.2);transition:height .35s ease}
+   .solar-live-bar small{display:block;font-size:.5em;letter-spacing:.08em;text-transform:uppercase;margin-top:.1em;color:#fff8d7}.chart-empty-note{position:absolute;inset:auto 4% 4% auto;color:#76889e;font-size:clamp(9px,.72vw,12px);font-weight:800}
+  `;d.head.appendChild(style)
+ }
+ const graph=savings.querySelector('.savings-graph');
+ if(graph&&!graph.querySelector('.dynamic-utility-chart')){
+  graph.innerHTML=`<svg class="dynamic-utility-chart" viewBox="0 0 100 55" preserveAspectRatio="none" aria-label="Live utility cost projection"><defs><linearGradient id="utilityGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ef684d" stop-opacity=".98"/><stop offset="1" stop-color="#e5583e" stop-opacity=".72"/></linearGradient></defs><g class="dynamic-grid"><line x1="4" y1="10" x2="96" y2="10"/><line x1="4" y1="22" x2="96" y2="22"/><line x1="4" y1="34" x2="96" y2="34"/><line x1="4" y1="46" x2="96" y2="46"/></g><path class="utility-area" d="M4 45 C26 42 48 34 70 24 S90 12 96 8 L96 50 L4 50 Z"/><path class="utility-line" d="M4 45 C26 42 48 34 70 24 S90 12 96 8"/><circle class="utility-dot start" cx="4" cy="45" r="1.8"/><circle class="utility-dot end" cx="96" cy="8" r="1.8"/><text class="utility-label" x="4" y="53">TODAY</text><text class="utility-label" x="83" y="53">YEAR 25</text><text class="utility-value start-value" x="5" y="41">$0/mo</text><text class="utility-value end-value" x="77" y="6">$0/mo</text></svg><div class="solar-live-bar"><div>SOLAR — LOWER &amp; PREDICTABLE<small>Designed around this home's usage</small></div></div><div class="chart-empty-note">Enter usage below to personalize the chart.</div>`;
+ }
+ const entries=[...savings.querySelectorAll('.month-entry')],bill=savings.querySelector('#recentBill'),kwh=savings.querySelector('#recentKwh');
+ if(!entries.length||!bill||!kwh)return;
+ const chart=graph.querySelector('.dynamic-utility-chart'),area=chart.querySelector('.utility-area'),line=chart.querySelector('.utility-line'),startDot=chart.querySelector('.utility-dot.start'),endDot=chart.querySelector('.utility-dot.end'),startValue=chart.querySelector('.start-value'),endValue=chart.querySelector('.end-value'),solarBar=graph.querySelector('.solar-live-bar'),emptyNote=graph.querySelector('.chart-empty-note');
+ const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n);
+ const update=()=>{
+  const vals=entries.map(el=>parseFloat(el.value)||0),b=parseFloat(bill.value),k=parseFloat(kwh.value),rate=(b>0&&k>0)?b/k:0;
+  const active=savings.querySelector('.mode-toggle button.active'),mode=active?.dataset?.mode||'usage';
+  let annualUsage=0,monthly=0;
+  if(mode==='usage'){annualUsage=vals.reduce((a,v)=>a+v,0);if(annualUsage>0&&rate>0)monthly=annualUsage*(rate+.16)/12}
+  else{const annualBills=vals.reduce((a,v)=>a+v,0);annualUsage=rate>0?annualBills/rate:0;if(annualBills>0&&rate>0)monthly=(annualBills+annualUsage*.16)/12}
+  if(!(monthly>0)){startValue.textContent='$0/mo';endValue.textContent='$0/mo';emptyNote.style.display='block';return}
+  emptyNote.style.display='none';
+  const future=monthly*Math.pow(1.06,25);
+  const intensity=Math.max(0,Math.min(1,(monthly-100)/650));
+  const startY=45-intensity*10;
+  const endY=8-intensity*5;
+  const mid1=42-intensity*8,mid2=27-intensity*10;
+  const path=`M4 ${startY.toFixed(1)} C24 ${mid1.toFixed(1)} 47 ${(mid2+8).toFixed(1)} 68 ${mid2.toFixed(1)} S89 ${(endY+4).toFixed(1)} 96 ${endY.toFixed(1)}`;
+  line.setAttribute('d',path);area.setAttribute('d',path+` L96 50 L4 50 Z`);startDot.setAttribute('cy',startY);endDot.setAttribute('cy',endY);
+  startValue.setAttribute('y',Math.max(7,startY-3));endValue.setAttribute('y',Math.max(5,endY-2));
+  startValue.textContent=money(monthly)+'/mo';endValue.textContent=money(future)+'/mo';
+  const usageBoost=Math.max(0,Math.min(6,(annualUsage-8000)/2500));solarBar.style.height=(18+usageBoost)+'%';
+ };
+ if(!savings.dataset.dynamicChartBound){savings.dataset.dynamicChartBound='1';[...entries,bill,kwh].forEach(el=>el.addEventListener('input',update));savings.querySelectorAll('.mode-toggle button').forEach(btn=>btn.addEventListener('click',()=>setTimeout(update,0)))}
+ update();resizeAll(ctx);
+}
+function install(){let n=0;const timer=setInterval(()=>{patchDeck();if(++n>120)clearInterval(timer)},250)}
+base.addEventListener('load',install);window.addEventListener('resize',()=>setTimeout(patchDeck,120));install();
+</script>
+</body>
+</html>
