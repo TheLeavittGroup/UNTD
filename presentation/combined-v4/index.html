@@ -7,7 +7,7 @@
 <style>*{box-sizing:border-box}html,body{margin:0;background:#000}#base{display:block;width:100%;height:18000px;border:0;background:#000}</style>
 </head>
 <body>
-<iframe id="base" src="../combined-v3/?v=aurora-new-project" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<iframe id="base" src="../combined-v3/?v=installer-grid-fix" scrolling="no" title="Daddy's Sales Deck"></iframe>
 <script>
 const base=document.getElementById('base');
 const AURORA_URL='https://v2.aurorasolar.com/new-project';
@@ -23,6 +23,33 @@ function install(){
    const deckFrame=outer.getElementById('deckFrame');if(!deckFrame)return;
    const apply=()=>{
     const d=deckFrame.contentDocument;if(!d)return;
+
+    if(!d.getElementById('installerGridFix')){
+     const installerFix=d.createElement('style');
+     installerFix.id='installerGridFix';
+     installerFix.textContent=`
+      .installer-links .installer-shell{grid-template-rows:minmax(0,68%) minmax(0,32%)!important;overflow:hidden!important}
+      .installer-links .installer-top{min-height:0!important;overflow:hidden!important;padding:2.4% 4.1% 1%!important}
+      .installer-links .credential-grid{min-height:0!important;margin-top:1.4%!important}
+      .installer-links .credential-btn{min-height:0!important;padding:3.4%!important}
+      .installer-links .tap-note{margin-top:.55%!important}
+      .installer-links .az-facts{min-height:0!important;overflow:hidden!important;padding:1.2% 4.1% 1.5%!important;justify-content:center!important}
+      .installer-links .az-facts-title{margin:0 0 .8%!important;font-size:clamp(13px,1.3vw,21px)!important;line-height:1.05!important}
+      .installer-links .fact-grid{min-height:0!important;gap:.9%!important;align-items:stretch!important}
+      .installer-links .fact-card{min-height:0!important;padding:3.5% 3%!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+      .installer-links .fact-icon{font-size:clamp(18px,1.8vw,28px)!important;margin-bottom:3%!important}
+      .installer-links .fact-card strong{font-size:clamp(11px,1.12vw,18px)!important;line-height:1.05!important}
+      .installer-links .fact-card span{font-size:clamp(8px,.64vw,10px)!important;line-height:1.15!important;margin-top:3%!important}
+      @media(max-width:1100px){
+       .installer-links .installer-shell{grid-template-rows:minmax(0,67%) minmax(0,33%)!important}
+       .installer-links .installer-top{padding:2% 3.4% .8%!important}
+       .installer-links .az-facts{padding:1% 3.4% 1.2%!important}
+       .installer-links .fact-card{padding:2.8% 2.4%!important}
+      }
+     `;
+     d.head.appendChild(installerFix);
+    }
+
     const options=[...d.querySelectorAll('.slide')].find(s=>/The Options/i.test(s.textContent||'')&&/Have Your Own Grid/i.test(s.textContent||''));
     if(options){
      const style=d.createElement('style');
