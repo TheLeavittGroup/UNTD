@@ -5,15 +5,39 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Daddy's Sales Deck</title>
   <meta name="theme-color" content="#000000">
-  <meta http-equiv="refresh" content="0; url=https://untd.solar/joinus/wp-content/uploads/2024/03/Owe-Arizona-PP-.pdf">
   <style>
-    html,body{margin:0;width:100%;height:100%;background:#000}
-    body{font-family:Arial,Helvetica,sans-serif}
-    a{position:fixed;inset:0;display:grid;place-items:center;color:#fff;text-decoration:none;font-weight:800}
+    *{box-sizing:border-box}html{background:#000}body{margin:0;background:#000;font-family:Arial,Helvetica,sans-serif}.deck{width:min(100%,1500px);margin:auto;padding:0 0 12px}.slide{position:relative;width:100%;aspect-ratio:16/9;margin:0 0 12px;background:#fff;overflow:hidden}.slide canvas{display:block;width:100%;height:100%}.loading{min-height:100vh;display:grid;place-items:center;color:#fff;font-size:18px;font-weight:800}.error{padding:28px;color:#fff;text-align:center}.edit-layer{position:absolute;inset:0;pointer-events:none}.slide[data-page="9"] .edit-layer{pointer-events:auto}@media(max-width:700px){.slide{margin-bottom:7px}}
   </style>
 </head>
 <body>
-  <a href="https://untd.solar/joinus/wp-content/uploads/2024/03/Owe-Arizona-PP-.pdf">Open Daddy's Sales Deck</a>
-  <script>window.location.replace('https://untd.solar/joinus/wp-content/uploads/2024/03/Owe-Arizona-PP-.pdf');</script>
+  <main id="deck" class="deck"><div class="loading">Loading Daddy's Sales Deck…</div></main>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module"></script>
+  <script type="module">
+    import * as pdfjsLib from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs';
+    pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+    const PDF_URL='https://untd.solar/joinus/wp-content/uploads/2024/03/Owe-Arizona-PP-.pdf';
+    const deck=document.getElementById('deck');
+    async function render(){
+      try{
+        const pdf=await pdfjsLib.getDocument({url:PDF_URL}).promise;
+        deck.innerHTML='';
+        for(let n=1;n<=pdf.numPages;n++){
+          const page=await pdf.getPage(n);
+          const base=page.getViewport({scale:1});
+          const target=Math.min(1800,Math.max(1024,window.innerWidth*2));
+          const viewport=page.getViewport({scale:target/base.width});
+          const section=document.createElement('section');section.className='slide';section.dataset.page=n;
+          const canvas=document.createElement('canvas');canvas.width=Math.round(viewport.width);canvas.height=Math.round(viewport.height);
+          section.appendChild(canvas);
+          const layer=document.createElement('div');layer.className='edit-layer';section.appendChild(layer);
+          deck.appendChild(section);
+          await page.render({canvasContext:canvas.getContext('2d'),viewport}).promise;
+        }
+      }catch(err){
+        deck.innerHTML='<div class="error"><h2>Deck could not load</h2><p>'+String(err.message||err)+'</p></div>';
+      }
+    }
+    render();
+  </script>
 </body>
 </html>
