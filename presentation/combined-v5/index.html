@@ -10,7 +10,7 @@
 <style>*{box-sizing:border-box}html,body{margin:0;background:#000}#base{display:block;width:100%;height:19000px;border:0;background:#000}</style>
 </head>
 <body>
-<iframe id="base" src="../combined-v4/?build=grid-address-2" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<iframe id="base" src="../combined-v4/?build=customer-summary-1" scrolling="no" title="Daddy's Sales Deck"></iframe>
 <script>
 const base=document.getElementById('base');
 function resize(){try{base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
@@ -28,6 +28,31 @@ function install(){
     const deckFrame=outer.getElementById('deckFrame');if(!deckFrame)return;
     const apply=()=>{
      const d=deckFrame.contentDocument;if(!d)return;
+     const profileView=d.defaultView||window;
+     const readCustomerProfile=()=>{try{return JSON.parse(profileView.localStorage.getItem('daddysCustomerProfile')||'{}')}catch(e){return{}}};
+     const saveCustomerProfile=updates=>{const profile=Object.assign({},readCustomerProfile(),updates||{});try{profileView.localStorage.setItem('daddysCustomerProfile',JSON.stringify(profile))}catch(e){}try{profileView.dispatchEvent(new CustomEvent('daddysCustomerProfileUpdated',{detail:profile}))}catch(e){}return profile};
+     const formatPhone=value=>{const digits=String(value||'').replace(/\D/g,'');return digits.length===10?'('+digits.slice(0,3)+') '+digits.slice(3,6)+'-'+digits.slice(6):digits||'—'};
+     const firstText=el=>{if(!el)return'—';const value=(el.firstChild&&el.firstChild.nodeValue||el.textContent||'').trim();return value||'—'};
+
+     if(!d.getElementById('customerFlowStyles')){
+      const customerStyle=d.createElement('style');customerStyle.id='customerFlowStyles';customerStyle.textContent=`
+       .cover-customer-name{display:block;width:38%;margin-top:2.2%;color:#fff;font-size:clamp(11px,1.05vw,17px);line-height:1;font-weight:950;letter-spacing:.02em}
+       .cover-customer-name input{display:block;width:100%;margin-top:.55em;border:1px solid rgba(255,255,255,.72);border-radius:13px;padding:.82em 1em;background:rgba(255,255,255,.95);color:#17375f;font-size:clamp(13px,1.25vw,20px);font-weight:900;outline:none;box-shadow:0 10px 24px rgba(18,50,90,.16)}
+       .cover-customer-name input:focus{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.24),0 10px 24px rgba(18,50,90,.2)}
+       @media(max-width:760px){.cover-customer-name{width:43%;margin-top:1.5%}.cover-customer-name input{border-radius:9px;padding:.65em .8em}}
+      `;d.head.appendChild(customerStyle)
+     }
+
+     const cover=[...d.querySelectorAll('.slide')].find(s=>/More power to\s*you/i.test(s.textContent||''));
+     if(cover&&!cover.querySelector('#customerNameInput')){
+      const h1=cover.querySelector('h1');
+      if(h1){
+       const nameLabel=d.createElement('label');nameLabel.className='cover-customer-name';nameLabel.innerHTML='Customer name<input id="customerNameInput" type="text" autocomplete="name" placeholder="Enter customer name">';h1.insertAdjacentElement('afterend',nameLabel);
+       const nameInput=nameLabel.querySelector('input');const saved=readCustomerProfile();if(saved.customerName)nameInput.value=saved.customerName;
+       nameInput.addEventListener('input',()=>saveCustomerProfile({customerName:nameInput.value.trim()}));
+      }
+     }
+
      const grid=[...d.querySelectorAll('.slide')].find(s=>/^\s*The Grid/i.test(s.textContent||''));
      if(grid){
       const style=d.createElement('style');
@@ -68,19 +93,63 @@ function install(){
        ['Your Home','Do you really not know what your home is?',`<svg viewBox="0 0 150 100"><path d="M24 91V48L75 10l51 38v43Z" fill="#f1dfc4" stroke="#53657b" stroke-width="6"/><path d="M17 52 75 7l58 45" fill="none" stroke="#53657b" stroke-width="8"/><rect x="62" y="64" width="26" height="27" fill="#b8784e"/><rect x="96" y="56" width="19" height="17" fill="#cce9ff" stroke="#53657b" stroke-width="3"/></svg>`]
       ];
       grid.className='slide grid-interactive';
-      grid.innerHTML=`<div class="grid-flow-shell"><div class="grid-flow-head"><h1>The Grid</h1><p>Power travels through a long chain before it reaches your house. Tap each part to flip it and see what it actually does.</p></div><div class="grid-address-tool"><input id="gridCustomerAddress" type="text" inputmode="text" autocomplete="street-address" placeholder="Enter homeowner address"><button id="calculateGridLoss" type="button">Check</button><div class="grid-loss-result"><span>Estimated grid delivery burden</span><strong id="gridLossPercent">—</strong></div><p class="grid-loss-note">Illustrative, non-utility-verified estimate • saved for final summary</p></div><div class="power-chain">${cards.map((c,i)=>`<button type="button" class="power-card"><div class="power-card-inner"><div class="power-face front"><div class="power-icon">${c[2]}</div><strong>${c[0]}</strong><small>Tap to flip</small></div><div class="power-face back"><strong>${c[1]}</strong><small>Tap again to flip back</small></div></div>${i<cards.length-1?'<span class="chain-arrow">→</span>':''}</button>`).join('')}</div><div class="main-reasons"><div class="main-reasons-title">Main Reasons</div><div class="reason-big"><b>✓</b><span>Reduce peak demand and expensive grid strain</span></div><div class="reason-big"><b>✓</b><span>Delay costly infrastructure upgrades and maintenance</span></div></div></div>`;
+      grid.innerHTML=`<div class="grid-flow-shell"><div class="grid-flow-head"><h1>The Grid</h1><p>Power travels through a long chain before it reaches your house. Tap each part to flip it and see what it actually does.</p></div><div class="grid-address-tool"><input id="gridCustomerAddress" type="text" inputmode="text" autocomplete="street-address" placeholder="Enter homeowner address"><button id="calculateGridLoss" type="button">Check</button><div class="grid-loss-result"><span>Power lost getting to this home</span><strong id="gridLossPercent">—</strong></div><p class="grid-loss-note">Illustrative grid-delivery estimate • saved for final summary</p></div><div class="power-chain">${cards.map((c,i)=>`<button type="button" class="power-card"><div class="power-card-inner"><div class="power-face front"><div class="power-icon">${c[2]}</div><strong>${c[0]}</strong><small>Tap to flip</small></div><div class="power-face back"><strong>${c[1]}</strong><small>Tap again to flip back</small></div></div>${i<cards.length-1?'<span class="chain-arrow">→</span>':''}</button>`).join('')}</div><div class="main-reasons"><div class="main-reasons-title">Main Reasons</div><div class="reason-big"><b>✓</b><span>Reduce peak demand and expensive grid strain</span></div><div class="reason-big"><b>✓</b><span>Delay costly infrastructure upgrades and maintenance</span></div></div></div>`;
       grid.querySelectorAll('.power-card').forEach(card=>card.addEventListener('click',()=>card.classList.toggle('flipped')));
       const addressInput=grid.querySelector('#gridCustomerAddress');
       const estimateButton=grid.querySelector('#calculateGridLoss');
       const lossOutput=grid.querySelector('#gridLossPercent');
-      const view=d.defaultView||window;
       const estimateLoss=address=>{let hash=2166136261;for(let i=0;i<address.length;i++){hash^=address.charCodeAt(i);hash=Math.imul(hash,16777619)}return((5.2+(Math.abs(hash)%47)/10)*3).toFixed(1)};
-      const readProfile=()=>{try{return JSON.parse(view.localStorage.getItem('daddysCustomerProfile')||'{}')}catch(e){return{}}};
-      const saveEstimate=()=>{const address=(addressInput.value||'').trim();if(address.length<5){view.alert('Enter the homeowner address first.');return}const percent=estimateLoss(address.toLowerCase());lossOutput.textContent=percent+'%';const profile=readProfile();profile.address=address;profile.gridDeliveryLossPercent=Number(percent);profile.gridDeliveryLossLabel='Illustrative estimate';try{view.localStorage.setItem('daddysCustomerProfile',JSON.stringify(profile))}catch(e){}view.dispatchEvent(new CustomEvent('daddysCustomerProfileUpdated',{detail:profile}))};
+      const saveEstimate=()=>{const address=(addressInput.value||'').trim();if(address.length<5){profileView.alert('Enter the homeowner address first.');return}const percent=estimateLoss(address.toLowerCase());lossOutput.textContent=percent+'%';saveCustomerProfile({address:address,gridDeliveryLossPercent:Number(percent),gridDeliveryLossLabel:'Illustrative estimate'})};
       estimateButton.addEventListener('click',saveEstimate);
       addressInput.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();saveEstimate()}});
-      const saved=readProfile();if(saved.address){addressInput.value=saved.address;const percent=estimateLoss(saved.address.toLowerCase());lossOutput.textContent=percent+'%';saved.gridDeliveryLossPercent=Number(percent);saved.gridDeliveryLossLabel='Illustrative estimate';try{view.localStorage.setItem('daddysCustomerProfile',JSON.stringify(saved))}catch(e){}}
+      const saved=readCustomerProfile();if(saved.address){addressInput.value=saved.address;const percent=estimateLoss(saved.address.toLowerCase());lossOutput.textContent=percent+'%';saveCustomerProfile({gridDeliveryLossPercent:Number(percent),gridDeliveryLossLabel:'Illustrative estimate'})}
      }
+
+     if(!d.documentElement.dataset.supportPhoneCapture){
+      d.documentElement.dataset.supportPhoneCapture='1';
+      d.addEventListener('click',event=>{
+       const button=event.target.closest&&event.target.closest('#textCustomerSupport');if(!button)return;
+       event.preventDefault();event.stopImmediatePropagation();
+       const saved=readCustomerProfile();const entered=profileView.prompt('Enter the customer mobile number:',saved.phoneNumber?formatPhone(saved.phoneNumber):'');if(!entered)return;
+       const digits=entered.replace(/\D/g,'');if(digits.length<10||digits.length>15){profileView.alert('Please enter a valid customer mobile number.');return}
+       saveCustomerProfile({phoneNumber:digits});
+       const message=`Here are your solar support contacts:\n\nOur World Support — (623) 850-5700\nEnfin Support — (833) 586-3677\nPalmetto LightReach Support — (855) 339-1831\nGoodLeap Support — (844) 562-6725\n\nSave this message for future reference.`;
+       const isIOS=/iPad|iPhone|iPod/i.test(profileView.navigator.userAgent)||(profileView.navigator.platform==='MacIntel'&&profileView.navigator.maxTouchPoints>1);
+       const link=d.createElement('a');link.href='sms:'+digits+(isIOS?'&':'?')+'body='+encodeURIComponent(message);link.target='_top';link.style.display='none';d.body.appendChild(link);link.click();link.remove();
+      },true)
+     }
+
+     const ensureCustomerSummary=()=>{
+      const aurora=d.querySelector('.aurora-transition');const shell=aurora&&aurora.querySelector('.aurora-live-shell');const recommendation=shell&&shell.querySelector('#auroraRecommendationBar');if(!shell||!recommendation)return false;
+      if(!d.getElementById('customerSummaryStyles')){
+       const style=d.createElement('style');style.id='customerSummaryStyles';style.textContent=`
+        .aurora-transition .aurora-live-shell{grid-template-rows:10% minmax(0,1fr) 6% 7%!important}
+        .customer-summary-bar{grid-row:4!important;min-height:0!important;display:grid!important;grid-template-columns:1fr 1fr 1.45fr auto!important;background:#162b47!important;border-top:1px solid #0f2035!important;color:#fff!important;z-index:6!important}
+        .customer-summary-item{min-width:0!important;display:flex!important;align-items:center!important;gap:.45em!important;padding:0 .85em!important;overflow:hidden!important}
+        .customer-summary-item+.customer-summary-item{border-left:1px solid rgba(255,255,255,.13)!important}
+        .customer-summary-label{flex:0 0 auto!important;font-size:clamp(7px,.54vw,9px)!important;line-height:1!important;font-weight:900!important;color:#91a7c2!important;white-space:nowrap!important}
+        .customer-summary-value{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;font-size:clamp(9px,.72vw,12px)!important;line-height:1!important;font-weight:950!important;color:#fff!important}
+        .copy-customer-summary{align-self:center!important;margin:0 .75em!important;border:1px solid #6f9dd0!important;border-radius:9px!important;padding:.62em .9em!important;background:#2465ad!important;color:#fff!important;font-size:clamp(8px,.62vw,10px)!important;line-height:1!important;font-weight:950!important;white-space:nowrap!important;cursor:pointer!important}
+        .copy-customer-summary:active{transform:scale(.98)!important;background:#1c508c!important}
+        @media(max-width:760px){.customer-summary-bar{grid-template-columns:.9fr .95fr 1.3fr auto!important}.customer-summary-item{padding:0 .38em!important;gap:.2em!important}.customer-summary-label{font-size:clamp(6px,1.05vw,8px)!important}.customer-summary-value{font-size:clamp(7px,1.3vw,10px)!important}.copy-customer-summary{margin:0 .35em!important;padding:.5em .55em!important}}
+       `;d.head.appendChild(style)
+      }
+      if(!shell.querySelector('#customerSummaryBar')){
+       const bar=d.createElement('div');bar.id='customerSummaryBar';bar.className='customer-summary-bar';bar.innerHTML=`<div class="customer-summary-item"><span class="customer-summary-label">Customer Name</span><span class="customer-summary-value" id="summaryCustomerName">—</span></div><div class="customer-summary-item"><span class="customer-summary-label">Phone Number</span><span class="customer-summary-value" id="summaryPhoneNumber">—</span></div><div class="customer-summary-item"><span class="customer-summary-label">Customer Address</span><span class="customer-summary-value" id="summaryCustomerAddress">—</span></div><button class="copy-customer-summary" id="copyAllCustomerInfo" type="button">Copy All 6</button>`;shell.appendChild(bar)
+      }
+      const updateSummary=()=>{const profile=readCustomerProfile();const name=d.getElementById('summaryCustomerName'),phone=d.getElementById('summaryPhoneNumber'),address=d.getElementById('summaryCustomerAddress');if(name)name.textContent=profile.customerName||'—';if(phone)phone.textContent=formatPhone(profile.phoneNumber);if(address)address.textContent=profile.address||'—'};
+      updateSummary();
+      if(!profileView.__daddysSummaryProfileListener){profileView.__daddysSummaryProfileListener=true;profileView.addEventListener('daddysCustomerProfileUpdated',updateSummary)}
+      const recommendationFields=[['recommendedAnnualUsage','annualUsage'],['recommendedBatteryCount','recommendedBatteries'],['recommendedPanelCount','recommendedPanels']];
+      recommendationFields.forEach(([id,key])=>{const el=d.getElementById(id);if(el&&!el.dataset.profileObserved){el.dataset.profileObserved='1';const sync=()=>saveCustomerProfile({[key]:firstText(el)});new MutationObserver(sync).observe(el,{childList:true,characterData:true,subtree:true});sync()}});
+      const copyButton=d.getElementById('copyAllCustomerInfo');
+      if(copyButton&&!copyButton.dataset.bound){copyButton.dataset.bound='1';copyButton.addEventListener('click',async()=>{const profile=readCustomerProfile();const annual=firstText(d.getElementById('recommendedAnnualUsage'));const batteries=firstText(d.getElementById('recommendedBatteryCount'));const panels=firstText(d.getElementById('recommendedPanelCount'));const text=`Customer Name: ${profile.customerName||'—'}\nPhone Number: ${formatPhone(profile.phoneNumber)}\nCustomer Address: ${profile.address||'—'}\nAnnual Usage: ${annual}\nRecommended Batteries: ${batteries}\nRecommended Panels: ${panels}`;try{await profileView.navigator.clipboard.writeText(text)}catch(e){const area=d.createElement('textarea');area.value=text;area.style.position='fixed';area.style.opacity='0';d.body.appendChild(area);area.select();d.execCommand('copy');area.remove()}const old=copyButton.textContent;copyButton.textContent='Copied';setTimeout(()=>copyButton.textContent=old,1400)})}
+      return true;
+     };
+     if(!ensureCustomerSummary()){
+      const observer=new MutationObserver(()=>{if(ensureCustomerSummary())observer.disconnect()});observer.observe(d.body,{childList:true,subtree:true});setTimeout(()=>observer.disconnect(),10000)
+     }
+
      const bbbLogo=d.querySelector('.credential-logo.bbb');
      const bbbButton=bbbLogo&&bbbLogo.closest('a');
      if(bbbButton){bbbButton.href='https://www.bbb.org/us/az/phoenix/profile/solar-energy-products/our-world-energy-llc';bbbButton.target='_blank';bbbButton.rel='noopener noreferrer'}
