@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Daddy's Sales Deck</title>
+<style>*{box-sizing:border-box}html,body{margin:0;background:#000}#base{display:block;width:100%;height:16000px;border:0;background:#000}</style>
+</head>
+<body>
+<iframe id="base" src="../combined/" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<script>
+const base=document.getElementById('base');
+function resize(){try{base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
+function install(){
+  const outer=base.contentDocument;if(!outer)return;
+  const deckFrame=outer.getElementById('deckFrame');if(!deckFrame)return;
+  const enhance=()=>{
+    const d=deckFrame.contentDocument;if(!d)return;
+    const slide=[...d.querySelectorAll('.slide')].find(s=>/The Power of Net Metering/i.test(s.textContent||''));
+    if(!slide)return;
+    const style=d.createElement('style');
+    style.textContent=`
+      .net-v2{padding:0!important;background:linear-gradient(145deg,#eef7ff,#dcecff 52%,#f7fbff)!important;color:#12233d}
+      .net-shell{position:absolute;inset:0;padding:3.2% 3.8%;display:flex;flex-direction:column}
+      .net-head{display:flex;justify-content:space-between;align-items:flex-start;gap:3%}
+      .net-head h1{font-size:clamp(38px,4.7vw,72px);line-height:.95;letter-spacing:-.045em;margin:0;color:#132a4d}
+      .net-head p{font-size:clamp(13px,1.2vw,19px);line-height:1.35;margin:.8% 0 0;max-width:72%;color:#526985}
+      .net-badge{padding:10px 14px;border-radius:999px;background:#173e79;color:#fff;font-weight:800;font-size:clamp(11px,.95vw,14px);white-space:nowrap}
+      .net-grid{flex:1;min-height:0;display:grid;grid-template-columns:1fr 15% 1fr;gap:2.1%;align-items:stretch;margin-top:2.3%}
+      .net-panel{border-radius:26px;background:rgba(255,255,255,.94);border:1px solid #ccdaeb;box-shadow:0 18px 36px rgba(31,67,113,.11);padding:5%;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+      .net-panel.sell{background:linear-gradient(155deg,#ffffff,#eff7ff)}
+      .net-panel.buy{background:linear-gradient(155deg,#ffffff,#eef9f0)}
+      .net-icon{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;background:#e9f2ff;color:#1f58ad;font-size:31px;font-weight:900}
+      .buy .net-icon{background:#e6f5e7;color:#2a7b3a}
+      .net-panel h2{font-size:clamp(24px,2.55vw,40px);line-height:1.02;letter-spacing:-.025em;margin:3% 0 2%;color:#17375f}
+      .net-panel p{font-size:clamp(12px,1.05vw,17px);line-height:1.35;margin:0;color:#526985}
+      .rate-box{margin-top:4%;padding:4%;border-radius:20px;background:#143c77;color:#fff}
+      .buy .rate-box{background:#236837}
+      .rate-label{font-size:clamp(10px,.85vw,13px);font-weight:800;letter-spacing:.09em;text-transform:uppercase;opacity:.8}
+      .rate-number{display:flex;align-items:flex-end;gap:7px;margin-top:3px}
+      .rate-number strong{font-size:clamp(42px,5vw,76px);line-height:.85;color:#77d8ff}
+      .buy .rate-number strong{color:#9af0a4}
+      .rate-number span{font-size:clamp(15px,1.3vw,21px);font-weight:800;padding-bottom:6px}
+      .rate-note{margin-top:7px;font-size:clamp(10px,.82vw,13px);line-height:1.25;opacity:.84}
+      .bullet-row{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:4%}
+      .bullet-row div{border-radius:14px;background:#f4f8fd;border:1px solid #dce6f1;padding:10px;font-size:clamp(10px,.85vw,13px);line-height:1.22;color:#49627f;font-weight:700}
+      .buy .bullet-row div{background:#f2faf3;border-color:#d5ead8;color:#42694a}
+      .net-flow{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8%;color:#1d4e94;text-align:center}
+      .battery-orb{width:100%;aspect-ratio:1;border-radius:32%;background:linear-gradient(145deg,#1c4e94,#0e2d5d);display:grid;place-items:center;box-shadow:0 18px 34px rgba(14,48,101,.23)}
+      .battery-orb svg{width:72%;height:72%}
+      .flow-arrow{font-size:clamp(30px,3.5vw,52px);font-weight:900;color:#6685af}
+      .flow-copy{font-size:clamp(11px,.95vw,15px);line-height:1.25;color:#47627f;font-weight:800}
+      .net-footer{margin-top:1.5%;display:flex;justify-content:space-between;gap:2%;font-size:clamp(9px,.72vw,12px);color:#667a92}
+      @media(max-width:1100px){.net-shell{padding:2.7% 3.2%}.net-grid{margin-top:1.8%;gap:1.5%}.net-panel{padding:4.2%}.bullet-row{gap:6px}.net-head p{max-width:75%}}
+    `;
+    d.head.appendChild(style);
+    slide.className='slide net-v2';
+    slide.innerHTML=`<div class="net-shell">
+      <div class="net-head"><div><h1>The Power of Net Metering.</h1><p>With a battery, energy becomes a strategy: export stored power when it makes sense, or buy overnight at the lowest available rate and save it for expensive peak hours.</p></div><div class="net-badge">SRP EV Export Plan • 2026</div></div>
+      <div class="net-grid">
+        <section class="net-panel sell">
+          <div><div class="net-icon">↗</div><h2>Sell stored battery energy back to the grid</h2><p>When stored energy is not needed at home, eligible systems can export it and receive a bill credit for every kilowatt-hour sent back.</p></div>
+          <div><div class="rate-box"><div class="rate-label">Current fixed SRP export credit</div><div class="rate-number"><strong>3.45¢</strong><span>per kWh</span></div><div class="rate-note">Credited instantly under SRP's EV Export Price Plan. Separate battery-program rewards may also apply.</div></div><div class="bullet-row"><div>Turns unused stored energy into bill credits</div><div>Supports the grid when extra power is valuable</div></div></div>
+        </section>
+        <div class="net-flow"><div class="flow-arrow">↔</div><div class="battery-orb"><svg viewBox="0 0 100 100"><rect x="22" y="12" width="56" height="76" rx="12" fill="#fff"/><rect x="41" y="5" width="18" height="9" rx="3" fill="#fff"/><path d="M48 28v20H36l20 25V52h12Z" fill="#4bbf64"/></svg></div><div class="flow-copy">Battery shifts energy to the time it is worth the most.</div><div class="flow-arrow">↔</div></div>
+        <section class="net-panel buy">
+          <div><div class="net-icon">↓</div><h2>Buy energy off-peak and store it for peak hours</h2><p>Charge the battery overnight when demand is lowest, then use that stored power later instead of buying expensive afternoon or evening electricity.</p></div>
+          <div><div class="rate-box"><div class="rate-label">2026 blended super off-peak average</div><div class="rate-number"><strong>≈7.74¢</strong><span>per kWh</span></div><div class="rate-note">SRP's published 2026 super off-peak rates average about 7.74¢ after the temporary May–October reduction. Standard seasonal rates average about 7.93¢.</div></div><div class="bullet-row"><div>Charge from 11 p.m.–5 a.m.</div><div>Avoid high-cost peak purchases later</div></div></div>
+        </section>
+      </div>
+      <div class="net-footer"><span>Rates shown are SRP EV Export Price Plan figures and may vary by plan, eligibility and future utility changes.</span><span>Export credit: 3.45¢/kWh • 2026 super off-peak blend: ≈7.74¢/kWh</span></div>
+    </div>`;
+    setTimeout(()=>{try{outer.getElementById('deckFrame').style.height=d.documentElement.scrollHeight+'px';resize()}catch(e){}},80);
+  };
+  deckFrame.addEventListener('load',enhance,{once:true});enhance();
+  setTimeout(resize,250);
+}
+base.addEventListener('load',install);
+window.addEventListener('resize',()=>setTimeout(resize,100));
+</script>
+</body>
+</html>
