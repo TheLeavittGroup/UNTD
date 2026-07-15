@@ -6,12 +6,70 @@
 <title>Daddy's Sales Deck</title>
 <meta name="theme-color" content="#000000">
 <style>
-*{box-sizing:border-box}html{background:#000;scroll-behavior:smooth}body{margin:0;background:#000;font-family:Arial,Helvetica,sans-serif}.frame{display:block;width:100%;border:0}.deck-frame{height:min(915vw,13700px);background:#000}.divider{padding:34px 18px;text-align:center;background:linear-gradient(135deg,#06111f,#10243a);color:#fff;border-top:6px solid #ffd36c;border-bottom:1px solid #25415f}.divider h2{margin:0 0 7px;font-size:clamp(28px,5vw,54px)}.divider p{margin:0;color:#b8c8db;font-weight:700}.tool-frame{height:6100px;background:#06111f}@media(max-width:700px){.deck-frame{height:915vw}.tool-frame{height:7600px}}
+*{box-sizing:border-box}html{background:#000;scroll-behavior:smooth}body{margin:0;background:#000;font-family:Arial,Helvetica,sans-serif}.frame{display:block;width:100%;border:0}.deck-frame{height:915vw;background:#000}.divider{padding:34px 18px;text-align:center;background:linear-gradient(135deg,#06111f,#10243a);color:#fff;border-top:6px solid #ffd36c;border-bottom:1px solid #25415f}.divider h2{margin:0 0 7px;font-size:clamp(28px,5vw,54px)}.divider p{margin:0;color:#b8c8db;font-weight:700}.tool-frame{height:6100px;background:#06111f}@media(max-width:700px){.tool-frame{height:7600px}}
 </style>
 </head>
 <body>
-<iframe class="frame deck-frame" title="Original Daddy's sales presentation" scrolling="no" src="../original.html"></iframe>
+<iframe id="deckFrame" class="frame deck-frame" title="Original Daddy's sales presentation" scrolling="no" src="../original.html"></iframe>
 <section class="divider"><h2>Daddy's Closing Tool</h2><p>The complete 8-step closing system starts below.</p></section>
-<iframe class="frame tool-frame" title="Daddy's interactive closing tool" scrolling="no" src="../closing-tool-full.html"></iframe>
+<iframe id="toolFrame" class="frame tool-frame" title="Daddy's interactive closing tool" scrolling="no" src="../closing-tool-full.html"></iframe>
+<script>
+const deckFrame=document.getElementById('deckFrame');
+const toolFrame=document.getElementById('toolFrame');
+const reasonMap=['Control Energy Cost','Upgrade Your Home','Save Money','Help the Environment'];
+function syncTool(reason){
+  localStorage.setItem('daddySolarReason',reason);
+  try{
+    const d=toolFrame.contentDocument;
+    if(!d)return;
+    const map={
+      'Control Energy Cost':'Rate protection',
+      'Upgrade Your Home':'Home value',
+      'Save Money':'Long-term savings',
+      'Help the Environment':'Environmental impact'
+    };
+    d.querySelectorAll('#priorityButtons button').forEach(b=>b.classList.toggle('active',b.dataset.p===map[reason]));
+    const summary=d.getElementById('discoverySummary');
+    if(summary)summary.innerHTML='<strong>Primary reason selected in the presentation:</strong> '+reason+'. This should guide the education, proposal, and close.';
+    const focus=d.getElementById('educationFocus');
+    if(focus)focus.textContent='Lead with '+reason.toLowerCase()+', then connect the numbers and recommendation back to that motivation.';
+  }catch(e){}
+}
+function setupDeck(){
+  const d=deckFrame.contentDocument;
+  if(!d)return;
+  const slides=[...d.querySelectorAll('.slide')];
+  const whySlides=slides.filter(s=>s.querySelector('.reason-list'));
+  if(whySlides.length<4)return;
+  const main=whySlides[0];
+  const visuals=whySlides.slice(0,4).map(s=>s.querySelector('.visual')?.innerHTML||'');
+  const reasons=[...main.querySelectorAll('.reason')];
+  const style=d.createElement('style');
+  style.textContent='.reason{cursor:pointer;transition:opacity .2s,transform .2s}.reason:hover{transform:translateX(5px)}.reason.active{opacity:1}.reason:not(.active){opacity:.16}.reason:focus{outline:3px solid #2258c7;outline-offset:5px;border-radius:8px}';
+  d.head.appendChild(style);
+  function activate(i){
+    reasons.forEach((r,j)=>{r.classList.toggle('active',i===j);r.setAttribute('aria-pressed',i===j?'true':'false')});
+    const v=main.querySelector('.visual');
+    if(v)v.innerHTML=visuals[i];
+    syncTool(reasonMap[i]);
+  }
+  reasons.forEach((r,i)=>{
+    r.tabIndex=0;
+    r.setAttribute('role','button');
+    r.addEventListener('click',()=>activate(i));
+    r.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activate(i)}});
+  });
+  whySlides.slice(1,4).forEach(s=>s.remove());
+  const saved=localStorage.getItem('daddySolarReason');
+  activate(Math.max(0,reasonMap.indexOf(saved)));
+  setTimeout(()=>{deckFrame.style.height=d.documentElement.scrollHeight+'px'},50);
+}
+deckFrame.addEventListener('load',setupDeck);
+toolFrame.addEventListener('load',()=>{
+  const saved=localStorage.getItem('daddySolarReason');
+  if(saved)syncTool(saved);
+  try{setTimeout(()=>{toolFrame.style.height=toolFrame.contentDocument.documentElement.scrollHeight+'px'},100)}catch(e){}
+});
+</script>
 </body>
 </html>
