@@ -3,13 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Daddy's Sales Deck</title>
 <style>*{box-sizing:border-box}html,body{margin:0;background:#000}#base{display:block;width:100%;height:24500px;border:0;background:#000}</style>
 </head>
 <body>
-<iframe id="base" src="../combined-v11/?v=compact-chart-installer" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<iframe id="base" scrolling="no" title="Daddy's Sales Deck"></iframe>
 <script>
+const BUILD='20260715-0135';
 const base=document.getElementById('base');
+base.src='../combined-v11/?build='+BUILD;
 function getDeck(){try{const docs=[];let doc=base.contentDocument;while(doc){docs.push(doc);const frame=doc.getElementById('base');if(!frame||!frame.contentDocument)break;doc=frame.contentDocument}const outer=docs[docs.length-1],deckFrame=outer&&outer.getElementById('deckFrame'),deck=deckFrame&&deckFrame.contentDocument;return{docs,deckFrame,deck}}catch(e){return{}}}
 function resizeAll(ctx){try{const{docs,deckFrame,deck}=ctx;if(deckFrame&&deck)deckFrame.style.height=deck.documentElement.scrollHeight+'px';if(docs)for(let i=docs.length-1;i>0;i--){const f=docs[i-1].getElementById('base');if(f)f.style.height=docs[i].documentElement.scrollHeight+'px'}if(base.contentDocument)base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
 function patchDeck(){
@@ -39,8 +44,8 @@ function patchDeck(){
  if(installer){installer.classList.add('installer-links');installer.style.removeProperty('aspect-ratio');installer.style.removeProperty('height');installer.style.removeProperty('min-height');installer.style.removeProperty('padding-bottom')}
  resizeAll(ctx);
 }
-function install(){let n=0;const timer=setInterval(()=>{patchDeck();if(++n>140)clearInterval(timer)},250)}
-base.addEventListener('load',install);window.addEventListener('resize',()=>setTimeout(patchDeck,120));install();
+function install(){let n=0;const timer=setInterval(()=>{patchDeck();if(++n>80)clearInterval(timer)},150)}
+base.addEventListener('load',install);window.addEventListener('resize',()=>setTimeout(patchDeck,80));install();
 </script>
 </body>
 </html>
