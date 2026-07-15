@@ -7,45 +7,165 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>Daddy's Sales Deck</title>
-<style>*{box-sizing:border-box}html,body{margin:0;background:#000}#base{display:block;width:100%;height:24500px;border:0;background:#000}</style>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;background:#000;min-height:100%}
+#base{display:block;width:100%;height:22000px;border:0;background:#000;visibility:hidden}
+</style>
 </head>
 <body>
 <iframe id="base" scrolling="no" title="Daddy's Sales Deck"></iframe>
 <script>
-const BUILD='20260715-0135';
+const BUILD='20260715-stable-1';
 const base=document.getElementById('base');
-base.src='../combined-v11/?build='+BUILD;
-function getDeck(){try{const docs=[];let doc=base.contentDocument;while(doc){docs.push(doc);const frame=doc.getElementById('base');if(!frame||!frame.contentDocument)break;doc=frame.contentDocument}const outer=docs[docs.length-1],deckFrame=outer&&outer.getElementById('deckFrame'),deck=deckFrame&&deckFrame.contentDocument;return{docs,deckFrame,deck}}catch(e){return{}}}
-function resizeAll(ctx){try{const{docs,deckFrame,deck}=ctx;if(deckFrame&&deck)deckFrame.style.height=deck.documentElement.scrollHeight+'px';if(docs)for(let i=docs.length-1;i>0;i--){const f=docs[i-1].getElementById('base');if(f)f.style.height=docs[i].documentElement.scrollHeight+'px'}if(base.contentDocument)base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
-function patchDeck(){
- const ctx=getDeck(),d=ctx.deck;if(!d)return;
- if(!d.getElementById('finalSavingsInstallerV12')){
-  const style=d.createElement('style');style.id='finalSavingsInstallerV12';style.textContent=`
-   .savings-shell{grid-template-rows:auto 34% minmax(0,1fr)!important;gap:.8%!important;padding:1.5% 2.3%!important}
-   .savings-head h1{font-size:clamp(27px,3.15vw,49px)!important}.savings-head p{margin:.2% 0 0!important}
-   .savings-graph{position:relative!important;overflow:hidden!important;background:linear-gradient(180deg,#f9fbfe,#edf3fa)!important;border:1px solid #d9e2ed!important}
-   .savings-graph .graph-red{position:absolute!important;left:3%!important;right:3%!important;bottom:8%!important;height:78%!important;background:#e65c40!important;clip-path:polygon(0 86%,100% 3%,100% 100%,0 100%)!important}
-   .savings-graph .graph-yellow{position:absolute!important;left:4%!important;bottom:8%!important;width:65%!important;height:4.5%!important;min-height:10px!important;border-radius:999px!important;background:#f6c238!important;box-shadow:none!important;padding:0!important;color:#fff!important;font-size:clamp(8px,.62vw,10px)!important;font-weight:950!important;letter-spacing:.06em!important;text-transform:uppercase!important;display:grid!important;place-items:center!important}
-   .dynamic-utility-chart,.solar-live-bar,.chart-empty-note,.utility-label,.utility-value,.dynamic-axis,.graph-label,.savings-graph svg,.savings-graph text{display:none!important}
-   .calc-zone{grid-template-columns:48% 22% 1fr!important;gap:.75%!important}
-   .input-card,.monthly-card,.future-card{padding:2.1%!important;border-radius:14px!important}
-   .mode-toggle{margin:0 0 5px!important;padding:3px!important}.mode-toggle button{padding:4px 7px!important}
-   .input-head{margin-bottom:1%!important}.month-grid{gap:3px 5px!important}.month-grid input,.rate-inputs input{padding:3px 6px!important;margin-top:1px!important}
-   .rate-inputs{gap:5px!important;margin-top:5px!important;padding-top:5px!important}.future-grid{gap:4px!important}.future-box{padding:4px!important}.monthly-card strong{margin:3% 0 2%!important}
-   .installer-links{aspect-ratio:16 / 9!important;height:auto!important;min-height:0!important;padding:0!important;overflow:hidden!important}
-   .installer-links .installer-shell{position:absolute!important;inset:0!important;height:100%!important;grid-template-rows:auto minmax(0,1fr) 34%!important}
-   .installer-links .installer-top{padding:2.6% 3.5% 1.2%!important}.installer-links .credential-grid{margin-top:1.7%!important;gap:.9%!important}.installer-links .credential-btn{padding:3.5%!important;border-radius:14px!important}
-   .installer-links .az-facts{padding:1.5% 3.5% 1.9%!important}.installer-links .fact-grid{gap:.8%!important}.installer-links .fact-card{padding:4.5% 3%!important;border-radius:13px!important}
-  `;d.head.appendChild(style)
- }
- const savings=[...d.querySelectorAll('.slide')].find(s=>/Be your own power company/i.test(s.textContent||''));
- if(savings){const graph=savings.querySelector('.savings-graph');if(graph){graph.innerHTML='<div class="graph-red"></div><div class="graph-yellow">With Batteries</div>'}}
- const installer=[...d.querySelectorAll('.slide')].find(s=>/Arizona.?s Largest Installer/i.test(s.textContent||'')&&/1000\+ installs/i.test(s.textContent||''));
- if(installer){installer.classList.add('installer-links');installer.style.removeProperty('aspect-ratio');installer.style.removeProperty('height');installer.style.removeProperty('min-height');installer.style.removeProperty('padding-bottom')}
- resizeAll(ctx);
+base.src='../combined-v5/?build='+BUILD;
+let resizeTimer=0;
+let patched=false;
+
+function getDeck(){
+ try{
+  const docs=[];
+  let doc=base.contentDocument;
+  while(doc){
+   docs.push(doc);
+   const frame=doc.getElementById('base');
+   if(!frame||!frame.contentDocument)break;
+   doc=frame.contentDocument;
+  }
+  const outer=docs[docs.length-1];
+  const deckFrame=outer&&outer.getElementById('deckFrame');
+  const deck=deckFrame&&deckFrame.contentDocument;
+  return{docs,deckFrame,deck};
+ }catch(e){return{}}
 }
-function install(){let n=0;const timer=setInterval(()=>{patchDeck();if(++n>80)clearInterval(timer)},150)}
-base.addEventListener('load',install);window.addEventListener('resize',()=>setTimeout(patchDeck,80));install();
+
+function setHeight(frame,height){
+ const next=Math.ceil(height||0);
+ const current=parseInt(frame.style.height,10)||0;
+ if(next>0&&Math.abs(next-current)>4)frame.style.height=next+'px';
+}
+
+function resizeAll(ctx){
+ try{
+  const{docs,deckFrame,deck}=ctx;
+  if(deckFrame&&deck)setHeight(deckFrame,deck.documentElement.scrollHeight);
+  if(docs){
+   for(let i=docs.length-1;i>0;i--){
+    const frame=docs[i-1].getElementById('base');
+    if(frame)setHeight(frame,docs[i].documentElement.scrollHeight);
+   }
+  }
+  if(base.contentDocument)setHeight(base,base.contentDocument.documentElement.scrollHeight);
+ }catch(e){}
+}
+
+function patchDeck(){
+ const ctx=getDeck();
+ const d=ctx.deck;
+ if(!d)return false;
+
+ if(!d.getElementById('stableLiveDeckV12')){
+  const style=d.createElement('style');
+  style.id='stableLiveDeckV12';
+  style.textContent=`
+   .installer-links{aspect-ratio:16/9!important;height:auto!important;min-height:0!important;padding:0!important;overflow:hidden!important}
+   .installer-links .installer-shell{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:grid!important;grid-template-rows:64% 36%!important;overflow:hidden!important}
+   .installer-links .installer-top{min-height:0!important;overflow:hidden!important;padding:2.25% 3.4% .7%!important}
+   .installer-links .installer-head{gap:1.6%!important}
+   .installer-links h1{font-size:clamp(28px,3.55vw,55px)!important;line-height:1!important}
+   .installer-links .installer-mark{width:6.2%!important;border-width:4px!important}
+   .installer-links .credential-grid{min-height:0!important;margin-top:1.15%!important;gap:.75%!important}
+   .installer-links .credential-btn{min-height:0!important;padding:2.3%!important;border-radius:11px!important}
+   .installer-links .credential-logo small{margin-top:4%!important}
+   .installer-links .tap-note{margin-top:.35%!important;font-size:clamp(8px,.62vw,10px)!important}
+   .installer-links .az-facts{min-height:0!important;overflow:hidden!important;padding:1% 3.2% 1.25%!important;justify-content:center!important}
+   .installer-links .az-facts-title{margin-bottom:.65%!important;font-size:clamp(12px,1.15vw,18px)!important;line-height:1.05!important}
+   .installer-links .fact-grid{gap:.65%!important;min-height:0!important}
+   .installer-links .fact-card{min-height:0!important;padding:3% 2.2%!important;border-radius:10px!important}
+   .installer-links .fact-icon{font-size:clamp(16px,1.55vw,24px)!important;margin-bottom:2.5%!important}
+   .installer-links .fact-card strong{font-size:clamp(10px,1vw,16px)!important;line-height:1.02!important}
+   .installer-links .fact-card span{margin-top:3%!important;font-size:clamp(7px,.56vw,9px)!important;line-height:1.12!important}
+   .savings-graph{opacity:.3!important;transform:none!important;visibility:visible!important;transition:opacity .2s ease!important}
+   .savings-graph.chart-ready{opacity:1!important}
+   .savings-graph .graph-red{transition:height .25s ease,clip-path .25s ease!important}
+   .savings-graph .graph-yellow{transition:width .25s ease!important}
+  `;
+  d.head.appendChild(style);
+ }
+
+ const installer=[...d.querySelectorAll('.slide')].find(s=>/Arizona.?s Largest Installer/i.test(s.textContent||'')&&/1000\+ installs/i.test(s.textContent||''));
+ if(installer){
+  installer.classList.add('installer-links');
+  installer.style.removeProperty('aspect-ratio');
+  installer.style.removeProperty('height');
+  installer.style.removeProperty('min-height');
+  installer.style.removeProperty('padding-bottom');
+  const shell=installer.querySelector('.installer-shell');
+  if(shell){
+   shell.style.removeProperty('grid-template-rows');
+   shell.style.removeProperty('height');
+  }
+ }
+
+ const savings=[...d.querySelectorAll('.slide')].find(s=>/Be your own power company/i.test(s.textContent||''));
+ if(savings&&!savings.dataset.stableChartBound){
+  const graph=savings.querySelector('.savings-graph');
+  const entries=[...savings.querySelectorAll('.month-entry')];
+  const bill=savings.querySelector('#recentBill');
+  const kwh=savings.querySelector('#recentKwh');
+  const red=graph&&graph.querySelector('.graph-red');
+  const yellow=graph&&graph.querySelector('.graph-yellow');
+  const label=graph&&graph.querySelector('.graph-label');
+  const updateChart=()=>{
+   if(!graph)return;
+   const values=entries.map(el=>parseFloat(el.value)||0);
+   const b=parseFloat((bill||{}).value)||0;
+   const k=parseFloat((kwh||{}).value)||0;
+   const hasInput=values.some(v=>v>0)||b>0||k>0;
+   graph.classList.toggle('chart-ready',hasInput);
+   const rate=b>0&&k>0?b/k:0;
+   const mode=(savings.querySelector('.mode-toggle button.active')||{}).dataset?.mode||'usage';
+   let monthly=0;
+   if(mode==='usage'){
+    const annual=values.reduce((a,v)=>a+v,0);
+    if(annual>0&&rate>0)monthly=annual*(rate+.16)/12;
+   }else{
+    const annualBills=values.reduce((a,v)=>a+v,0);
+    const annual=rate>0?annualBills/rate:0;
+    if(annualBills>0&&rate>0)monthly=(annualBills+annual*.16)/12;
+   }
+   if(monthly>0){
+    const intensity=Math.max(0,Math.min(1,(monthly-100)/650));
+    if(red)red.style.height=(68+intensity*14)+'%';
+    if(yellow)yellow.style.width=(62+intensity*5)+'%';
+    if(label)label.textContent='WITHOUT SOLAR • '+new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(monthly)+'/MO';
+   }
+  };
+  [...entries,bill,kwh].filter(Boolean).forEach(el=>el.addEventListener('input',updateChart));
+  savings.querySelectorAll('.mode-toggle button').forEach(btn=>btn.addEventListener('click',()=>setTimeout(updateChart,0)));
+  savings.dataset.stableChartBound='1';
+  updateChart();
+ }
+
+ patched=true;
+ resizeAll(ctx);
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{resizeAll(getDeck());base.style.visibility='visible'}));
+ return true;
+}
+
+function waitForDeck(attempt=0){
+ if(patchDeck())return;
+ if(attempt<60)setTimeout(()=>waitForDeck(attempt+1),100);
+ else base.style.visibility='visible';
+}
+
+base.addEventListener('load',()=>waitForDeck(),{once:true});
+setTimeout(()=>waitForDeck(),100);
+window.addEventListener('resize',()=>{
+ clearTimeout(resizeTimer);
+ resizeTimer=setTimeout(()=>{if(patched)resizeAll(getDeck())},180);
+},{passive:true});
+setTimeout(()=>{base.style.visibility='visible'},7000);
 </script>
 </body>
 </html>
