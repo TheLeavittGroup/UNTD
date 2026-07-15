@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Daddy's Sales Deck</title>
+<style>*{box-sizing:border-box}html,body{margin:0;background:#000}#base{display:block;width:100%;height:24000px;border:0;background:#000}</style>
+</head>
+<body>
+<iframe id="base" src="../combined-v10/?v=clean-chart" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<script>
+const base=document.getElementById('base');
+function getDeck(){try{const docs=[];let doc=base.contentDocument;while(doc){docs.push(doc);const frame=doc.getElementById('base');if(!frame||!frame.contentDocument)break;doc=frame.contentDocument}const outer=docs[docs.length-1],deckFrame=outer&&outer.getElementById('deckFrame'),deck=deckFrame&&deckFrame.contentDocument;return{docs,deckFrame,deck}}catch(e){return{}}}
+function resizeAll(ctx){try{const{docs,deckFrame,deck}=ctx;if(deckFrame&&deck)deckFrame.style.height=deck.documentElement.scrollHeight+'px';if(docs)for(let i=docs.length-1;i>0;i--){const f=docs[i-1].getElementById('base');if(f)f.style.height=docs[i].documentElement.scrollHeight+'px'}if(base.contentDocument)base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
+function patchDeck(){
+ const ctx=getDeck(),d=ctx.deck;if(!d)return;
+ const savings=[...d.querySelectorAll('.slide')].find(s=>/Be your own power company/i.test(s.textContent||''));
+ if(!savings)return;
+ const graph=savings.querySelector('.savings-graph');
+ if(graph&&!graph.dataset.cleanOriginalChart){
+  graph.dataset.cleanOriginalChart='1';
+  graph.innerHTML='<div class="graph-red"></div><div class="graph-yellow clean-solar-bar"></div>';
+  if(!d.getElementById('cleanOriginalChartV11')){
+   const style=d.createElement('style');style.id='cleanOriginalChartV11';style.textContent=`
+    .savings-graph{position:relative!important;overflow:hidden!important;background:linear-gradient(180deg,#f9fbfe,#edf3fa)!important;border:1px solid #d9e2ed!important}
+    .savings-graph .graph-red{position:absolute!important;left:3%!important;right:3%!important;bottom:10%!important;height:72%!important;background:#e65c40!important;clip-path:polygon(0 82%,100% 5%,100% 100%,0 100%)!important}
+    .savings-graph .graph-yellow{position:absolute!important;left:3%!important;bottom:10%!important;width:65%!important;height:9%!important;min-height:0!important;border-radius:4px!important;background:#f6c238!important;box-shadow:none!important;padding:0!important;color:transparent!important;font-size:0!important}
+    .dynamic-utility-chart,.solar-live-bar,.chart-empty-note,.utility-label,.utility-value,.dynamic-axis{display:none!important}
+   `;d.head.appendChild(style)
+  }
+ }
+ resizeAll(ctx);
+}
+function install(){let n=0;const timer=setInterval(()=>{patchDeck();if(++n>120)clearInterval(timer)},250)}
+base.addEventListener('load',install);window.addEventListener('resize',()=>setTimeout(patchDeck,120));install();
+</script>
+</body>
+</html>
