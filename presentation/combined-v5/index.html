@@ -10,7 +10,7 @@
 <style>*{box-sizing:border-box}html,body{margin:0;background:#000}#base{display:block;width:100%;height:19000px;border:0;background:#000}</style>
 </head>
 <body>
-<iframe id="base" src="../combined-v4/?build=customer-summary-1" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<iframe id="base" src="../combined-v4/?build=customer-summary-2" scrolling="no" title="Daddy's Sales Deck"></iframe>
 <script>
 const base=document.getElementById('base');
 function resize(){try{base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
@@ -36,10 +36,12 @@ function install(){
 
      if(!d.getElementById('customerFlowStyles')){
       const customerStyle=d.createElement('style');customerStyle.id='customerFlowStyles';customerStyle.textContent=`
-       .cover-customer-name{display:block;width:38%;margin-top:2.2%;color:#fff;font-size:clamp(11px,1.05vw,17px);line-height:1;font-weight:950;letter-spacing:.02em}
-       .cover-customer-name input{display:block;width:100%;margin-top:.55em;border:1px solid rgba(255,255,255,.72);border-radius:13px;padding:.82em 1em;background:rgba(255,255,255,.95);color:#17375f;font-size:clamp(13px,1.25vw,20px);font-weight:900;outline:none;box-shadow:0 10px 24px rgba(18,50,90,.16)}
-       .cover-customer-name input:focus{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.24),0 10px 24px rgba(18,50,90,.2)}
-       @media(max-width:760px){.cover-customer-name{width:43%;margin-top:1.5%}.cover-customer-name input{border-radius:9px;padding:.65em .8em}}
+       .cover-customer-name{display:block;width:40%;margin-top:2.2%}
+       .cover-customer-name input{display:block;width:100%;margin:0!important;border:0!important;border-radius:0!important;padding:.18em 0!important;background:transparent!important;color:#fff!important;font-size:clamp(17px,1.65vw,26px)!important;line-height:1.15!important;font-weight:850!important;outline:none!important;box-shadow:none!important;text-shadow:0 2px 10px rgba(12,47,91,.22)}
+       .cover-customer-name input::placeholder{color:rgba(255,255,255,.72)!important;opacity:1!important;font-weight:750!important}
+       .cover-customer-name input:focus{border:0!important;background:transparent!important;box-shadow:none!important}
+       .cover-customer-name input:focus::placeholder{opacity:.34!important}
+       @media(max-width:760px){.cover-customer-name{width:44%;margin-top:1.5%}.cover-customer-name input{font-size:clamp(13px,2.6vw,20px)!important;padding:.1em 0!important}}
       `;d.head.appendChild(customerStyle)
      }
 
@@ -47,8 +49,8 @@ function install(){
      if(cover&&!cover.querySelector('#customerNameInput')){
       const h1=cover.querySelector('h1');
       if(h1){
-       const nameLabel=d.createElement('label');nameLabel.className='cover-customer-name';nameLabel.innerHTML='Customer name<input id="customerNameInput" type="text" autocomplete="name" placeholder="Enter customer name">';h1.insertAdjacentElement('afterend',nameLabel);
-       const nameInput=nameLabel.querySelector('input');const saved=readCustomerProfile();if(saved.customerName)nameInput.value=saved.customerName;
+       const nameField=d.createElement('div');nameField.className='cover-customer-name';nameField.innerHTML='<input id="customerNameInput" type="text" autocomplete="name" aria-label="Customer name" placeholder="Tap to add customer name">';h1.insertAdjacentElement('afterend',nameField);
+       const nameInput=nameField.querySelector('input');const saved=readCustomerProfile();if(saved.customerName)nameInput.value=saved.customerName;
        nameInput.addEventListener('input',()=>saveCustomerProfile({customerName:nameInput.value.trim()}));
       }
      }
