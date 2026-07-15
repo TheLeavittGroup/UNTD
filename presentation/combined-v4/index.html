@@ -64,9 +64,9 @@ function install(){
      const oldRate=savings.querySelector('#rateResult');
      if(oldRate){
       const button=d.createElement('button');
-      button.type='button';button.id='utility25Button';button.textContent='Calculate 25-Year Utility Cost';
+      button.type='button';button.id='utility25Button';button.textContent='Total 25-Year Utility Cost';
       oldRate.replaceWith(button);
-      const resetButton=()=>{button.classList.remove('result');button.textContent='Calculate 25-Year Utility Cost'};
+      const resetButton=()=>{button.classList.remove('result');button.textContent='Total 25-Year Utility Cost'};
       const dollars=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n);
       button.addEventListener('click',()=>{
        const entries=[...savings.querySelectorAll('.month-entry')];
