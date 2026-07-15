@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Daddy's Sales Deck</title>
+<style>*{box-sizing:border-box}html,body{margin:0;background:#000}#base{display:block;width:100%;height:16000px;border:0;background:#000}</style>
+</head>
+<body>
+<iframe id="base" src="../combined-v3/" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<script>
+const base=document.getElementById('base');
+function resize(){try{base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
+function install(){
+ const v3=base.contentDocument;if(!v3)return;
+ const v2Frame=v3.getElementById('base');if(!v2Frame)return;
+ const patch=()=>{
+  const v2=v2Frame.contentDocument;if(!v2)return;
+  const outerFrame=v2.getElementById('base');if(!outerFrame)return;
+  const patchOuter=()=>{
+   const outer=outerFrame.contentDocument;if(!outer)return;
+   const deckFrame=outer.getElementById('deckFrame');if(!deckFrame)return;
+   const apply=()=>{
+    const d=deckFrame.contentDocument;if(!d)return;
+    const options=[...d.querySelectorAll('.slide')].find(s=>/The Options/i.test(s.textContent||'')&&/Have Your Own Grid/i.test(s.textContent||''));
+    if(!options)return;
+    const style=d.createElement('style');
+    style.textContent=`
+      .options-upgrade .option{padding:1.8% 2.35%!important}
+      .options-upgrade .option-list{gap:2.25%!important}
+      .options-upgrade .option-item{font-size:clamp(12px,1.18vw,19px)!important;line-height:1.18!important}
+      .options-upgrade .option-pain{margin-top:6%!important;padding:3.2% 4%!important}
+      .options-upgrade .option.solar .option-pain{transform:translateY(5%)}
+    `;
+    d.head.appendChild(style);
+    const solar=options.querySelector('.option.solar');
+    if(solar){
+      solar.innerHTML=`<h2>Have Your Own Grid</h2><div class="option-list"><div class="option-item"><b>✓</b><span>No cost or debt</span></div><div class="option-item"><b>✓</b><span>Buy power at a fixed price for a fraction of what your neighbors pay</span></div><div class="option-item"><b>✓</b><span>25-year price and performance guarantee</span></div><div class="option-item"><b>✓</b><span>25-year added roof, grid, and solar-system coverage for the home</span></div><div class="option-item"><b>✓</b><span>Take control of whatever the utility decides to do in the future</span></div><div class="option-item"><b>✓</b><span>Battery homes sell faster and for more</span></div><div class="option-item"><b>✓</b><span>If it doesn't work, you don't pay for it</span></div></div><div class="option-pain">Your lights and A/C stay on—and your food stays cold when the grid goes down.</div>`;
+    }
+    setTimeout(()=>{try{outer.getElementById('deckFrame').style.height=d.documentElement.scrollHeight+'px';outerFrame.style.height=outer.documentElement.scrollHeight+'px';v2Frame.style.height=v2.documentElement.scrollHeight+'px';resize()}catch(e){}},100);
+   };
+   deckFrame.addEventListener('load',apply,{once:true});apply();
+  };
+  outerFrame.addEventListener('load',patchOuter,{once:true});patchOuter();
+ };
+ v2Frame.addEventListener('load',patch,{once:true});patch();
+}
+base.addEventListener('load',install);window.addEventListener('resize',()=>setTimeout(resize,100));
+</script>
+</body>
+</html>
