@@ -7,13 +7,14 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>Daddy's Sales Deck</title>
-<style>*{box-sizing:border-box}html,body{margin:0;background:#000;min-height:100%}#base{display:block;width:100%;height:26000px;border:0;background:#000}</style>
+<style>*{box-sizing:border-box}html,body{margin:0;background:#000;min-height:100%}#base{display:block;width:100%;height:27000px;border:0;background:#000}</style>
 </head>
 <body>
 <iframe id="base" scrolling="no" title="Daddy's Sales Deck"></iframe>
 <script>
 const base=document.getElementById('base');
-base.src='../combined-v14/?build=battery-copy-v15&refresh='+Date.now();
+base.src='../combined-v14/?build=iphone-polish-v15-2&refresh='+Date.now();
+let resizeTimer=0;
 
 function setHeight(frame,height){
  const next=Math.ceil(height||0),current=parseInt(frame.style.height,10)||0;
@@ -48,44 +49,83 @@ function resizeAll(ctx){
  }catch(e){}
 }
 
-function patchCopy(){
+function patchDeck(){
  const ctx=getDeck(),d=ctx.deck;
  if(!d)return false;
 
- let changed=false;
  [...d.querySelectorAll('h1')].forEach(h=>{
-  if(/^Why are people going solar\?$/i.test((h.textContent||'').trim())){
-   h.textContent='Why are people getting batteries?';
-   changed=true;
-  }
+  if(/^Why are people going solar\?$/i.test((h.textContent||'').trim()))h.textContent='Why are people getting batteries?';
  });
 
  const grid=d.querySelector('.slide.grid-interactive,.slide.grid-live-retry,.slide.grid-v4,.slide.grid-slide')||[...d.querySelectorAll('.slide')].find(s=>{const h=s.querySelector('h1');return h&&/^The Grid$/i.test((h.textContent||'').trim())});
- if(grid){
-  const label=grid.querySelector('.main-reasons-title,.grid-retry-reasons-title,.why-incentive-title');
-  if(label){
-   label.textContent='Main Reasons Utility Incentivizes Around Half of Home Grid Payment';
-   changed=true;
+ const moving=d.querySelector('.slide.move')||[...d.querySelectorAll('.slide')].find(s=>/Moving with Solar/i.test(s.textContent||''));
+ const options=d.querySelector('.slide.options-upgrade')||[...d.querySelectorAll('.slide')].find(s=>/The Options/i.test(s.textContent||''));
+ if(!grid||!moving||!options)return false;
+
+ const label=grid.querySelector('.main-reasons-title,.grid-retry-reasons-title,.why-incentive-title');
+ if(label)label.textContent='Main Reasons Utility Incentivizes Around Half of Home Grid Payment';
+
+ let style=d.getElementById('batteryCopyV15Styles');
+ if(!style){style=d.createElement('style');style.id='batteryCopyV15Styles'}
+ style.textContent=`
+  .main-reasons,.grid-retry-reasons{grid-template-columns:minmax(170px,1.35fr) 1fr 1fr!important}
+  .main-reasons-title,.grid-retry-reasons-title,.why-incentive-title{white-space:normal!important;line-height:1.12!important;text-align:left!important;font-size:clamp(11px,1.08vw,17px)!important;padding:.7em 1em!important}
+  @media(max-width:600px){
+   .main-reasons,.grid-retry-reasons{grid-template-columns:1.35fr 1fr 1fr!important}
+   .main-reasons-title,.grid-retry-reasons-title,.why-incentive-title{font-size:6.2px!important;line-height:1.08!important;padding:.45em!important}
+
+   .grid-interactive>.grid-address-tool,.grid-live-retry>.grid-address-tool,.grid-v4>.grid-address-tool,.grid-slide>.grid-address-tool{position:absolute!important;top:2.1%!important;right:2.5%!important;width:30.5%!important;margin:0!important;z-index:90!important}
+
+   .move{padding:3% 4% 3% 13%!important;overflow:hidden!important}
+   .move .logo{left:3%!important;top:7%!important;width:7%!important;border-width:2px!important;font-size:8px!important}
+   .move .title{margin:0!important;padding:0!important;font-size:28px!important;line-height:.95!important;letter-spacing:-.035em!important}
+   .move ul{position:absolute!important;left:13%!important;top:24%!important;width:47%!important;max-width:none!important;margin:0!important;padding-left:16px!important;display:grid!important;gap:9px!important;font-size:9.4px!important;line-height:1.18!important}
+   .move li{margin:0!important;padding:0!important}
+   .move .moving-photo{right:6%!important;top:38%!important;width:35%!important;height:34%!important}
+
+   .options-upgrade{aspect-ratio:auto!important;height:480px!important;min-height:480px!important;padding:3% 3.5% 5%!important;overflow:hidden!important}
+   .options-upgrade .options-grid{height:82%!important;margin-top:1.5%!important;gap:2%!important;align-items:stretch!important;overflow:visible!important}
+   .options-upgrade .option{width:46%!important;min-height:100%!important;padding:2.5% 2.4% 3%!important;display:flex!important;flex-direction:column!important;position:relative!important;overflow:visible!important}
+   .options-upgrade .option h2{font-size:21px!important;line-height:.94!important;margin:0 0 4%!important}
+   .options-upgrade .option-list{display:grid!important;gap:5px!important}
+   .options-upgrade .option-item{font-size:7.2px!important;line-height:1.14!important;gap:.4em!important}
+   .options-upgrade .option-pain{margin-top:auto!important;margin-bottom:11%!important;padding:2.3%!important;font-size:6.8px!important;line-height:1.1!important;transform:translateY(4px)!important}
+   .options-upgrade .choice-mascot{display:flex!important;left:-2%!important;right:auto!important;top:auto!important;bottom:-1%!important;transform:scale(.58)!important;transform-origin:left bottom!important;z-index:30!important}
+   .options-upgrade .choice-mascot.dev{display:flex!important;left:auto!important;right:-2%!important;bottom:-1%!important;transform:scale(.58)!important;transform-origin:right bottom!important}
+   .options-upgrade .choice-face{width:48px!important;height:48px!important;font-size:30px!important;border-width:2px!important}
+   .options-upgrade .choice-bubble{font-size:11px!important;padding:.45em .65em!important;margin-bottom:13%!important}
   }
-  if(!d.getElementById('batteryCopyV15Styles')){
-   const style=d.createElement('style');
-   style.id='batteryCopyV15Styles';
-   style.textContent=`
-    .main-reasons,.grid-retry-reasons{grid-template-columns:minmax(170px,1.35fr) 1fr 1fr!important}
-    .main-reasons-title,.grid-retry-reasons-title,.why-incentive-title{white-space:normal!important;line-height:1.12!important;text-align:left!important;font-size:clamp(11px,1.08vw,17px)!important;padding:.7em 1em!important}
-    @media(max-width:600px){.main-reasons,.grid-retry-reasons{grid-template-columns:1.35fr 1fr 1fr!important}.main-reasons-title,.grid-retry-reasons-title,.why-incentive-title{font-size:6.2px!important;line-height:1.08!important;padding:.45em!important}}
-   `;
-   d.head.appendChild(style);
+ `;
+ d.head.appendChild(style);
+
+ if(window.innerWidth<=600){
+  const address=grid.querySelector('.grid-address-tool');
+  if(address){
+   if(address.parentElement!==grid)grid.appendChild(address);
+   address.style.setProperty('position','absolute','important');
+   address.style.setProperty('top','2.1%','important');
+   address.style.setProperty('right','2.5%','important');
+   address.style.setProperty('z-index','90','important');
   }
+
+  const list=moving.querySelector('ul');
+  if(list){
+   list.innerHTML='<li>Home buyers prefer homes with lower expenses</li><li>Easily transferred to new homeowners</li><li>Solar can increase the value of your home</li><li>Solar homes sell faster than homes without solar</li>';
+  }
+
+  options.style.setProperty('height','480px','important');
+  options.style.setProperty('min-height','480px','important');
+  options.style.setProperty('aspect-ratio','auto','important');
  }
 
- if(changed)resizeAll(ctx);
- return changed;
+ resizeAll(ctx);
+ requestAnimationFrame(()=>requestAnimationFrame(()=>resizeAll(getDeck())));
+ return true;
 }
 
 function waitForDeck(attempt=0){
- if(patchCopy()){
-  setTimeout(()=>{patchCopy();resizeAll(getDeck())},700);
+ if(patchDeck()){
+  setTimeout(()=>{patchDeck();resizeAll(getDeck())},850);
   return;
  }
  if(attempt<100)setTimeout(()=>waitForDeck(attempt+1),100);
@@ -93,7 +133,10 @@ function waitForDeck(attempt=0){
 
 base.addEventListener('load',()=>waitForDeck(),{once:true});
 setTimeout(()=>waitForDeck(),120);
-window.addEventListener('resize',()=>setTimeout(()=>{patchCopy();resizeAll(getDeck())},180),{passive:true});
+window.addEventListener('resize',()=>{
+ clearTimeout(resizeTimer);
+ resizeTimer=setTimeout(()=>{patchDeck();resizeAll(getDeck())},220);
+},{passive:true});
 </script>
 </body>
 </html>
