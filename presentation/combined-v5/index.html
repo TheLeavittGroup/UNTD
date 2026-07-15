@@ -58,6 +58,9 @@ function install(){
       grid.innerHTML=`<div class="grid-flow-shell"><div class="grid-flow-head"><h1>The Grid</h1><p>Power travels through a long chain before it reaches your house. Tap each part to flip it and see what it actually does.</p></div><div class="power-chain">${cards.map((c,i)=>`<button type="button" class="power-card"><div class="power-card-inner"><div class="power-face front"><div class="power-icon">${c[2]}</div><strong>${c[0]}</strong><small>Tap to flip</small></div><div class="power-face back"><strong>${c[1]}</strong><small>Tap again to flip back</small></div></div>${i<cards.length-1?'<span class="chain-arrow">→</span>':''}</button>`).join('')}</div><div class="main-reasons"><div class="main-reasons-title">Main Reasons</div><div class="reason-big"><b>✓</b><span>Reduce peak demand and expensive grid strain</span></div><div class="reason-big"><b>✓</b><span>Delay costly infrastructure upgrades and maintenance</span></div></div></div>`;
       grid.querySelectorAll('.power-card').forEach(card=>card.addEventListener('click',()=>card.classList.toggle('flipped')));
      }
+     const bbbLogo=d.querySelector('.credential-logo.bbb');
+     const bbbButton=bbbLogo&&bbbLogo.closest('a');
+     if(bbbButton){bbbButton.href='https://www.bbb.org/us/az/phoenix/profile/solar-energy-products/our-world-energy-llc';bbbButton.target='_blank';bbbButton.rel='noopener noreferrer'}
      setTimeout(()=>{try{outer.getElementById('deckFrame').style.height=d.documentElement.scrollHeight+'px';outerFrame.style.height=outer.documentElement.scrollHeight+'px';v2Frame.style.height=v2.documentElement.scrollHeight+'px';v3Frame.style.height=v3.documentElement.scrollHeight+'px';resize()}catch(e){}},150);
     };
     deckFrame.addEventListener('load',apply,{once:true});apply();
