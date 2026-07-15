@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Daddy's Sales Deck</title>
+<style>*{box-sizing:border-box}html,body{margin:0;background:#000}#base{display:block;width:100%;height:22000px;border:0;background:#000}</style>
+</head>
+<body>
+<iframe id="base" src="../combined-v5/?v=aurora-full-height" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<script>
+const base=document.getElementById('base');
+function patchAurora(){
+ try{
+  const docs=[];
+  let doc=base.contentDocument;
+  while(doc){
+   docs.push(doc);
+   const frame=doc.getElementById('base');
+   if(!frame||!frame.contentDocument)break;
+   doc=frame.contentDocument;
+  }
+  const outer=docs[docs.length-1];
+  const deckFrame=outer&&outer.getElementById('deckFrame');
+  const deck=deckFrame&&deckFrame.contentDocument;
+  if(!deck)return;
+  const aurora=deck.querySelector('.aurora-transition');
+  if(!aurora)return;
+  aurora.style.setProperty('aspect-ratio','4 / 3','important');
+  aurora.style.setProperty('min-height','760px','important');
+  aurora.style.setProperty('height','auto','important');
+  deckFrame.style.height=deck.documentElement.scrollHeight+'px';
+  for(let i=docs.length-1;i>0;i--){
+   const parent=docs[i-1];
+   const frame=parent.getElementById('base');
+   if(frame)frame.style.height=docs[i].documentElement.scrollHeight+'px';
+  }
+  base.style.height=base.contentDocument.documentElement.scrollHeight+'px';
+ }catch(e){}
+}
+function install(){
+ let count=0;
+ const timer=setInterval(()=>{
+  patchAurora();
+  if(++count>40)clearInterval(timer);
+ },250);
+}
+base.addEventListener('load',install);
+window.addEventListener('resize',()=>setTimeout(patchAurora,120));
+install();
+</script>
+</body>
+</html>
