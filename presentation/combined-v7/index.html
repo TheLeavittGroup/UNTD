@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Daddy's Sales Deck</title>
+<style>*{box-sizing:border-box}html,body{margin:0;background:#000}#base{display:block;width:100%;height:23000px;border:0;background:#000}</style>
+</head>
+<body>
+<iframe id="base" src="../combined-v6/" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<script>
+const base=document.getElementById('base');
+function getDeck(){try{const docs=[];let doc=base.contentDocument;while(doc){docs.push(doc);const frame=doc.getElementById('base');if(!frame||!frame.contentDocument)break;doc=frame.contentDocument}const outer=docs[docs.length-1],deckFrame=outer&&outer.getElementById('deckFrame'),deck=deckFrame&&deckFrame.contentDocument;return{docs,deckFrame,deck}}catch(e){return{}}}
+function resizeAll(ctx){try{const{docs,deckFrame,deck}=ctx;if(deckFrame&&deck)deckFrame.style.height=deck.documentElement.scrollHeight+'px';if(docs)for(let i=docs.length-1;i>0;i--){const f=docs[i-1].getElementById('base');if(f)f.style.height=docs[i].documentElement.scrollHeight+'px'}if(base.contentDocument)base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
+function patchDeck(){const ctx=getDeck(),d=ctx.deck;if(!d)return;const aurora=d.querySelector('.aurora-transition');if(aurora){if(!d.getElementById('auroraCleanV7')){const style=d.createElement('style');style.id='auroraCleanV7';style.textContent=`.aurora-transition{aspect-ratio:auto!important;height:min(1040px,82vw)!important;min-height:820px!important;padding:0!important;overflow:hidden!important;background:#fff!important}.aurora-live-shell{position:absolute!important;inset:0!important;display:grid!important;grid-template-rows:56px minmax(0,1fr)!important;background:#fff!important}.aurora-live-top{position:relative!important;height:56px!important;min-height:56px!important;padding:0 2.2%!important;background:#fff!important;border-bottom:1px solid #dedee3!important;box-shadow:none!important;z-index:2!important}.aurora-live-title strong{font-size:clamp(15px,1.35vw,22px)!important;line-height:1.1!important}.aurora-live-title span{display:none!important}.aurora-live-stage{position:relative!important;height:100%!important;min-height:0!important;overflow:hidden!important;background:#fff!important}.aurora-live-frame{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;border:0!important}.aurora-live-help,.aurora-fallback{display:none!important}`;d.head.appendChild(style)}aurora.querySelectorAll('.aurora-live-help,.aurora-fallback').forEach(el=>el.remove());const sub=aurora.querySelector('.aurora-live-title span');if(sub)sub.remove();const title=aurora.querySelector('.aurora-live-title strong');if(title)title.textContent="Create the Homeowner's Aurora Project"}resizeAll(ctx)}
+function install(){let n=0;const timer=setInterval(()=>{patchDeck();if(++n>100)clearInterval(timer)},250)}
+base.addEventListener('load',install);window.addEventListener('resize',()=>setTimeout(patchDeck,120));install();
+</script>
+</body>
+</html>
