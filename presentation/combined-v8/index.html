@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Daddy's Sales Deck</title>
+<style>*{box-sizing:border-box}html,body{margin:0;background:#000}#base{display:block;width:100%;height:23000px;border:0;background:#000}</style>
+</head>
+<body>
+<iframe id="base" src="../combined-v7/?v=installer-tight" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<script>
+const base=document.getElementById('base');
+function getDeck(){try{const docs=[];let doc=base.contentDocument;while(doc){docs.push(doc);const frame=doc.getElementById('base');if(!frame||!frame.contentDocument)break;doc=frame.contentDocument}const outer=docs[docs.length-1],deckFrame=outer&&outer.getElementById('deckFrame'),deck=deckFrame&&deckFrame.contentDocument;return{docs,deckFrame,deck}}catch(e){return{}}}
+function resizeAll(ctx){try{const{docs,deckFrame,deck}=ctx;if(deckFrame&&deck)deckFrame.style.height=deck.documentElement.scrollHeight+'px';if(docs)for(let i=docs.length-1;i>0;i--){const f=docs[i-1].getElementById('base');if(f)f.style.height=docs[i].documentElement.scrollHeight+'px'}if(base.contentDocument)base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
+function patchDeck(){const ctx=getDeck(),d=ctx.deck;if(!d)return;const installer=[...d.querySelectorAll('.slide')].find(s=>/Arizona.?s Largest Installer/i.test(s.textContent||'')&&/1000\+ installs/i.test(s.textContent||''));if(installer){installer.style.setProperty('aspect-ratio','16 / 6.85','important');installer.style.setProperty('height','auto','important');installer.style.setProperty('min-height','0','important');installer.style.setProperty('padding-bottom','0','important');const shell=installer.querySelector('.installer-shell');if(shell){shell.style.setProperty('inset','0','important');shell.style.setProperty('height','100%','important')}}resizeAll(ctx)}
+function install(){let n=0;const timer=setInterval(()=>{patchDeck();if(++n>100)clearInterval(timer)},250)}
+base.addEventListener('load',install);window.addEventListener('resize',()=>setTimeout(patchDeck,120));install();
+</script>
+</body>
+</html>
