@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Daddy's Sales Deck</title>
+<style>*{box-sizing:border-box}html,body{margin:0;background:#000}#base{display:block;width:100%;height:19000px;border:0;background:#000}</style>
+</head>
+<body>
+<iframe id="base" src="../combined-v4/" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<script>
+const base=document.getElementById('base');
+function resize(){try{base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
+function install(){
+ const v4=base.contentDocument;if(!v4)return;
+ const v3Frame=v4.getElementById('base');if(!v3Frame)return;
+ const patchV3=()=>{
+  const v3=v3Frame.contentDocument;if(!v3)return;
+  const v2Frame=v3.getElementById('base');if(!v2Frame)return;
+  const patchV2=()=>{
+   const v2=v2Frame.contentDocument;if(!v2)return;
+   const outerFrame=v2.getElementById('base');if(!outerFrame)return;
+   const patchOuter=()=>{
+    const outer=outerFrame.contentDocument;if(!outer)return;
+    const deckFrame=outer.getElementById('deckFrame');if(!deckFrame)return;
+    const apply=()=>{
+     const d=deckFrame.contentDocument;if(!d)return;
+     const grid=[...d.querySelectorAll('.slide')].find(s=>/^\s*The Grid/i.test(s.textContent||''));
+     if(grid){
+      const style=d.createElement('style');
+      style.textContent=`
+       .grid-interactive{padding:0!important;background:linear-gradient(180deg,#eef5ff,#dfeafb)!important;color:#15253a!important;overflow:hidden!important}
+       .grid-flow-shell{position:absolute;inset:0;padding:3.2% 4.2%;display:grid;grid-template-rows:auto 1fr auto;gap:2.4%}
+       .grid-flow-head h1{margin:0;font-size:clamp(38px,4.8vw,74px);line-height:.95;letter-spacing:-.045em;color:#172a45}.grid-flow-head p{margin:1.1% 0 0;max-width:92%;font-size:clamp(12px,1.15vw,18px);line-height:1.35;color:#526a86;font-weight:700}
+       .power-chain{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:1.4%;align-items:stretch;min-height:0;padding:2.2% 0 1%}
+       .power-chain:before{content:"";position:absolute;left:8%;right:8%;top:48%;height:7px;border-radius:999px;background:linear-gradient(90deg,#5b7088,#273f5c);box-shadow:0 0 0 3px rgba(255,255,255,.7),0 8px 18px rgba(30,57,88,.18);z-index:0}
+       .power-card{position:relative;z-index:1;border:0;background:transparent;padding:0;perspective:900px;cursor:pointer;min-width:0}
+       .power-card-inner{position:relative;width:100%;height:100%;min-height:250px;transition:transform .5s;transform-style:preserve-3d}
+       .power-card.flipped .power-card-inner{transform:rotateY(180deg)}
+       .power-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:22px;border:1px solid #bdcde0;background:rgba(255,255,255,.96);box-shadow:0 14px 30px rgba(25,54,89,.13);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10% 7%}
+       .power-face.back{transform:rotateY(180deg);background:#173b67;color:#fff;border-color:#173b67}
+       .power-icon{width:78%;height:46%;display:grid;place-items:center;margin-bottom:7%;color:#536b84}.power-icon svg{width:100%;height:100%}
+       .power-face strong{font-size:clamp(15px,1.55vw,24px);line-height:1.05;color:#183658}.power-face small{display:block;margin-top:7%;font-size:clamp(9px,.78vw,12px);font-weight:850;color:#6a7f96}.power-face.back strong{color:#fff;font-size:clamp(14px,1.35vw,21px);line-height:1.28}.power-face.back small{color:#bcd3ee}
+       .chain-arrow{position:absolute;right:-11%;top:45%;z-index:4;width:20%;height:16%;display:grid;place-items:center;color:#173b67;font-size:clamp(22px,2.6vw,40px);font-weight:950;pointer-events:none}
+       .main-reasons{display:grid;grid-template-columns:auto 1fr 1fr;gap:1.4%;align-items:stretch;padding:1.5%;border-radius:20px;background:#173b67;color:#fff;box-shadow:0 12px 28px rgba(23,59,103,.2)}
+       .main-reasons-title{display:flex;align-items:center;padding:0 1.2em;font-size:clamp(16px,1.55vw,24px);font-weight:950;white-space:nowrap;color:#9fd0ff}.reason-big{display:flex;align-items:center;gap:.7em;padding:1.1em 1.2em;border-radius:15px;background:rgba(255,255,255,.09);font-size:clamp(13px,1.25vw,20px);line-height:1.22;font-weight:900}.reason-big b{font-size:1.35em;color:#8ee4a4}
+       @media(max-width:1100px){.grid-flow-shell{padding:2.6% 3.5%}.power-card-inner{min-height:215px}.power-chain{gap:1%}.power-face{border-radius:17px}.main-reasons{gap:1%}.main-reasons-title{padding:0 .8em}}
+      `;
+      d.head.appendChild(style);
+      const cards=[
+       ['Generation','Big breasts you see when driving from San Diego to Newport.',`<svg viewBox="0 0 150 100"><rect x="7" y="76" width="136" height="15" rx="4" fill="#65778b"/><path d="M17 76V40h27v36M54 76V25h25v51M88 76V47h30v29" fill="#8193a5"/><path d="M28 39c-11-20 8-31 18-15 5-20 29-15 27 4 17-6 30 16 14 25" fill="#cbd4dd"/><path d="M107 76V29h22v47" fill="#74869a"/></svg>`],
+       ['Transmission','The large metal poles or lines that cause all the fires.',`<svg viewBox="0 0 150 100"><path d="M20 90 47 8 73 90M78 90 105 16 132 90" fill="none" stroke="#52657a" stroke-width="6"/><path d="M10 47h72M27 30h42M68 54h74M88 36h35" stroke="#52657a" stroke-width="5"/><path d="M47 8v82M105 16v74" stroke="#52657a" stroke-width="3"/></svg>`],
+       ['Distribution','Those tree-looking poles you sometimes see in the road during storms.',`<svg viewBox="0 0 150 100"><path d="M34 92V16M108 92V29" stroke="#755839" stroke-width="8"/><path d="M13 33h48M84 45h47" stroke="#755839" stroke-width="7"/><path d="M14 33c29 21 62 7 94 12" fill="none" stroke="#334258" stroke-width="4"/><circle cx="20" cy="34" r="5" fill="#53657a"/><circle cx="53" cy="34" r="5" fill="#53657a"/></svg>`],
+       ['Transformer','The things your neighbors run into, causing all the power outages.',`<svg viewBox="0 0 150 100"><rect x="32" y="29" width="86" height="58" rx="9" fill="#557360"/><rect x="42" y="38" width="66" height="39" rx="5" fill="#71927a"/><path d="M48 17v13M64 17v13M86 17v13M102 17v13" stroke="#374b3d" stroke-width="6"/><path d="M22 90h106" stroke="#45576c" stroke-width="6"/></svg>`],
+       ['Your Home','Do you really not know what your home is?',`<svg viewBox="0 0 150 100"><path d="M24 91V48L75 10l51 38v43Z" fill="#f1dfc4" stroke="#53657b" stroke-width="6"/><path d="M17 52 75 7l58 45" fill="none" stroke="#53657b" stroke-width="8"/><rect x="62" y="64" width="26" height="27" fill="#b8784e"/><rect x="96" y="56" width="19" height="17" fill="#cce9ff" stroke="#53657b" stroke-width="3"/></svg>`]
+      ];
+      grid.className='slide grid-interactive';
+      grid.innerHTML=`<div class="grid-flow-shell"><div class="grid-flow-head"><h1>The Grid</h1><p>Power travels through a long chain before it reaches your house. Tap each part to flip it and see what it actually does.</p></div><div class="power-chain">${cards.map((c,i)=>`<button type="button" class="power-card"><div class="power-card-inner"><div class="power-face front"><div class="power-icon">${c[2]}</div><strong>${c[0]}</strong><small>Tap to flip</small></div><div class="power-face back"><strong>${c[1]}</strong><small>Tap again to flip back</small></div></div>${i<cards.length-1?'<span class="chain-arrow">→</span>':''}</button>`).join('')}</div><div class="main-reasons"><div class="main-reasons-title">Main Reasons</div><div class="reason-big"><b>✓</b><span>Reduce peak demand and expensive grid strain</span></div><div class="reason-big"><b>✓</b><span>Delay costly infrastructure upgrades and maintenance</span></div></div></div>`;
+      grid.querySelectorAll('.power-card').forEach(card=>card.addEventListener('click',()=>card.classList.toggle('flipped')));
+     }
+     setTimeout(()=>{try{outer.getElementById('deckFrame').style.height=d.documentElement.scrollHeight+'px';outerFrame.style.height=outer.documentElement.scrollHeight+'px';v2Frame.style.height=v2.documentElement.scrollHeight+'px';v3Frame.style.height=v3.documentElement.scrollHeight+'px';resize()}catch(e){}},150);
+    };
+    deckFrame.addEventListener('load',apply,{once:true});apply();
+   };
+   outerFrame.addEventListener('load',patchOuter,{once:true});patchOuter();
+  };
+  v2Frame.addEventListener('load',patchV2,{once:true});patchV2();
+ };
+ v3Frame.addEventListener('load',patchV3,{once:true});patchV3();
+}
+base.addEventListener('load',install);window.addEventListener('resize',()=>setTimeout(resize,100));
+</script>
+</body>
+</html>
