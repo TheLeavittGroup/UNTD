@@ -63,12 +63,19 @@ function install(){
       auroraStyle.id='auroraLiveStyles';
       auroraStyle.textContent=`
        .aurora-transition{padding:0!important;background:#f4f4f6!important;color:#111!important;overflow:hidden!important}
-       .aurora-live-shell{position:absolute;inset:0;background:#f4f4f6;display:grid;grid-template-rows:10% 1fr}
+       .aurora-live-shell{position:absolute;inset:0;background:#f4f4f6;display:grid;grid-template-rows:10% 7% 1fr}
        .aurora-live-top{display:flex;align-items:center;justify-content:space-between;gap:2%;padding:0 2.4%;background:#fff;border-bottom:1px solid #d9d9df;box-shadow:0 4px 15px rgba(0,0,0,.08);z-index:3}
        .aurora-live-title strong{display:block;font-size:clamp(16px,1.55vw,25px);color:#18181d}
        .aurora-live-title span{display:block;margin-top:2px;font-size:clamp(10px,.82vw,14px);font-weight:750;color:#70707a}
        .aurora-live-open{display:inline-flex;align-items:center;gap:.5em;padding:.72em 1.05em;border-radius:999px;background:#86155f;color:#fff!important;text-decoration:none;font-size:clamp(11px,1vw,16px);font-weight:950;box-shadow:0 8px 22px rgba(134,21,95,.24);white-space:nowrap}
        .aurora-live-open:after{content:'↗'}
+       .aurora-sizing-bar{display:grid;grid-template-columns:1.15fr 1fr 1.3fr;gap:1px;background:#dddde4;border-bottom:1px solid #d5d5dc;z-index:3}
+       .aurora-sizing-item{min-width:0;display:flex;align-items:center;gap:.75em;padding:0 1.35em;background:#fafafd}
+       .aurora-sizing-item label{font-size:clamp(9px,.68vw,12px);font-weight:900;color:#666670;white-space:nowrap}
+       .aurora-sizing-item input{width:100%;min-width:80px;border:1px solid #cfcfd7;border-radius:8px;padding:.48em .65em;background:#fff;color:#18181d;font-size:clamp(11px,.88vw,15px);font-weight:900;outline:none}
+       .aurora-sizing-item input:focus{border-color:#86155f;box-shadow:0 0 0 2px rgba(134,21,95,.1)}
+       .aurora-sizing-result{font-size:clamp(12px,1vw,17px);font-weight:950;color:#18181d;white-space:nowrap}
+       .aurora-sizing-result small{display:block;margin-top:1px;font-size:clamp(8px,.58vw,10px);font-weight:750;color:#777781}
        .aurora-live-stage{position:relative;min-height:0;background:#fff}
        .aurora-live-frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff}
        .aurora-live-help{position:absolute;left:2%;bottom:2%;z-index:4;padding:10px 13px;border-radius:12px;background:rgba(255,255,255,.96);border:1px solid #d5d5dc;box-shadow:0 8px 24px rgba(0,0,0,.12);font-size:clamp(9px,.72vw,12px);font-weight:800;color:#5d5d67}
@@ -76,7 +83,20 @@ function install(){
       `;
       d.head.appendChild(auroraStyle);
      }
-     aurora.innerHTML=`<div class="aurora-live-shell"><header class="aurora-live-top"><div class="aurora-live-title"><strong>Create the Homeowner's Aurora Project</strong><span>Enter the property address, confirm Residential, name the project, and create it.</span></div><a class="aurora-live-open" href="${AURORA_URL}" target="_blank" rel="noopener noreferrer">Open Aurora New Project</a></header><div class="aurora-live-stage"><iframe class="aurora-live-frame" src="${AURORA_URL}" title="Aurora Solar New Project" allow="clipboard-read; clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe><div class="aurora-live-help">Aurora may block its logged-in workspace from displaying inside another website. <a href="${AURORA_URL}" target="_blank" rel="noopener noreferrer">Open the New Project page directly</a>.</div></div></div>`;
+     aurora.innerHTML=`<div class="aurora-live-shell"><header class="aurora-live-top"><div class="aurora-live-title"><strong>Create the Homeowner's Aurora Project</strong><span>Enter the property address, confirm Residential, name the project, and create it.</span></div><a class="aurora-live-open" href="${AURORA_URL}" target="_blank" rel="noopener noreferrer">Open Aurora New Project</a></header><div class="aurora-sizing-bar"><div class="aurora-sizing-item"><label for="auroraAnnualUsage">Annual Usage</label><input id="auroraAnnualUsage" type="number" inputmode="numeric" min="0" step="100" placeholder="20,000 kWh"></div><div class="aurora-sizing-item"><label>Batteries</label><div class="aurora-sizing-result"><span id="auroraBatteryAmount">—</span><small>Recommended for near-zero grid use</small></div></div><div class="aurora-sizing-item"><label>Backup Solar</label><div class="aurora-sizing-result"><span id="auroraSolarAmount">—</span><small>Recharge support during an outage</small></div></div></div><div class="aurora-live-stage"><iframe class="aurora-live-frame" src="${AURORA_URL}" title="Aurora Solar New Project" allow="clipboard-read; clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe><div class="aurora-live-help">Aurora may block its logged-in workspace from displaying inside another website. <a href="${AURORA_URL}" target="_blank" rel="noopener noreferrer">Open the New Project page directly</a>.</div></div></div>`;
+     const annualInput=aurora.querySelector('#auroraAnnualUsage');
+     const batteryResult=aurora.querySelector('#auroraBatteryAmount');
+     const solarResult=aurora.querySelector('#auroraSolarAmount');
+     const updateAuroraSizing=()=>{
+      const annual=parseFloat(annualInput.value)||0;
+      if(!(annual>0)){batteryResult.textContent='—';solarResult.textContent='—';return}
+      const batteries=Math.max(1,Math.ceil(annual/30000));
+      const panels=batteries*4;
+      const solarKw=(panels*.4).toFixed(1).replace('.0','');
+      batteryResult.textContent=batteries+' × 11.5 kWh';
+      solarResult.textContent=panels+' panels / '+solarKw+' kW';
+     };
+     annualInput.addEventListener('input',updateAuroraSizing);
     }
 
     const savings=[...d.querySelectorAll('.slide')].find(s=>/Be your own power company/i.test(s.textContent||''));
