@@ -4,12 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Daddy's Sales Deck</title>
-<style>*{box-sizing:border-box}html,body{margin:0;background:#000}#base{display:block;width:100%;height:16000px;border:0;background:#000}</style>
+<style>*{box-sizing:border-box}html,body{margin:0;background:#000}#base{display:block;width:100%;height:18000px;border:0;background:#000}</style>
 </head>
 <body>
-<iframe id="base" src="../combined-v3/" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<iframe id="base" src="../combined-v3/?v=aurora-new-project" scrolling="no" title="Daddy's Sales Deck"></iframe>
 <script>
 const base=document.getElementById('base');
+const AURORA_URL='https://v2.aurorasolar.com/new-project';
 function resize(){try{base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
 function install(){
  const v3=base.contentDocument;if(!v3)return;
@@ -50,6 +51,32 @@ function install(){
      if(stay&&!stay.querySelector('.choice-mascot')){
        stay.insertAdjacentHTML('afterbegin','<div class="choice-mascot dev"><div class="choice-face">😈</div><div class="choice-bubble">No, pick me!</div></div>');
      }
+
+     let aurora=d.querySelector('.aurora-transition');
+     if(!aurora){
+      aurora=d.createElement('section');
+      aurora.className='slide aurora-transition';
+      options.insertAdjacentElement('afterend',aurora);
+     }
+     if(!d.getElementById('auroraLiveStyles')){
+      const auroraStyle=d.createElement('style');
+      auroraStyle.id='auroraLiveStyles';
+      auroraStyle.textContent=`
+       .aurora-transition{padding:0!important;background:#f4f4f6!important;color:#111!important;overflow:hidden!important}
+       .aurora-live-shell{position:absolute;inset:0;background:#f4f4f6;display:grid;grid-template-rows:10% 1fr}
+       .aurora-live-top{display:flex;align-items:center;justify-content:space-between;gap:2%;padding:0 2.4%;background:#fff;border-bottom:1px solid #d9d9df;box-shadow:0 4px 15px rgba(0,0,0,.08);z-index:3}
+       .aurora-live-title strong{display:block;font-size:clamp(16px,1.55vw,25px);color:#18181d}
+       .aurora-live-title span{display:block;margin-top:2px;font-size:clamp(10px,.82vw,14px);font-weight:750;color:#70707a}
+       .aurora-live-open{display:inline-flex;align-items:center;gap:.5em;padding:.72em 1.05em;border-radius:999px;background:#86155f;color:#fff!important;text-decoration:none;font-size:clamp(11px,1vw,16px);font-weight:950;box-shadow:0 8px 22px rgba(134,21,95,.24);white-space:nowrap}
+       .aurora-live-open:after{content:'↗'}
+       .aurora-live-stage{position:relative;min-height:0;background:#fff}
+       .aurora-live-frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff}
+       .aurora-live-help{position:absolute;left:2%;bottom:2%;z-index:4;padding:10px 13px;border-radius:12px;background:rgba(255,255,255,.96);border:1px solid #d5d5dc;box-shadow:0 8px 24px rgba(0,0,0,.12);font-size:clamp(9px,.72vw,12px);font-weight:800;color:#5d5d67}
+       .aurora-live-help a{color:#86155f!important;font-weight:950;text-decoration:underline}
+      `;
+      d.head.appendChild(auroraStyle);
+     }
+     aurora.innerHTML=`<div class="aurora-live-shell"><header class="aurora-live-top"><div class="aurora-live-title"><strong>Create the Homeowner's Aurora Project</strong><span>Enter the property address, confirm Residential, name the project, and create it.</span></div><a class="aurora-live-open" href="${AURORA_URL}" target="_blank" rel="noopener noreferrer">Open Aurora New Project</a></header><div class="aurora-live-stage"><iframe class="aurora-live-frame" src="${AURORA_URL}" title="Aurora Solar New Project" allow="clipboard-read; clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe><div class="aurora-live-help">Aurora may block its logged-in workspace from displaying inside another website. <a href="${AURORA_URL}" target="_blank" rel="noopener noreferrer">Open the New Project page directly</a>.</div></div></div>`;
     }
 
     const savings=[...d.querySelectorAll('.slide')].find(s=>/Be your own power company/i.test(s.textContent||''));
@@ -94,7 +121,7 @@ function install(){
       savings.querySelectorAll('input,.mode-toggle button').forEach(el=>el.addEventListener(el.tagName==='BUTTON'?'click':'input',()=>setTimeout(resetButton,0)));
      }
     }
-    setTimeout(()=>{try{outer.getElementById('deckFrame').style.height=d.documentElement.scrollHeight+'px';outerFrame.style.height=outer.documentElement.scrollHeight+'px';v2Frame.style.height=v2.documentElement.scrollHeight+'px';resize()}catch(e){}},100);
+    setTimeout(()=>{try{outer.getElementById('deckFrame').style.height=d.documentElement.scrollHeight+'px';outerFrame.style.height=outer.documentElement.scrollHeight+'px';v2Frame.style.height=v2.documentElement.scrollHeight+'px';resize()}catch(e){}},150);
    };
    deckFrame.addEventListener('load',apply,{once:true});apply();
   };
