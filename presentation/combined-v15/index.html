@@ -13,7 +13,7 @@
 <iframe id="base" scrolling="no" title="Daddy's Sales Deck"></iframe>
 <script>
 const base=document.getElementById('base');
-base.src='../combined-v14/?build=iphone-polish-v15-2&refresh='+Date.now();
+base.src='../combined-v14/?build=iphone-polish-v15-3&refresh='+Date.now();
 let resizeTimer=0;
 
 function setHeight(frame,height){
@@ -63,7 +63,7 @@ function patchDeck(){
  if(!grid||!moving||!options)return false;
 
  const label=grid.querySelector('.main-reasons-title,.grid-retry-reasons-title,.why-incentive-title');
- if(label)label.textContent='Main Reasons Utility Incentivizes Around Half of Home Grid Payment';
+ if(label)label.textContent='APS and SRP pay homeowners to have their own storage';
 
  let style=d.getElementById('batteryCopyV15Styles');
  if(!style){style=d.createElement('style');style.id='batteryCopyV15Styles'}
