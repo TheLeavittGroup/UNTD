@@ -22,12 +22,7 @@ function syncTool(reason){
   try{
     const d=toolFrame.contentDocument;
     if(!d)return;
-    const map={
-      'Control Energy Cost':'Rate protection',
-      'Upgrade Your Home':'Home value',
-      'Save Money':'Long-term savings',
-      'Help the Environment':'Environmental impact'
-    };
+    const map={'Control Energy Cost':'Rate protection','Upgrade Your Home':'Home value','Save Money':'Long-term savings','Help the Environment':'Environmental impact'};
     d.querySelectorAll('#priorityButtons button').forEach(b=>b.classList.toggle('active',b.dataset.p===map[reason]));
     const summary=d.getElementById('discoverySummary');
     if(summary)summary.innerHTML='<strong>Primary reason selected in the presentation:</strong> '+reason+'. This should guide the education, proposal, and close.';
@@ -42,60 +37,81 @@ function setupDeck(){
   const whySlides=slides.filter(s=>s.querySelector('.reason-list'));
   if(whySlides.length<4)return;
   const main=whySlides[0];
-  const visuals=whySlides.slice(0,4).map(s=>s.querySelector('.visual')?.innerHTML||'');
   const reasons=[...main.querySelectorAll('.reason')];
   const style=d.createElement('style');
   style.textContent=`
-    .reason{cursor:pointer;transition:opacity .2s,transform .2s}
+    .reason{cursor:pointer;transition:opacity .2s,transform .2s,border-color .2s,box-shadow .2s;border:2px solid transparent;border-radius:18px;padding:2.7% 4.5% 2.7% 6.5%!important}
     .reason:hover{transform:translateX(5px)}
-    .reason.active{opacity:1}
+    .reason.active{opacity:1;border-color:#8da6e8;box-shadow:0 10px 28px rgba(34,88,199,.12);background:linear-gradient(180deg,#fff,#fbfcff)}
     .reason:not(.active){opacity:.16}
-    .reason:focus{outline:3px solid #2258c7;outline-offset:5px;border-radius:8px}
-    .reasons{grid-template-columns:42% 58%;padding-top:7%}
-    .visual{height:100%;min-height:0;padding:1.5% 2% 2%;display:flex;align-items:center;justify-content:center;overflow:hidden}
-    .visual>div{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2%;overflow:hidden}
-    .icon-house,.icon-money{font-size:clamp(72px,11vw,168px)!important;line-height:.9!important;margin:0!important;flex:0 0 auto}
-    .visual-label{font-size:clamp(22px,3.5vw,52px)!important;line-height:1.03!important;max-width:92%!important;margin:0 auto!important;padding:0 3% 2%!important;text-align:center!important}
-    .impact{width:94%!important;height:auto!important;max-height:88%;display:flex!important;flex-direction:column;justify-content:center;gap:4%}
-    .impact h3{font-size:clamp(22px,2.7vw,42px)!important;line-height:1.05!important;text-align:center;margin:0 0 2%!important}
-    .impact-grid{width:100%;grid-template-columns:repeat(2,1fr)!important;gap:10% 5%!important;align-items:start}
-    .impact-grid b{font-size:clamp(22px,2.8vw,42px)!important;line-height:1!important}
-    .impact-grid span{font-size:clamp(12px,1.15vw,18px)!important;line-height:1.2!important;margin-top:5px}
-    .linechart{width:84%!important;height:52%!important;margin:auto}
-    @media(max-width:1100px){
-      .visual{padding:1% 3% 3%}
-      .icon-house,.icon-money{font-size:clamp(64px,10vw,130px)!important}
-      .visual-label{font-size:clamp(20px,3.1vw,40px)!important;max-width:96%!important}
-      .impact{width:96%!important;max-height:92%}
-      .impact-grid{gap:7% 4%!important}
-      .impact-grid b{font-size:clamp(20px,2.5vw,34px)!important}
-      .impact-grid span{font-size:clamp(11px,1.05vw,16px)!important}
-    }
+    .reason:focus{outline:3px solid #2258c7;outline-offset:5px;border-radius:18px}
+    .reason.active:before{left:2px!important;top:10%!important;bottom:10%!important;border-radius:999px;width:6px!important;background:#4167d9!important}
+    .reason h3{font-size:clamp(18px,2vw,31px)!important}
+    .reason p{font-size:clamp(12px,1.25vw,18px)!important;line-height:1.28!important}
+    .reasons{grid-template-columns:42% 58%;padding-top:6.4%}
+    .reason-list{padding:3% 4.5% 0 0!important;display:flex;flex-direction:column;gap:3%}
+    .visual{height:100%;min-height:0;padding:1% 2.2% 2%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .visual>div,.custom-visual{width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden}
+    .custom-visual{padding:2%}
+    .control-wrap{gap:4%;padding:0 2% 1%}
+    .control-top{width:100%;display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+    .control-top strong{font-size:clamp(23px,2.6vw,40px);color:#2757b6;line-height:1.05}
+    .control-top span{display:block;font-size:clamp(12px,1.1vw,16px);letter-spacing:.08em;text-transform:uppercase;color:#6d83a9;font-weight:700}
+    .control-chip{padding:10px 14px;border-radius:999px;background:#eff5ff;color:#2757b6;font-weight:700;font-size:clamp(12px,1vw,15px);border:1px solid #cddaf5}
+    .chart-shell{width:100%;height:66%;border-radius:26px;background:linear-gradient(180deg,#f8fbff,#eef5ff);box-shadow:inset 0 0 0 1px #d9e5fb;padding:16px 18px 14px}
+    .chart-shell svg{width:100%;height:100%;display:block}
+    .control-caption{width:100%;text-align:left;color:#46628f;font-size:clamp(13px,1.15vw,17px);line-height:1.35}
+    .home-wrap{gap:6%;padding:1% 4%}
+    .home-tag{align-self:flex-start;padding:9px 14px;border-radius:999px;background:#eef5ff;color:#2757b6;font-size:clamp(12px,1vw,15px);font-weight:700;border:1px solid #d7e3fb}
+    .home-card{width:100%;height:72%;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:3%;padding:4%;border-radius:28px;background:linear-gradient(135deg,#f7fbff,#eef5ff 58%,#f8fafc);box-shadow:inset 0 0 0 1px #d9e5fb}
+    .home-icon{width:100%;height:78%;max-height:260px}
+    .home-copy{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:12px}
+    .home-copy strong{font-size:clamp(34px,4vw,60px);line-height:.95;color:#2757b6;letter-spacing:-.03em}
+    .home-copy span{font-size:clamp(14px,1.2vw,18px);line-height:1.35;color:#5d7399;max-width:90%}
+    .money-wrap{gap:4%;padding:1% 3%}
+    .money-hero{width:100%;display:grid;grid-template-columns:150px 1fr;align-items:center;gap:14px;padding:0 1%}
+    .money-icon{width:140px;height:140px;border-radius:50%;background:linear-gradient(135deg,#edf5ff,#dbe9ff);display:grid;place-items:center;font-size:clamp(70px,8vw,108px);font-weight:700;color:#2757b6;box-shadow:inset 0 0 0 1px #cfdef9}
+    .money-copy strong{display:block;font-size:clamp(32px,4vw,62px);line-height:.96;color:#2757b6;letter-spacing:-.04em}
+    .money-copy span{display:block;margin-top:8px;color:#5e7299;font-size:clamp(13px,1.1vw,17px)}
+    .money-row{width:100%;display:grid;grid-template-columns:1fr 60px 1fr;gap:10px;align-items:center}
+    .money-pill{border-radius:22px;padding:16px 18px;background:linear-gradient(180deg,#f8fbff,#eef4ff);box-shadow:inset 0 0 0 1px #d9e5fb;text-align:center}
+    .money-pill label{display:block;font-size:clamp(11px,1vw,14px);letter-spacing:.08em;text-transform:uppercase;color:#7b8eaf;font-weight:700;margin-bottom:5px}
+    .money-pill b{display:block;font-size:clamp(18px,1.8vw,28px);color:#243f80}
+    .money-arrow{font-size:clamp(34px,3.3vw,50px);color:#7b95cf;text-align:center}
+    .money-caption{width:100%;text-align:center;color:#46628f;font-size:clamp(13px,1.12vw,17px);line-height:1.35}
+    .env-wrap{gap:4%;padding:1% 2%}
+    .env-head{text-align:center}
+    .env-head strong{display:block;font-size:clamp(24px,2.7vw,42px);color:#2757b6;line-height:1.03}
+    .env-head span{display:block;margin-top:10px;font-size:clamp(13px,1.08vw,16px);color:#6b7fa4}
+    .env-grid{width:100%;display:grid;grid-template-columns:repeat(2,1fr);gap:12px 14px}
+    .env-stat{min-height:126px;border-radius:24px;background:linear-gradient(180deg,#f8fbff,#eef5ff);box-shadow:inset 0 0 0 1px #d9e5fb;padding:16px 10px 14px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+    .env-icon{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:#e5efff;color:#2757b6;font-size:24px;margin-bottom:8px}
+    .env-stat b{display:block;font-size:clamp(26px,2.7vw,40px);line-height:.95;color:#264ea7}
+    .env-stat em{display:block;font-style:normal;font-size:clamp(16px,1.7vw,24px);line-height:1;color:#264ea7;font-weight:700}
+    .env-stat span{display:block;font-size:clamp(12px,1.02vw,15px);line-height:1.2;color:#5e7299;margin-top:8px;max-width:90%}
+    @media(max-width:1100px){.reasons{grid-template-columns:43% 57%}.reason-list{gap:2.2%}.chart-shell{height:63%}.home-card{grid-template-columns:.95fr 1.05fr;padding:4.2%}.home-copy strong{font-size:clamp(30px,3.7vw,46px)}.money-hero{grid-template-columns:118px 1fr}.money-icon{width:112px;height:112px;font-size:clamp(56px,7vw,86px)}.money-copy strong{font-size:clamp(28px,3.5vw,46px)}.env-stat{min-height:110px}}
   `;
   d.head.appendChild(style);
+  const visualTemplates=[
+    `<div class="custom-visual control-wrap"><div class="control-top"><div><span>Utility rates trend upward</span><strong>Control Energy Costs</strong></div><div class="control-chip">More choice. More control.</div></div><div class="chart-shell"><svg viewBox="0 0 540 280" role="img" aria-label="Line chart of electricity price increases over time"><defs><linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#6ca5ef"/><stop offset="100%" stop-color="#2a56c3"/></linearGradient><linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#9bc0f4" stop-opacity="0.35"/><stop offset="100%" stop-color="#9bc0f4" stop-opacity="0"/></linearGradient></defs><g font-family="Arial,Helvetica,sans-serif"><g stroke="#d7e2f5" stroke-width="1"><line x1="52" y1="236" x2="510" y2="236"/><line x1="52" y1="182" x2="510" y2="182"/><line x1="52" y1="128" x2="510" y2="128"/><line x1="52" y1="74" x2="510" y2="74"/><line x1="52" y1="20" x2="510" y2="20"/></g><g fill="#7f91af" font-size="13"><text x="28" y="240">0</text><text x="20" y="186">5</text><text x="16" y="132">10</text><text x="16" y="78">15</text><text x="16" y="24">20</text><text x="52" y="262">2020</text><text x="148" y="262">2025</text><text x="246" y="262">2030</text><text x="344" y="262">2035</text><text x="442" y="262">2040</text></g><path d="M52 208 L150 166 L248 94 L346 72 L444 54 L510 40 L510 236 L52 236 Z" fill="url(#fillGrad)"/><path d="M52 208 L150 166 L248 94 L346 72 L444 54 L510 40" fill="none" stroke="url(#lineGrad)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><g fill="#fff" stroke="#2b58c5" stroke-width="4"><circle cx="52" cy="208" r="9"/><circle cx="150" cy="166" r="9"/><circle cx="248" cy="94" r="9"/><circle cx="346" cy="72" r="9"/><circle cx="444" cy="54" r="9"/><circle cx="510" cy="40" r="9"/></g></g></svg></div><div class="control-caption">By having a choice where you get your power, you can avoid annual utility rate increases and build a more predictable energy path.</div></div>`,
+    `<div class="custom-visual home-wrap"><div class="home-tag">Upgrade your home</div><div class="home-card"><svg class="home-icon" viewBox="0 0 300 250" aria-hidden="true"><defs><linearGradient id="homeGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#8db8f5"/><stop offset="100%" stop-color="#2d59c5"/></linearGradient></defs><path d="M54 190 V110 L126 52 L196 110 V190" fill="none" stroke="url(#homeGrad)" stroke-width="12" stroke-linejoin="round"/><path d="M104 190 V135 H146 V190" fill="none" stroke="url(#homeGrad)" stroke-width="12" stroke-linejoin="round"/><path d="M207 196 V44" stroke="url(#homeGrad)" stroke-width="12" stroke-linecap="round"/><path d="M170 79 L207 42 L244 79" fill="none" stroke="url(#homeGrad)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><circle cx="207" cy="42" r="14" fill="#2d59c5" opacity=".15"/></svg><div class="home-copy"><strong>Increased<br>home value</strong><span>Energy-efficient upgrades can help your home stand out and feel more attractive to future buyers.</span></div></div></div>`,
+    `<div class="custom-visual money-wrap"><div class="money-hero"><div class="money-icon">$</div><div class="money-copy"><strong>Save Money<br>on Your Electric Bill</strong><span>Replace rising utility costs with a more predictable payment path.</span></div></div><div class="money-row"><div class="money-pill"><label>Utility</label><b>Higher & rising</b></div><div class="money-arrow">→</div><div class="money-pill"><label>Solar</label><b>Lower & predictable</b></div></div><div class="money-caption">Solar technology has come a long way — in many areas it can cost less than staying with the utility over time.</div></div>`,
+    `<div class="custom-visual env-wrap"><div class="env-head"><strong>Solar Energy Makes a Difference.</strong><span>Cleaner energy can reduce waste, emissions, and dependence on dirtier power sources.</span></div><div class="env-grid"><div class="env-stat"><div class="env-icon">♻</div><b>4.8</b><em>tons</em><span>of garbage recycled</span></div><div class="env-stat"><div class="env-icon">⚡</div><b>1,718,000</b><em>fewer</em><span>smartphones charged</span></div><div class="env-stat"><div class="env-icon">🕒</div><b>35,495</b><em>miles</em><span>not driven</span></div><div class="env-stat"><div class="env-icon">🚗</div><b>3.1</b><em>fewer</em><span>cars on the road</span></div></div></div>`
+  ];
   function activate(i){
     reasons.forEach((r,j)=>{r.classList.toggle('active',i===j);r.setAttribute('aria-pressed',i===j?'true':'false')});
     const v=main.querySelector('.visual');
-    if(v)v.innerHTML=visuals[i];
+    if(v)v.innerHTML=visualTemplates[i];
     syncTool(reasonMap[i]);
   }
-  reasons.forEach((r,i)=>{
-    r.tabIndex=0;
-    r.setAttribute('role','button');
-    r.addEventListener('click',()=>activate(i));
-    r.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activate(i)}});
-  });
+  reasons.forEach((r,i)=>{r.tabIndex=0;r.setAttribute('role','button');r.addEventListener('click',()=>activate(i));r.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activate(i)}})});
   whySlides.slice(1,4).forEach(s=>s.remove());
   const saved=localStorage.getItem('daddySolarReason');
   activate(Math.max(0,reasonMap.indexOf(saved)));
   setTimeout(()=>{deckFrame.style.height=d.documentElement.scrollHeight+'px'},50);
 }
 deckFrame.addEventListener('load',setupDeck);
-toolFrame.addEventListener('load',()=>{
-  const saved=localStorage.getItem('daddySolarReason');
-  if(saved)syncTool(saved);
-  try{setTimeout(()=>{toolFrame.style.height=toolFrame.contentDocument.documentElement.scrollHeight+'px'},100)}catch(e){}
-});
+toolFrame.addEventListener('load',()=>{const saved=localStorage.getItem('daddySolarReason');if(saved)syncTool(saved);try{setTimeout(()=>{toolFrame.style.height=toolFrame.contentDocument.documentElement.scrollHeight+'px'},100)}catch(e){}});
 </script>
 </body>
 </html>
