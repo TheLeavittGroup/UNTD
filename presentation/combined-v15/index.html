@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Daddy's Sales Deck</title>
+<style>*{box-sizing:border-box}html,body{margin:0;background:#000;min-height:100%}#base{display:block;width:100%;height:26000px;border:0;background:#000}</style>
+</head>
+<body>
+<iframe id="base" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<script>
+const base=document.getElementById('base');
+base.src='../combined-v14/?build=battery-copy-v15&refresh='+Date.now();
+
+function setHeight(frame,height){
+ const next=Math.ceil(height||0),current=parseInt(frame.style.height,10)||0;
+ if(next>0&&Math.abs(next-current)>4)frame.style.height=next+'px';
+}
+
+function getDeck(){
+ try{
+  const docs=[];let doc=base.contentDocument;
+  while(doc){
+   docs.push(doc);
+   const frame=doc.getElementById('base');
+   if(!frame||!frame.contentDocument)break;
+   doc=frame.contentDocument;
+  }
+  const outer=docs[docs.length-1];
+  const deckFrame=outer&&outer.getElementById('deckFrame');
+  const deck=deckFrame&&deckFrame.contentDocument;
+  return{docs,deckFrame,deck};
+ }catch(e){return{}}
+}
+
+function resizeAll(ctx){
+ try{
+  const{docs,deckFrame,deck}=ctx;
+  if(deckFrame&&deck)setHeight(deckFrame,deck.documentElement.scrollHeight);
+  if(docs)for(let i=docs.length-1;i>0;i--){
+   const frame=docs[i-1].getElementById('base');
+   if(frame)setHeight(frame,docs[i].documentElement.scrollHeight);
+  }
+  if(base.contentDocument)setHeight(base,base.contentDocument.documentElement.scrollHeight);
+ }catch(e){}
+}
+
+function patchCopy(){
+ const ctx=getDeck(),d=ctx.deck;
+ if(!d)return false;
+
+ let changed=false;
+ [...d.querySelectorAll('h1')].forEach(h=>{
+  if(/^Why are people going solar\?$/i.test((h.textContent||'').trim())){
+   h.textContent='Why are people getting batteries?';
+   changed=true;
+  }
+ });
+
+ const grid=d.querySelector('.slide.grid-interactive,.slide.grid-live-retry,.slide.grid-v4,.slide.grid-slide')||[...d.querySelectorAll('.slide')].find(s=>{const h=s.querySelector('h1');return h&&/^The Grid$/i.test((h.textContent||'').trim())});
+ if(grid){
+  const label=grid.querySelector('.main-reasons-title,.grid-retry-reasons-title,.why-incentive-title');
+  if(label){
+   label.textContent='Main Reasons Utility Incentivizes Around Half of Home Grid Payment';
+   changed=true;
+  }
+  if(!d.getElementById('batteryCopyV15Styles')){
+   const style=d.createElement('style');
+   style.id='batteryCopyV15Styles';
+   style.textContent=`
+    .main-reasons,.grid-retry-reasons{grid-template-columns:minmax(170px,1.35fr) 1fr 1fr!important}
+    .main-reasons-title,.grid-retry-reasons-title,.why-incentive-title{white-space:normal!important;line-height:1.12!important;text-align:left!important;font-size:clamp(11px,1.08vw,17px)!important;padding:.7em 1em!important}
+    @media(max-width:600px){.main-reasons,.grid-retry-reasons{grid-template-columns:1.35fr 1fr 1fr!important}.main-reasons-title,.grid-retry-reasons-title,.why-incentive-title{font-size:6.2px!important;line-height:1.08!important;padding:.45em!important}}
+   `;
+   d.head.appendChild(style);
+  }
+ }
+
+ if(changed)resizeAll(ctx);
+ return changed;
+}
+
+function waitForDeck(attempt=0){
+ if(patchCopy()){
+  setTimeout(()=>{patchCopy();resizeAll(getDeck())},700);
+  return;
+ }
+ if(attempt<100)setTimeout(()=>waitForDeck(attempt+1),100);
+}
+
+base.addEventListener('load',()=>waitForDeck(),{once:true});
+setTimeout(()=>waitForDeck(),120);
+window.addEventListener('resize',()=>setTimeout(()=>{patchCopy();resizeAll(getDeck())},180),{passive:true});
+</script>
+</body>
+</html>
