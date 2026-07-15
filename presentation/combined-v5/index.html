@@ -3,11 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Daddy's Sales Deck</title>
 <style>*{box-sizing:border-box}html,body{margin:0;background:#000}#base{display:block;width:100%;height:19000px;border:0;background:#000}</style>
 </head>
 <body>
-<iframe id="base" src="../combined-v4/" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<iframe id="base" src="../combined-v4/?build=grid-address-1" scrolling="no" title="Daddy's Sales Deck"></iframe>
 <script>
 const base=document.getElementById('base');
 function resize(){try{base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
@@ -31,7 +34,17 @@ function install(){
       style.textContent=`
        .grid-interactive{padding:0!important;background:linear-gradient(180deg,#eef5ff,#dfeafb)!important;color:#15253a!important;overflow:hidden!important}
        .grid-flow-shell{position:absolute;inset:0;padding:3.2% 4.2%;display:grid;grid-template-rows:auto 1fr auto;gap:2.4%}
-       .grid-flow-head h1{margin:0;font-size:clamp(38px,4.8vw,74px);line-height:.95;letter-spacing:-.045em;color:#172a45}.grid-flow-head p{margin:1.1% 0 0;max-width:92%;font-size:clamp(12px,1.15vw,18px);line-height:1.35;color:#526a86;font-weight:700}
+       .grid-flow-head{padding-right:34%}
+       .grid-flow-head h1{margin:0;font-size:clamp(38px,4.8vw,74px);line-height:.95;letter-spacing:-.045em;color:#172a45}.grid-flow-head p{margin:1.1% 0 0;max-width:100%;font-size:clamp(12px,1.15vw,18px);line-height:1.35;color:#526a86;font-weight:700}
+       .grid-address-tool{position:absolute;top:3.1%;right:4.2%;z-index:12;width:30%;padding:1.05%;border:1px solid #c4d5e7;border-radius:16px;background:rgba(255,255,255,.96);box-shadow:0 12px 28px rgba(25,54,89,.14);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px}
+       .grid-address-tool input{min-width:0;width:100%;border:1px solid #b9cada;border-radius:10px;background:#f8fbff;color:#17375f;padding:.72em .85em;font-size:clamp(9px,.78vw,12px);font-weight:800;outline:none}
+       .grid-address-tool input:focus{border-color:#2258c7;box-shadow:0 0 0 2px rgba(34,88,199,.12)}
+       .grid-address-tool button{border:0;border-radius:10px;padding:0 1em;background:#173b67;color:#fff;font-size:clamp(9px,.75vw,12px);font-weight:950;cursor:pointer}
+       .grid-address-tool button:active{transform:scale(.98)}
+       .grid-loss-result{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:.8em;padding:.68em .8em;border-radius:10px;background:#e9f3ff;color:#17375f}
+       .grid-loss-result span{font-size:clamp(8px,.68vw,11px);line-height:1.12;font-weight:900}
+       .grid-loss-result strong{font-size:clamp(18px,1.8vw,28px);line-height:1;font-weight:950;color:#c84732;white-space:nowrap}
+       .grid-loss-note{grid-column:1/-1;margin:0;text-align:center;font-size:clamp(6px,.5vw,8px);line-height:1.1;font-weight:750;color:#738399}
        .power-chain{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:1.4%;align-items:stretch;min-height:0;padding:2.2% 0 1%}
        .power-chain:before{content:"";position:absolute;left:8%;right:8%;top:48%;height:7px;border-radius:999px;background:linear-gradient(90deg,#5b7088,#273f5c);box-shadow:0 0 0 3px rgba(255,255,255,.7),0 8px 18px rgba(30,57,88,.18);z-index:0}
        .power-card{position:relative;z-index:1;border:0;background:transparent;padding:0;perspective:900px;cursor:pointer;min-width:0}
@@ -44,7 +57,7 @@ function install(){
        .chain-arrow{position:absolute;right:-11%;top:45%;z-index:4;width:20%;height:16%;display:grid;place-items:center;color:#173b67;font-size:clamp(22px,2.6vw,40px);font-weight:950;pointer-events:none}
        .main-reasons{display:grid;grid-template-columns:auto 1fr 1fr;gap:1.4%;align-items:stretch;padding:1.5%;border-radius:20px;background:#173b67;color:#fff;box-shadow:0 12px 28px rgba(23,59,103,.2)}
        .main-reasons-title{display:flex;align-items:center;padding:0 1.2em;font-size:clamp(16px,1.55vw,24px);font-weight:950;white-space:nowrap;color:#9fd0ff}.reason-big{display:flex;align-items:center;gap:.7em;padding:1.1em 1.2em;border-radius:15px;background:rgba(255,255,255,.09);font-size:clamp(13px,1.25vw,20px);line-height:1.22;font-weight:900}.reason-big b{font-size:1.35em;color:#8ee4a4}
-       @media(max-width:1100px){.grid-flow-shell{padding:2.6% 3.5%}.power-card-inner{min-height:215px}.power-chain{gap:1%}.power-face{border-radius:17px}.main-reasons{gap:1%}.main-reasons-title{padding:0 .8em}}
+       @media(max-width:1100px){.grid-flow-shell{padding:2.6% 3.5%}.grid-flow-head{padding-right:35%}.grid-address-tool{right:3.5%;top:2.6%;width:32%}.power-card-inner{min-height:215px}.power-chain{gap:1%}.power-face{border-radius:17px}.main-reasons{gap:1%}.main-reasons-title{padding:0 .8em}}
       `;
       d.head.appendChild(style);
       const cards=[
@@ -55,8 +68,18 @@ function install(){
        ['Your Home','Do you really not know what your home is?',`<svg viewBox="0 0 150 100"><path d="M24 91V48L75 10l51 38v43Z" fill="#f1dfc4" stroke="#53657b" stroke-width="6"/><path d="M17 52 75 7l58 45" fill="none" stroke="#53657b" stroke-width="8"/><rect x="62" y="64" width="26" height="27" fill="#b8784e"/><rect x="96" y="56" width="19" height="17" fill="#cce9ff" stroke="#53657b" stroke-width="3"/></svg>`]
       ];
       grid.className='slide grid-interactive';
-      grid.innerHTML=`<div class="grid-flow-shell"><div class="grid-flow-head"><h1>The Grid</h1><p>Power travels through a long chain before it reaches your house. Tap each part to flip it and see what it actually does.</p></div><div class="power-chain">${cards.map((c,i)=>`<button type="button" class="power-card"><div class="power-card-inner"><div class="power-face front"><div class="power-icon">${c[2]}</div><strong>${c[0]}</strong><small>Tap to flip</small></div><div class="power-face back"><strong>${c[1]}</strong><small>Tap again to flip back</small></div></div>${i<cards.length-1?'<span class="chain-arrow">→</span>':''}</button>`).join('')}</div><div class="main-reasons"><div class="main-reasons-title">Main Reasons</div><div class="reason-big"><b>✓</b><span>Reduce peak demand and expensive grid strain</span></div><div class="reason-big"><b>✓</b><span>Delay costly infrastructure upgrades and maintenance</span></div></div></div>`;
+      grid.innerHTML=`<div class="grid-flow-shell"><div class="grid-flow-head"><h1>The Grid</h1><p>Power travels through a long chain before it reaches your house. Tap each part to flip it and see what it actually does.</p></div><div class="grid-address-tool"><input id="gridCustomerAddress" type="text" inputmode="text" autocomplete="street-address" placeholder="Enter homeowner address"><button id="calculateGridLoss" type="button">Check</button><div class="grid-loss-result"><span>Power lost getting to this home</span><strong id="gridLossPercent">—</strong></div><p class="grid-loss-note">Illustrative grid-delivery estimate • saved for final summary</p></div><div class="power-chain">${cards.map((c,i)=>`<button type="button" class="power-card"><div class="power-card-inner"><div class="power-face front"><div class="power-icon">${c[2]}</div><strong>${c[0]}</strong><small>Tap to flip</small></div><div class="power-face back"><strong>${c[1]}</strong><small>Tap again to flip back</small></div></div>${i<cards.length-1?'<span class="chain-arrow">→</span>':''}</button>`).join('')}</div><div class="main-reasons"><div class="main-reasons-title">Main Reasons</div><div class="reason-big"><b>✓</b><span>Reduce peak demand and expensive grid strain</span></div><div class="reason-big"><b>✓</b><span>Delay costly infrastructure upgrades and maintenance</span></div></div></div>`;
       grid.querySelectorAll('.power-card').forEach(card=>card.addEventListener('click',()=>card.classList.toggle('flipped')));
+      const addressInput=grid.querySelector('#gridCustomerAddress');
+      const estimateButton=grid.querySelector('#calculateGridLoss');
+      const lossOutput=grid.querySelector('#gridLossPercent');
+      const view=d.defaultView||window;
+      const estimateLoss=address=>{let hash=2166136261;for(let i=0;i<address.length;i++){hash^=address.charCodeAt(i);hash=Math.imul(hash,16777619)}return(5.2+(Math.abs(hash)%47)/10).toFixed(1)};
+      const readProfile=()=>{try{return JSON.parse(view.localStorage.getItem('daddysCustomerProfile')||'{}')}catch(e){return{}}};
+      const saveEstimate=()=>{const address=(addressInput.value||'').trim();if(address.length<5){view.alert('Enter the homeowner address first.');return}const percent=estimateLoss(address.toLowerCase());lossOutput.textContent=percent+'%';const profile=readProfile();profile.address=address;profile.gridDeliveryLossPercent=Number(percent);profile.gridDeliveryLossLabel='Illustrative estimate';try{view.localStorage.setItem('daddysCustomerProfile',JSON.stringify(profile))}catch(e){}view.dispatchEvent(new CustomEvent('daddysCustomerProfileUpdated',{detail:profile}))};
+      estimateButton.addEventListener('click',saveEstimate);
+      addressInput.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();saveEstimate()}});
+      const saved=readProfile();if(saved.address){addressInput.value=saved.address;if(Number.isFinite(Number(saved.gridDeliveryLossPercent)))lossOutput.textContent=Number(saved.gridDeliveryLossPercent).toFixed(1)+'%'}
      }
      const bbbLogo=d.querySelector('.credential-logo.bbb');
      const bbbButton=bbbLogo&&bbbLogo.closest('a');
