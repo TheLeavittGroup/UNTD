@@ -43,6 +43,29 @@ function install(){
     const blueCallout=zillow.querySelector('.sign');
     if(blueCallout)blueCallout.insertAdjacentElement('beforebegin',proof);else zillow.appendChild(proof);
    }
+   const options=[...d.querySelectorAll('.slide')].find(s=>/^\s*The Options/i.test(s.textContent||''));
+   if(options){
+    const optionsStyle=d.createElement('style');
+    optionsStyle.textContent=`
+     .options-upgrade{padding:3.5% 4.5%!important;background:#fff!important;color:#111}
+     .options-upgrade .logo{top:6.5%}
+     .options-upgrade .title{font-size:clamp(34px,4.2vw,66px)}
+     .options-upgrade .options-grid{height:79%;margin-top:2.2%;gap:2.4%;align-items:stretch}
+     .options-upgrade .option{width:38%;min-height:100%;padding:2.2% 2.5%;border-radius:0;font-size:clamp(13px,1.35vw,21px);line-height:1.28;box-shadow:0 14px 30px rgba(27,51,82,.12)}
+     .options-upgrade .option h2{font-size:clamp(28px,3.45vw,54px);line-height:1;margin:0 0 5%;font-weight:900}
+     .options-upgrade .option.solar{background:#4fa8e9;color:#10243d}
+     .options-upgrade .option.stay{background:#bbb;color:#202020}
+     .option-list{display:grid;gap:3.2%}
+     .option-item{display:grid;grid-template-columns:auto 1fr;gap:.6em;align-items:start;font-weight:750}
+     .option-item b{font-size:1.15em;line-height:1;color:#fff}
+     .stay .option-item b{color:#4a4a4a}
+     .option-pain{margin-top:4%;padding:3.5% 4%;background:rgba(255,255,255,.24);border:1px solid rgba(255,255,255,.36);font-weight:900;line-height:1.2;text-align:center}
+     .stay .option-pain{background:rgba(255,255,255,.32);border-color:rgba(255,255,255,.4)}
+    `;
+    d.head.appendChild(optionsStyle);
+    options.className='slide options-upgrade';
+    options.innerHTML=`<div class="logo">WE</div><h1 class="title with-logo">The Options</h1><div class="options-grid"><div class="option solar"><h2>Have Your Own Grid</h2><div class="option-list"><div class="option-item"><b>✓</b><span>Buy power at a fixed price for a fraction of what your neighbors pay</span></div><div class="option-item"><b>✓</b><span>No cost</span></div><div class="option-item"><b>✓</b><span>25-year risk-free warranty</span></div><div class="option-item"><b>✓</b><span>Take control of whatever the utility decides to do in the future</span></div><div class="option-item"><b>✓</b><span>Battery homes sell faster and for more</span></div></div><div class="option-pain">Your lights and A/C stay on—and your food stays cold when the grid goes down.</div></div><div class="option stay"><h2>Stay Where<br>You're At</h2><div class="option-list"><div class="option-item"><b>➤</b><span>Pay for on-peak power and 100% of demand costs</span></div><div class="option-item"><b>➤</b><span>No say in how much you have to pay for power every year</span></div><div class="option-item"><b>➤</b><span>No savings</span></div><div class="option-item"><b>➤</b><span>Lose power whenever the utility decides to shut it off</span></div></div><div class="option-pain">You remain fully dependent on the utility for price and reliability.</div></div></div>`;
+   }
    const savings=[...d.querySelectorAll('.slide')].find(s=>/Be your own power company/i.test(s.textContent||''));
    if(!savings)return;
    const style=d.createElement('style');
@@ -55,7 +78,7 @@ function install(){
    d.head.appendChild(style);
    const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
    const card=savings.querySelector('.input-card');if(!card)return;
-   card.innerHTML=`<div class="mode-toggle"><button type="button" class="active" data-mode="usage">Monthly kWh</button><button type="button" data-mode="bills">Monthly Bills</button></div><div class="input-head"><div class="input-title" id="modeTitle">Enter monthly electricity use</div><div class="annual-total">Annual usage: <strong id="annualUsage">0 kWh</strong></div></div><div class="month-grid">${months.map((m,i)=>`<label>${m.slice(0,3)}<input class="month-entry" data-month="${i}" type="number" inputmode="decimal" placeholder="kWh"></label>`).join('')}</div><div class="rate-inputs"><label>Latest bill<input id="recentBill" type="number" inputmode="decimal" placeholder="$"></label><label>kWh on latest bill<input id="recentKwh" type="number" inputmode="decimal" placeholder="kWh"></label></div>`;
+   card.innerHTML=`<div class="mode-toggle"><button type="button" class="active" data-mode="usage">Monthly kWh</button><button type="button" data-mode="bills">Monthly Bills</button></div><div class="input-head"><div class="input-title" id="modeTitle">Enter monthly electricity use</div><div class="annual-total">Annual usage: <strong id="annualUsage">0 kWh</strong></div></div><div class="month-grid">${months.map((m,i)=>`<label>${m.slice(0,3)}<input class="month-entry" data-month="${i}" type="number" inputmode="decimal" placeholder="kWh"></label>`).join('')}</div><div class="rate-inputs"><label>Latest bill<input id="recentBill" type="number" inputmode="decimal" placeholder="₹"></label><label>kWh on latest bill<input id="recentKwh" type="number" inputmode="decimal" placeholder="kWh"></label></div>`;
    const entries=[...card.querySelectorAll('.month-entry')],bill=card.querySelector('#recentBill'),kwh=card.querySelector('#recentKwh'),buttons=[...card.querySelectorAll('.mode-toggle button')];
    let mode='usage';
    const money=n=>Number.isFinite(n)?new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n):'$0';
