@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Daddy's Sales Deck</title>
+<style>*{box-sizing:border-box}html,body{margin:0;background:#000}#base{display:block;width:100%;height:24500px;border:0;background:#000}</style>
+</head>
+<body>
+<iframe id="base" src="../combined-v11/?v=compact-chart-installer" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<script>
+const base=document.getElementById('base');
+function getDeck(){try{const docs=[];let doc=base.contentDocument;while(doc){docs.push(doc);const frame=doc.getElementById('base');if(!frame||!frame.contentDocument)break;doc=frame.contentDocument}const outer=docs[docs.length-1],deckFrame=outer&&outer.getElementById('deckFrame'),deck=deckFrame&&deckFrame.contentDocument;return{docs,deckFrame,deck}}catch(e){return{}}}
+function resizeAll(ctx){try{const{docs,deckFrame,deck}=ctx;if(deckFrame&&deck)deckFrame.style.height=deck.documentElement.scrollHeight+'px';if(docs)for(let i=docs.length-1;i>0;i--){const f=docs[i-1].getElementById('base');if(f)f.style.height=docs[i].documentElement.scrollHeight+'px'}if(base.contentDocument)base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
+function patchDeck(){
+ const ctx=getDeck(),d=ctx.deck;if(!d)return;
+ if(!d.getElementById('finalSavingsInstallerV12')){
+  const style=d.createElement('style');style.id='finalSavingsInstallerV12';style.textContent=`
+   .savings-shell{grid-template-rows:auto 34% minmax(0,1fr)!important;gap:.8%!important;padding:1.5% 2.3%!important}
+   .savings-head h1{font-size:clamp(27px,3.15vw,49px)!important}.savings-head p{margin:.2% 0 0!important}
+   .savings-graph{position:relative!important;overflow:hidden!important;background:linear-gradient(180deg,#f9fbfe,#edf3fa)!important;border:1px solid #d9e2ed!important}
+   .savings-graph .graph-red{position:absolute!important;left:3%!important;right:3%!important;bottom:8%!important;height:78%!important;background:#e65c40!important;clip-path:polygon(0 86%,100% 3%,100% 100%,0 100%)!important}
+   .savings-graph .graph-yellow{position:absolute!important;left:4%!important;bottom:8%!important;width:65%!important;height:4.5%!important;min-height:10px!important;border-radius:999px!important;background:#f6c238!important;box-shadow:none!important;padding:0!important;color:#fff!important;font-size:clamp(8px,.62vw,10px)!important;font-weight:950!important;letter-spacing:.06em!important;text-transform:uppercase!important;display:grid!important;place-items:center!important}
+   .dynamic-utility-chart,.solar-live-bar,.chart-empty-note,.utility-label,.utility-value,.dynamic-axis,.graph-label,.savings-graph svg,.savings-graph text{display:none!important}
+   .calc-zone{grid-template-columns:48% 22% 1fr!important;gap:.75%!important}
+   .input-card,.monthly-card,.future-card{padding:2.1%!important;border-radius:14px!important}
+   .mode-toggle{margin:0 0 5px!important;padding:3px!important}.mode-toggle button{padding:4px 7px!important}
+   .input-head{margin-bottom:1%!important}.month-grid{gap:3px 5px!important}.month-grid input,.rate-inputs input{padding:3px 6px!important;margin-top:1px!important}
+   .rate-inputs{gap:5px!important;margin-top:5px!important;padding-top:5px!important}.future-grid{gap:4px!important}.future-box{padding:4px!important}.monthly-card strong{margin:3% 0 2%!important}
+   .installer-links{aspect-ratio:16 / 9!important;height:auto!important;min-height:0!important;padding:0!important;overflow:hidden!important}
+   .installer-links .installer-shell{position:absolute!important;inset:0!important;height:100%!important;grid-template-rows:auto minmax(0,1fr) 34%!important}
+   .installer-links .installer-top{padding:2.6% 3.5% 1.2%!important}.installer-links .credential-grid{margin-top:1.7%!important;gap:.9%!important}.installer-links .credential-btn{padding:3.5%!important;border-radius:14px!important}
+   .installer-links .az-facts{padding:1.5% 3.5% 1.9%!important}.installer-links .fact-grid{gap:.8%!important}.installer-links .fact-card{padding:4.5% 3%!important;border-radius:13px!important}
+  `;d.head.appendChild(style)
+ }
+ const savings=[...d.querySelectorAll('.slide')].find(s=>/Be your own power company/i.test(s.textContent||''));
+ if(savings){const graph=savings.querySelector('.savings-graph');if(graph){graph.innerHTML='<div class="graph-red"></div><div class="graph-yellow">With Batteries</div>'}}
+ const installer=[...d.querySelectorAll('.slide')].find(s=>/Arizona.?s Largest Installer/i.test(s.textContent||'')&&/1000\+ installs/i.test(s.textContent||''));
+ if(installer){installer.classList.add('installer-links');installer.style.removeProperty('aspect-ratio');installer.style.removeProperty('height');installer.style.removeProperty('min-height');installer.style.removeProperty('padding-bottom')}
+ resizeAll(ctx);
+}
+function install(){let n=0;const timer=setInterval(()=>{patchDeck();if(++n>140)clearInterval(timer)},250)}
+base.addEventListener('load',install);window.addEventListener('resize',()=>setTimeout(patchDeck,120));install();
+</script>
+</body>
+</html>
