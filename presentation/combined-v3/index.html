@@ -26,11 +26,11 @@ function install(){
     const remaining=moving.querySelector('ul');
     if(remaining)remaining.style.marginTop='9%';
    }
-   const zillow=[...d.querySelectorAll('.slide')].find(s=>/How much does Solar increase property value/i.test(s.textContent||''));
+   const zillow=d.querySelector('.slide.zillow')||[...d.querySelectorAll('.slide')].find(s=>/property value/i.test(s.textContent||'')&&/Zillow/i.test(s.textContent||''));
    if(zillow&&!zillow.querySelector('.zillow-proof')){
     const proofStyle=d.createElement('style');
     proofStyle.textContent=`
-     .zillow-proof{position:absolute;right:9.2%;bottom:31%;z-index:5;display:inline-flex;align-items:center;gap:.55em;padding:.72em 1.05em;border-radius:999px;background:#fff;color:#2458b7;border:2px solid #2458b7;box-shadow:0 10px 24px rgba(29,94,199,.22);font-size:clamp(11px,1.05vw,17px);font-weight:900;text-decoration:none;transition:.18s transform,.18s box-shadow,.18s background,.18s color}
+     .zillow-proof{position:absolute;right:10%;bottom:29%;z-index:20;display:inline-flex;align-items:center;gap:.55em;padding:.72em 1.05em;border-radius:999px;background:#fff;color:#2458b7;border:2px solid #2458b7;box-shadow:0 10px 24px rgba(29,94,199,.22);font-size:clamp(11px,1.05vw,17px);font-weight:900;text-decoration:none;transition:.18s transform,.18s box-shadow,.18s background,.18s color}
      .zillow-proof:after{content:'↗';font-size:1.05em}.zillow-proof:hover,.zillow-proof:active{transform:translateY(-2px);background:#2458b7;color:#fff;box-shadow:0 14px 30px rgba(29,94,199,.3)}
     `;
     d.head.appendChild(proofStyle);
@@ -38,10 +38,9 @@ function install(){
     proof.className='zillow-proof';
     proof.href='https://www.zillow.com/research/solar-panels-house-sell-more-23798/';
     proof.target='_blank';
-    proof.rel='noopener';
+    proof.rel='noopener noreferrer';
     proof.textContent='View Zillow Study';
-    const blueCallout=zillow.querySelector('.sign');
-    if(blueCallout)blueCallout.insertAdjacentElement('beforebegin',proof);else zillow.appendChild(proof);
+    zillow.appendChild(proof);
    }
    const options=[...d.querySelectorAll('.slide')].find(s=>/^\s*The Options/i.test(s.textContent||''));
    if(options){
