@@ -19,6 +19,13 @@ function install(){
   const deckFrame=outer.getElementById('deckFrame');if(!deckFrame)return;
   const apply=()=>{
    const d=deckFrame.contentDocument;if(!d)return;
+   const moving=[...d.querySelectorAll('.slide')].find(s=>/Moving with Solar/i.test(s.textContent||''));
+   if(moving){
+    const valueBullet=[...moving.querySelectorAll('li')].find(li=>/Solar can increase the value of your home/i.test(li.textContent||''));
+    if(valueBullet)valueBullet.remove();
+    const remaining=moving.querySelector('ul');
+    if(remaining)remaining.style.marginTop='9%';
+   }
    const savings=[...d.querySelectorAll('.slide')].find(s=>/Be your own power company/i.test(s.textContent||''));
    if(!savings)return;
    const style=d.createElement('style');
