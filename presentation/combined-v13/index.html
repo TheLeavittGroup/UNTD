@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Daddy's Sales Deck</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;background:#000;min-height:100%;overflow-x:hidden}
+#stage{position:relative;width:100%;overflow:hidden;background:#000}
+#deck{display:block;border:0;background:#000;transform-origin:top left}
+@media(min-width:601px){#deck{width:100%;transform:none}}
+</style>
+</head>
+<body>
+<div id="stage"><iframe id="deck" scrolling="no" title="Daddy's Sales Deck"></iframe></div>
+<script>
+const BUILD='20260715-iphone-scale-2';
+const DESIGN_WIDTH=1200;
+const stage=document.getElementById('stage');
+const deck=document.getElementById('deck');
+const isPhone=()=>window.matchMedia('(max-width:600px)').matches;
+deck.src='../combined-v12/?build='+BUILD;
+let timer=0;
+function contentHeight(){
+ try{return Math.max(deck.contentDocument.documentElement.scrollHeight,deck.contentDocument.body.scrollHeight)}catch(e){return 0}
+}
+function layout(){
+ clearTimeout(timer);
+ if(isPhone()){
+  const scale=window.innerWidth/DESIGN_WIDTH;
+  deck.style.width=DESIGN_WIDTH+'px';
+  deck.style.transform='scale('+scale+')';
+  const h=contentHeight();
+  if(h>0){deck.style.height=h+'px';stage.style.height=Math.ceil(h*scale)+'px'}
+ }else{
+  deck.style.width='100%';
+  deck.style.transform='none';
+  const h=contentHeight();
+  if(h>0){deck.style.height=h+'px';stage.style.height=h+'px'}
+ }
+}
+function settle(attempt=0){
+ layout();
+ if(attempt<30)timer=setTimeout(()=>settle(attempt+1),150);
+}
+deck.addEventListener('load',()=>settle());
+window.addEventListener('resize',()=>{clearTimeout(timer);timer=setTimeout(()=>settle(),120)},{passive:true});
+setTimeout(()=>settle(),100);
+</script>
+</body>
+</html>
