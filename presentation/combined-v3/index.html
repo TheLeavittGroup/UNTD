@@ -19,97 +19,63 @@ function install(){
   const deckFrame=outer.getElementById('deckFrame');if(!deckFrame)return;
   const apply=()=>{
    const d=deckFrame.contentDocument;if(!d)return;
+
    const moving=[...d.querySelectorAll('.slide')].find(s=>/Moving with Solar/i.test(s.textContent||''));
    if(moving){
     const valueBullet=[...moving.querySelectorAll('li')].find(li=>/Solar can increase the value of your home/i.test(li.textContent||''));
     if(valueBullet)valueBullet.remove();
-    const remaining=moving.querySelector('ul');
-    if(remaining)remaining.style.marginTop='9%';
+    const remaining=moving.querySelector('ul');if(remaining)remaining.style.marginTop='9%';
    }
+
    const zillow=d.querySelector('.slide.zillow')||[...d.querySelectorAll('.slide')].find(s=>/property value/i.test(s.textContent||'')&&/Zillow/i.test(s.textContent||''));
    if(zillow&&!zillow.querySelector('.zillow-proof')){
     const proofStyle=d.createElement('style');
-    proofStyle.textContent=`
-     .zillow-proof{position:absolute;right:10%;bottom:29%;z-index:20;display:inline-flex;align-items:center;gap:.55em;padding:.72em 1.05em;border-radius:999px;background:#fff;color:#2458b7;border:2px solid #2458b7;box-shadow:0 10px 24px rgba(29,94,199,.22);font-size:clamp(11px,1.05vw,17px);font-weight:900;text-decoration:none;transition:.18s transform,.18s box-shadow,.18s background,.18s color}
-     .zillow-proof:after{content:'↗';font-size:1.05em}.zillow-proof:hover,.zillow-proof:active{transform:translateY(-2px);background:#2458b7;color:#fff;box-shadow:0 14px 30px rgba(29,94,199,.3)}
-    `;
+    proofStyle.textContent=`.zillow-proof{position:absolute;right:10%;bottom:29%;z-index:20;display:inline-flex;align-items:center;gap:.55em;padding:.72em 1.05em;border-radius:999px;background:#fff;color:#2458b7;border:2px solid #2458b7;box-shadow:0 10px 24px rgba(29,94,199,.22);font-size:clamp(11px,1.05vw,17px);font-weight:900;text-decoration:none;transition:.18s}.zillow-proof:after{content:'↗';font-size:1.05em}.zillow-proof:hover,.zillow-proof:active{transform:translateY(-2px);background:#2458b7;color:#fff}`;
     d.head.appendChild(proofStyle);
-    const proof=d.createElement('a');
-    proof.className='zillow-proof';
-    proof.href='https://www.zillow.com/research/solar-panels-house-sell-more-23798/';
-    proof.target='_blank';
-    proof.rel='noopener noreferrer';
-    proof.textContent='View Zillow Study';
-    zillow.appendChild(proof);
+    const proof=d.createElement('a');proof.className='zillow-proof';proof.href='https://www.zillow.com/research/solar-panels-house-sell-more-23798/';proof.target='_blank';proof.rel='noopener noreferrer';proof.textContent='View Zillow Study';zillow.appendChild(proof);
    }
+
    const options=[...d.querySelectorAll('.slide')].find(s=>/The Options/i.test(s.textContent||'')&&s.querySelector('.options-grid'));
    if(options){
     const optionsStyle=d.createElement('style');
-    optionsStyle.textContent=`
-     .options-upgrade{padding:3.5% 4.5%!important;background:#fff!important;color:#111}
-     .options-upgrade .logo{top:6.5%}
-     .options-upgrade .title{font-size:clamp(34px,4.2vw,66px)}
-     .options-upgrade .options-grid{height:79%;margin-top:2.2%;gap:2.4%;align-items:stretch}
-     .options-upgrade .option{width:38%;min-height:100%;padding:2.2% 2.5%;border-radius:0;font-size:clamp(13px,1.35vw,21px);line-height:1.28;box-shadow:0 14px 30px rgba(27,51,82,.12)}
-     .options-upgrade .option h2{font-size:clamp(28px,3.45vw,54px);line-height:1;margin:0 0 5%;font-weight:900}
-     .options-upgrade .option.solar{background:#4fa8e9;color:#10243d}
-     .options-upgrade .option.stay{background:#bbb;color:#202020}
-     .option-list{display:grid;gap:3.2%}
-     .option-item{display:grid;grid-template-columns:auto 1fr;gap:.6em;align-items:start;font-weight:750}
-     .option-item b{font-size:1.15em;line-height:1;color:#fff}
-     .stay .option-item b{color:#4a4a4a}
-     .option-pain{margin-top:4%;padding:3.5% 4%;background:rgba(255,255,255,.24);border:1px solid rgba(255,255,255,.36);font-weight:900;line-height:1.2;text-align:center}
-     .stay .option-pain{background:rgba(255,255,255,.32);border-color:rgba(255,255,255,.4)}
-    `;
+    optionsStyle.textContent=`.options-upgrade{padding:3.5% 4.5%!important;background:#fff!important;color:#111}.options-upgrade .logo{top:6.5%}.options-upgrade .title{font-size:clamp(34px,4.2vw,66px)}.options-upgrade .options-grid{height:79%;margin-top:2.2%;gap:2.4%;align-items:stretch}.options-upgrade .option{width:38%;min-height:100%;padding:2.2% 2.5%;border-radius:0;font-size:clamp(13px,1.35vw,21px);line-height:1.28;box-shadow:0 14px 30px rgba(27,51,82,.12)}.options-upgrade .option h2{font-size:clamp(28px,3.45vw,54px);line-height:1;margin:0 0 5%;font-weight:900}.options-upgrade .option.solar{background:#4fa8e9;color:#10243d}.options-upgrade .option.stay{background:#bbb;color:#202020}.option-list{display:grid;gap:3.2%}.option-item{display:grid;grid-template-columns:auto 1fr;gap:.6em;align-items:start;font-weight:750}.option-item b{font-size:1.15em;line-height:1;color:#fff}.stay .option-item b{color:#4a4a4a}.option-pain{margin-top:4%;padding:3.5% 4%;background:rgba(255,255,255,.24);border:1px solid rgba(255,255,255,.36);font-weight:900;line-height:1.2;text-align:center}.stay .option-pain{background:rgba(255,255,255,.32);border-color:rgba(255,255,255,.4)}`;
     d.head.appendChild(optionsStyle);
     options.className='slide options-upgrade';
     options.innerHTML=`<div class="logo">WE</div><h1 class="title with-logo">The Options</h1><div class="options-grid"><div class="option solar"><h2>Have Your Own Grid</h2><div class="option-list"><div class="option-item"><b>✓</b><span>Buy power at a fixed price for a fraction of what your neighbors pay</span></div><div class="option-item"><b>✓</b><span>No cost</span></div><div class="option-item"><b>✓</b><span>25-year risk-free warranty</span></div><div class="option-item"><b>✓</b><span>Take control of whatever the utility decides to do in the future</span></div><div class="option-item"><b>✓</b><span>Battery homes sell faster and for more</span></div></div><div class="option-pain">Your lights and A/C stay on—and your food stays cold when the grid goes down.</div></div><div class="option stay"><h2>Stay Where<br>You're At</h2><div class="option-list"><div class="option-item"><b>➤</b><span>Pay for on-peak power and 100% of demand costs</span></div><div class="option-item"><b>➤</b><span>No say in how much you have to pay for power every year</span></div><div class="option-item"><b>➤</b><span>No savings</span></div><div class="option-item"><b>➤</b><span>Lose power whenever the utility decides to shut it off</span></div></div><div class="option-pain">You remain fully dependent on the utility for price and reliability.</div></div></div>`;
    }
+
+   const referral=[...d.querySelectorAll('.slide')].find(s=>/Our World/i.test(s.textContent||'')&&/Referral Program/i.test(s.textContent||''));
+   if(referral){
+    let node=referral;
+    while(node){const next=node.nextElementSibling;node.remove();node=next}
+   }
+
+   if(options&&!d.querySelector('.aurora-transition')){
+    const auroraStyle=d.createElement('style');
+    auroraStyle.textContent=`.aurora-transition{padding:0!important;background:linear-gradient(145deg,#06111f,#102d4d 58%,#173f68)!important;color:#fff}.aurora-shell{position:absolute;inset:0;padding:4.3% 5%;display:grid;grid-template-columns:1.05fr .95fr;gap:5%;align-items:center}.aurora-copy .eyebrow{font-size:clamp(11px,1vw,16px);font-weight:950;letter-spacing:.14em;text-transform:uppercase;color:#8fc0f4}.aurora-copy h1{font-size:clamp(38px,5vw,78px);line-height:.95;letter-spacing:-.05em;margin:2.5% 0 4%}.aurora-copy p{font-size:clamp(15px,1.55vw,24px);line-height:1.42;color:#d2e2f5;max-width:92%}.aurora-steps{display:grid;gap:10px;margin:5% 0}.aurora-step{display:grid;grid-template-columns:38px 1fr;gap:12px;align-items:center;padding:12px 14px;border-radius:15px;background:rgba(255,255,255,.07);border:1px solid rgba(143,192,244,.22);font-size:clamp(13px,1.2vw,19px);font-weight:850}.aurora-step b{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#4fa8e9;color:#06111f}.aurora-launch{display:inline-flex;align-items:center;gap:.65em;padding:16px 22px;border-radius:999px;background:linear-gradient(135deg,#b9ddff,#4fa8e9);color:#06111f;text-decoration:none;font-size:clamp(15px,1.35vw,21px);font-weight:950;box-shadow:0 16px 36px rgba(0,0,0,.28)}.aurora-launch:after{content:'↗'}.aurora-launch:active{transform:scale(.98)}.aurora-panel{border-radius:28px;background:#fff;color:#15324f;padding:7%;box-shadow:0 28px 70px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.5)}.aurora-panel h2{font-size:clamp(27px,3.2vw,50px);line-height:1.02;margin:0 0 5%;color:#173f68}.aurora-panel p{font-size:clamp(14px,1.3vw,20px);line-height:1.4;color:#60758c}.qualify-box{margin-top:8%;padding:6%;border-radius:20px;background:#edf6ff;border:1px solid #cadff4}.qualify-box strong{display:block;font-size:clamp(17px,1.65vw,26px);color:#174f91;margin-bottom:3%}.qualify-box span{font-size:clamp(12px,1.1vw,17px);line-height:1.4;color:#526b85}`;
+    d.head.appendChild(auroraStyle);
+    const aurora=d.createElement('section');aurora.className='slide aurora-transition';
+    aurora.innerHTML=`<div class="aurora-shell"><div class="aurora-copy"><div class="eyebrow">Next Step</div><h1>Schedule Site Survey Qualification</h1><p>Now we verify the home, finalize the design, and confirm the exact solar and battery pricing.</p><div class="aurora-steps"><div class="aurora-step"><b>1</b><span>Open the homeowner's prebuilt Aurora project</span></div><div class="aurora-step"><b>2</b><span>Update the usage and finalize the system design</span></div><div class="aurora-step"><b>3</b><span>Review pricing, qualify the home, and apply</span></div></div><a class="aurora-launch" href="https://app.aurorasolar.com/" target="_blank" rel="noopener noreferrer">Open Aurora Design Workspace</a></div><div class="aurora-panel"><h2>Move directly into the design.</h2><p>After your first Aurora login, the browser can retain your authenticated session. Opening Aurora in its own tab keeps the login reliable and leaves this presentation open for the close.</p><div class="qualify-box"><strong>Site Survey Qualification</strong><span>Confirm roof, electrical, battery location, usage, ownership details, and the recommended system before submitting.</span></div></div></div>`;
+    options.insertAdjacentElement('afterend',aurora);
+   }
+
    const savings=[...d.querySelectorAll('.slide')].find(s=>/Be your own power company/i.test(s.textContent||''));
-   if(!savings)return;
-   const style=d.createElement('style');
-   style.textContent=`
-    .mode-toggle{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:999px;background:#e8f0fa;margin:0 0 8px}
-    .mode-toggle button{border:0;border-radius:999px;padding:6px 8px;background:transparent;color:#59718d;font-size:clamp(9px,.72vw,12px);font-weight:900;cursor:pointer}
-    .mode-toggle button.active{background:#174f91;color:#fff;box-shadow:0 4px 12px rgba(23,79,145,.22)}
-    .input-head{margin-bottom:1.4%!important}.input-title{min-width:0}.annual-total{font-size:clamp(9px,.72vw,12px)!important;padding:5px 8px!important}
-   `;
-   d.head.appendChild(style);
-   const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
-   const card=savings.querySelector('.input-card');if(!card)return;
-   card.innerHTML=`<div class="mode-toggle"><button type="button" class="active" data-mode="usage">Monthly kWh</button><button type="button" data-mode="bills">Monthly Bills</button></div><div class="input-head"><div class="input-title" id="modeTitle">Enter monthly electricity use</div><div class="annual-total">Annual usage: <strong id="annualUsage">0 kWh</strong></div></div><div class="month-grid">${months.map((m,i)=>`<label>${m.slice(0,3)}<input class="month-entry" data-month="${i}" type="number" inputmode="decimal" placeholder="kWh"></label>`).join('')}</div><div class="rate-inputs"><label>Latest bill<input id="recentBill" type="number" inputmode="decimal" placeholder="$"></label><label>kWh on latest bill<input id="recentKwh" type="number" inputmode="decimal" placeholder="kWh"></label></div>`;
-   const entries=[...card.querySelectorAll('.month-entry')],bill=card.querySelector('#recentBill'),kwh=card.querySelector('#recentKwh'),buttons=[...card.querySelectorAll('.mode-toggle button')];
-   let mode='usage';
-   const money=n=>Number.isFinite(n)?new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n):'$0';
-   const clearResults=msg=>{['monthlyAvg','y5','y10','y15','y25'].forEach(id=>{const el=d.getElementById(id);if(el)el.textContent='$0'});const rr=d.getElementById('rateResult');if(rr)rr.textContent=msg};
-   const calc=()=>{
-    const vals=entries.map(el=>parseFloat(el.value)||0),b=parseFloat(bill.value),k=parseFloat(kwh.value),current=(b>0&&k>0)?b/k:0;
-    let annual=0,monthly=0;
-    if(mode==='usage'){
-      annual=vals.reduce((a,v)=>a+v,0);
-      d.getElementById('annualUsage').textContent=Math.round(annual).toLocaleString()+' kWh';
-      if(!(annual>0&&current>0)){clearResults('Enter monthly usage, latest bill and bill kWh.');return}
-      monthly=annual*(current+.16)/12;
-    }else{
-      const annualBills=vals.reduce((a,v)=>a+v,0);
-      annual=current>0?annualBills/current:0;
-      d.getElementById('annualUsage').textContent=Math.round(annual).toLocaleString()+' kWh';
-      if(!(annualBills>0&&current>0)){clearResults('Enter monthly bills, latest bill and bill kWh.');return}
-      monthly=(annualBills+annual*.16)/12;
+   if(savings){
+    const style=d.createElement('style');style.textContent=`.mode-toggle{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:999px;background:#e8f0fa;margin:0 0 8px}.mode-toggle button{border:0;border-radius:999px;padding:6px 8px;background:transparent;color:#59718d;font-size:clamp(9px,.72vw,12px);font-weight:900;cursor:pointer}.mode-toggle button.active{background:#174f91;color:#fff;box-shadow:0 4px 12px rgba(23,79,145,.22)}.input-head{margin-bottom:1.4%!important}.input-title{min-width:0}.annual-total{font-size:clamp(9px,.72vw,12px)!important;padding:5px 8px!important}`;d.head.appendChild(style);
+    const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const card=savings.querySelector('.input-card');
+    if(card){
+     card.innerHTML=`<div class="mode-toggle"><button type="button" class="active" data-mode="usage">Monthly kWh</button><button type="button" data-mode="bills">Monthly Bills</button></div><div class="input-head"><div class="input-title" id="modeTitle">Enter monthly electricity use</div><div class="annual-total">Annual usage: <strong id="annualUsage">0 kWh</strong></div></div><div class="month-grid">${months.map((m,i)=>`<label>${m.slice(0,3)}<input class="month-entry" data-month="${i}" type="number" inputmode="decimal" placeholder="kWh"></label>`).join('')}</div><div class="rate-inputs"><label>Latest bill<input id="recentBill" type="number" inputmode="decimal" placeholder="$"></label><label>kWh on latest bill<input id="recentKwh" type="number" inputmode="decimal" placeholder="kWh"></label></div>`;
+     const entries=[...card.querySelectorAll('.month-entry')],bill=card.querySelector('#recentBill'),kwh=card.querySelector('#recentKwh'),buttons=[...card.querySelectorAll('.mode-toggle button')];let mode='usage';
+     const money=n=>Number.isFinite(n)?new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n):'$0';
+     const clearResults=msg=>{['monthlyAvg','y5','y10','y15','y25'].forEach(id=>{const el=d.getElementById(id);if(el)el.textContent='$0'});const rr=d.getElementById('rateResult');if(rr)rr.textContent=msg};
+     const calc=()=>{const vals=entries.map(el=>parseFloat(el.value)||0),b=parseFloat(bill.value),k=parseFloat(kwh.value),current=(b>0&&k>0)?b/k:0;let annual=0,monthly=0;if(mode==='usage'){annual=vals.reduce((a,v)=>a+v,0);d.getElementById('annualUsage').textContent=Math.round(annual).toLocaleString()+' kWh';if(!(annual>0&&current>0)){clearResults('Enter monthly usage, latest bill and bill kWh.');return}monthly=annual*(current+.16)/12}else{const annualBills=vals.reduce((a,v)=>a+v,0);annual=current>0?annualBills/current:0;d.getElementById('annualUsage').textContent=Math.round(annual).toLocaleString()+' kWh';if(!(annualBills>0&&current>0)){clearResults('Enter monthly bills, latest bill and bill kWh.');return}monthly=(annualBills+annual*.16)/12}d.getElementById('monthlyAvg').textContent=money(monthly);[[5,'y5'],[10,'y10'],[15,'y15'],[25,'y25']].forEach(([yr,id])=>d.getElementById(id).textContent=money(monthly*Math.pow(1.06,yr)));d.getElementById('rateResult').textContent='Current bill rate: '+(current*100).toFixed(1)+'¢/kWh'};
+     buttons.forEach(btn=>btn.addEventListener('click',()=>{mode=btn.dataset.mode;buttons.forEach(b=>b.classList.toggle('active',b===btn));d.getElementById('modeTitle').textContent=mode==='usage'?'Enter monthly electricity use':'Enter monthly power bills';entries.forEach(el=>{el.value='';el.placeholder=mode==='usage'?'kWh':'$'});d.getElementById('annualUsage').textContent='0 kWh';clearResults(mode==='usage'?'Enter monthly usage, latest bill and bill kWh.':'Enter monthly bills, latest bill and bill kWh.')}));
+     [...entries,bill,kwh].forEach(el=>el.addEventListener('input',calc));const sub=savings.querySelector('.monthly-card span');if(sub)sub.textContent='Includes the current public-notice rate increase';
     }
-    d.getElementById('monthlyAvg').textContent=money(monthly);
-    [[5,'y5'],[10,'y10'],[15,'y15'],[25,'y25']].forEach(([yr,id])=>d.getElementById(id).textContent=money(monthly*Math.pow(1.06,yr)));
-    d.getElementById('rateResult').textContent='Current bill rate: '+(current*100).toFixed(1)+'¢/kWh';
-   };
-   buttons.forEach(btn=>btn.addEventListener('click',()=>{
-    mode=btn.dataset.mode;buttons.forEach(b=>b.classList.toggle('active',b===btn));
-    d.getElementById('modeTitle').textContent=mode==='usage'?'Enter monthly electricity use':'Enter monthly power bills';
-    entries.forEach(el=>{el.value='';el.placeholder=mode==='usage'?'kWh':'$'});
-    d.getElementById('annualUsage').textContent='0 kWh';clearResults(mode==='usage'?'Enter monthly usage, latest bill and bill kWh.':'Enter monthly bills, latest bill and bill kWh.');
-   }));
-   [...entries,bill,kwh].forEach(el=>el.addEventListener('input',calc));
-   const sub=savings.querySelector('.monthly-card span');if(sub)sub.textContent='Includes the current public-notice rate increase';
-   setTimeout(()=>{try{outer.getElementById('deckFrame').style.height=d.documentElement.scrollHeight+'px';outerFrame.style.height=outer.documentElement.scrollHeight+'px';resize()}catch(e){}},80);
+   }
+
+   setTimeout(()=>{try{deckFrame.style.height=d.documentElement.scrollHeight+'px';outerFrame.style.height=outer.documentElement.scrollHeight+'px';resize()}catch(e){}},120);
   };
   deckFrame.addEventListener('load',apply,{once:true});apply();
  };
