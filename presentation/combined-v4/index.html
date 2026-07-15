@@ -4,37 +4,25 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Daddy's Sales Deck</title>
-<style>*{box-sizing:border-box}html,body{margin:0;background:#000}#base{display:block;width:100%;height:18000px;border:0;background:#000;visibility:hidden}</style>
+<style>*{box-sizing:border-box}html,body{margin:0;background:#000}#base{display:block;width:100%;height:18000px;border:0;background:#000}</style>
 </head>
 <body>
 <iframe id="base" src="../combined-v3/?v=aurora-new-project" scrolling="no" title="Daddy's Sales Deck"></iframe>
 <script>
 const base=document.getElementById('base');
 const AURORA_URL='https://v2.aurorasolar.com/new-project';
-let resizeTimer=0;
-function setHeight(frame,height){
- const next=Math.ceil(height||0);
- const current=parseInt(frame.style.height,10)||0;
- if(next>0&&Math.abs(current-next)>3)frame.style.height=next+'px';
-}
-function resize(){
- clearTimeout(resizeTimer);
- resizeTimer=setTimeout(()=>{
-  try{setHeight(base,base.contentDocument.documentElement.scrollHeight)}catch(e){}
- },60);
-}
-function reveal(){requestAnimationFrame(()=>requestAnimationFrame(()=>{base.style.visibility='visible'}))}
+function resize(){try{base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
 function install(){
- const v3=base.contentDocument;if(!v3){reveal();return}
- const v2Frame=v3.getElementById('base');if(!v2Frame){reveal();return}
+ const v3=base.contentDocument;if(!v3)return;
+ const v2Frame=v3.getElementById('base');if(!v2Frame)return;
  const patch=()=>{
-  const v2=v2Frame.contentDocument;if(!v2){reveal();return}
-  const outerFrame=v2.getElementById('base');if(!outerFrame){reveal();return}
+  const v2=v2Frame.contentDocument;if(!v2)return;
+  const outerFrame=v2.getElementById('base');if(!outerFrame)return;
   const patchOuter=()=>{
-   const outer=outerFrame.contentDocument;if(!outer){reveal();return}
-   const deckFrame=outer.getElementById('deckFrame');if(!deckFrame){reveal();return}
+   const outer=outerFrame.contentDocument;if(!outer)return;
+   const deckFrame=outer.getElementById('deckFrame');if(!deckFrame)return;
    const apply=()=>{
-    const d=deckFrame.contentDocument;if(!d){reveal();return}
+    const d=deckFrame.contentDocument;if(!d)return;
     const options=[...d.querySelectorAll('.slide')].find(s=>/The Options/i.test(s.textContent||'')&&/Have Your Own Grid/i.test(s.textContent||''));
     if(options){
      const style=d.createElement('style');
@@ -85,53 +73,13 @@ function install(){
        .aurora-live-frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff}
        .aurora-live-help{position:absolute;left:2%;bottom:2%;z-index:4;padding:10px 13px;border-radius:12px;background:rgba(255,255,255,.96);border:1px solid #d5d5dc;box-shadow:0 8px 24px rgba(0,0,0,.12);font-size:clamp(9px,.72vw,12px);font-weight:800;color:#5d5d67}
        .aurora-live-help a{color:#86155f!important;font-weight:950;text-decoration:underline}
-       .aurora-sizing-strip{width:100%;min-height:84px;margin:0 0 12px;background:#fff;border-top:1px solid #d9d9df;border-bottom:1px solid #d9d9df;display:grid;grid-template-columns:repeat(3,1fr);box-shadow:0 8px 20px rgba(0,0,0,.09);color:#15243a}
-       .aurora-size-cell{display:flex;align-items:center;justify-content:center;gap:12px;padding:16px 22px;text-align:left}
-       .aurora-size-cell+.aurora-size-cell{border-left:1px solid #dde3ea}
-       .aurora-size-label{font-size:clamp(10px,.82vw,14px);font-weight:850;color:#68798d;white-space:nowrap}
-       .aurora-size-value{font-size:clamp(18px,1.7vw,28px);font-weight:950;color:#174f91;white-space:nowrap}
-       .aurora-size-value small{display:block;margin-top:2px;font-size:clamp(8px,.62vw,11px);font-weight:750;color:#7a8796}
-       @media(max-width:760px){.aurora-sizing-strip{min-height:72px}.aurora-size-cell{padding:12px 9px;gap:6px;flex-direction:column;align-items:flex-start}.aurora-size-cell+.aurora-size-cell{border-left:1px solid #dde3ea}.aurora-size-label{white-space:normal}}
       `;
       d.head.appendChild(auroraStyle);
      }
      aurora.innerHTML=`<div class="aurora-live-shell"><header class="aurora-live-top"><div class="aurora-live-title"><strong>Create the Homeowner's Aurora Project</strong><span>Enter the property address, confirm Residential, name the project, and create it.</span></div><a class="aurora-live-open" href="${AURORA_URL}" target="_blank" rel="noopener noreferrer">Open Aurora New Project</a></header><div class="aurora-live-stage"><iframe class="aurora-live-frame" src="${AURORA_URL}" title="Aurora Solar New Project" allow="clipboard-read; clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe><div class="aurora-live-help">Aurora may block its logged-in workspace from displaying inside another website. <a href="${AURORA_URL}" target="_blank" rel="noopener noreferrer">Open the New Project page directly</a>.</div></div></div>`;
-
-     let sizing=d.querySelector('.aurora-sizing-strip');
-     if(!sizing){
-      sizing=d.createElement('section');
-      sizing.className='aurora-sizing-strip';
-      sizing.innerHTML=`<div class="aurora-size-cell"><span class="aurora-size-label">Annual Usage</span><span class="aurora-size-value" id="auroraAnnualResult">—<small>Calculated from utility inputs</small></span></div><div class="aurora-size-cell"><span class="aurora-size-label">Battery Count</span><span class="aurora-size-value" id="auroraBatteryResult">—<small>11.5 kWh batteries</small></span></div><div class="aurora-size-cell"><span class="aurora-size-label">Panel Count</span><span class="aurora-size-value" id="auroraPanelResult">—<small>400W backup/recharge panels</small></span></div>`;
-      aurora.insertAdjacentElement('afterend',sizing);
-     }
     }
 
     const savings=[...d.querySelectorAll('.slide')].find(s=>/Be your own power company/i.test(s.textContent||''));
-    const updateSizing=()=>{
-     if(!savings)return;
-     const entries=[...savings.querySelectorAll('.month-entry')];
-     const bill=parseFloat((savings.querySelector('#recentBill')||{}).value);
-     const kwh=parseFloat((savings.querySelector('#recentKwh')||{}).value);
-     const current=(bill>0&&kwh>0)?bill/kwh:0;
-     const mode=(savings.querySelector('.mode-toggle button.active')||{}).dataset?.mode||'usage';
-     const vals=entries.map(el=>parseFloat(el.value)||0);
-     let annual=0;
-     if(mode==='usage')annual=vals.reduce((a,v)=>a+v,0);
-     else annual=current>0?vals.reduce((a,v)=>a+v,0)/current:0;
-     const annualEl=d.getElementById('auroraAnnualResult');
-     const batteryEl=d.getElementById('auroraBatteryResult');
-     const panelEl=d.getElementById('auroraPanelResult');
-     if(!annualEl||!batteryEl||!panelEl)return;
-     if(!(annual>0)){
-      annualEl.firstChild.nodeValue='—';batteryEl.firstChild.nodeValue='—';panelEl.firstChild.nodeValue='—';return;
-     }
-     const batteries=Math.max(1,Math.ceil(annual/30000));
-     const panels=batteries*4;
-     annualEl.firstChild.nodeValue=Math.round(annual).toLocaleString()+' kWh';
-     batteryEl.firstChild.nodeValue=String(batteries);
-     panelEl.firstChild.nodeValue=String(panels);
-    };
-
     if(savings&&!savings.querySelector('#utility25Button')){
      const calcStyle=d.createElement('style');
      calcStyle.textContent=`
@@ -170,22 +118,10 @@ function install(){
        button.classList.add('result');
        button.textContent=dollars(total)+' total over 25 years';
       });
-      savings.querySelectorAll('input,.mode-toggle button').forEach(el=>el.addEventListener(el.tagName==='BUTTON'?'click':'input',()=>setTimeout(()=>{resetButton();updateSizing()},0)));
+      savings.querySelectorAll('input,.mode-toggle button').forEach(el=>el.addEventListener(el.tagName==='BUTTON'?'click':'input',()=>setTimeout(resetButton,0)));
      }
-    }else if(savings){
-     savings.querySelectorAll('input,.mode-toggle button').forEach(el=>el.addEventListener(el.tagName==='BUTTON'?'click':'input',()=>setTimeout(updateSizing,0)));
     }
-    updateSizing();
-
-    setTimeout(()=>{
-     try{
-      setHeight(deckFrame,d.documentElement.scrollHeight);
-      setHeight(outerFrame,outer.documentElement.scrollHeight);
-      setHeight(v2Frame,v2.documentElement.scrollHeight);
-      resize();
-      setTimeout(reveal,120);
-     }catch(e){reveal()}
-    },220);
+    setTimeout(()=>{try{outer.getElementById('deckFrame').style.height=d.documentElement.scrollHeight+'px';outerFrame.style.height=outer.documentElement.scrollHeight+'px';v2Frame.style.height=v2.documentElement.scrollHeight+'px';resize()}catch(e){}},150);
    };
    deckFrame.addEventListener('load',apply,{once:true});apply();
   };
@@ -193,9 +129,7 @@ function install(){
  };
  v2Frame.addEventListener('load',patch,{once:true});patch();
 }
-base.addEventListener('load',install,{once:true});
-window.addEventListener('resize',resize,{passive:true});
-setTimeout(reveal,2500);
+base.addEventListener('load',install);window.addEventListener('resize',()=>setTimeout(resize,100));
 </script>
 </body>
 </html>
