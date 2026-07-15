@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Daddy's Sales Deck</title>
+<style>*{box-sizing:border-box}html,body{margin:0;background:#000}#base{display:block;width:100%;height:24000px;border:0;background:#000}</style>
+</head>
+<body>
+<iframe id="base" src="../combined-v9/?v=annual-usage" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<script>
+const base=document.getElementById('base');
+function getDeck(){try{const docs=[];let doc=base.contentDocument;while(doc){docs.push(doc);const frame=doc.getElementById('base');if(!frame||!frame.contentDocument)break;doc=frame.contentDocument}const outer=docs[docs.length-1],deckFrame=outer&&outer.getElementById('deckFrame'),deck=deckFrame&&deckFrame.contentDocument;return{docs,deckFrame,deck}}catch(e){return{}}}
+function resizeAll(ctx){try{const{docs,deckFrame,deck}=ctx;if(deckFrame&&deck)deckFrame.style.height=deck.documentElement.scrollHeight+'px';if(docs)for(let i=docs.length-1;i>0;i--){const f=docs[i-1].getElementById('base');if(f)f.style.height=docs[i].documentElement.scrollHeight+'px'}if(base.contentDocument)base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
+function patchDeck(){
+ const ctx=getDeck(),d=ctx.deck;if(!d)return;
+ const savings=[...d.querySelectorAll('.slide')].find(s=>/Be your own power company/i.test(s.textContent||''));
+ if(!savings)return;
+ const entries=[...savings.querySelectorAll('.month-entry')];if(entries.length!==12)return;
+ const annualBox=savings.querySelector('.annual-total');if(!annualBox)return;
+ if(!d.getElementById('annualUsageEntryV10')){
+  const style=d.createElement('style');style.id='annualUsageEntryV10';style.textContent=`
+   .annual-total.annual-entry{display:flex!important;align-items:center!important;gap:6px!important;padding:5px 8px!important;cursor:text!important;background:#eaf3ff!important;border:1px solid #bfd6f1!important}
+   .annual-entry label{font-size:clamp(9px,.72vw,12px)!important;font-weight:900!important;color:#174f91!important;white-space:nowrap!important}
+   .annual-entry input{width:92px!important;min-width:0!important;border:0!important;outline:0!important;background:transparent!important;color:#174f91!important;font-size:clamp(10px,.82vw,13px)!important;font-weight:950!important;text-align:right!important;padding:0!important;margin:0!important}
+   .annual-entry span{font-size:clamp(9px,.72vw,12px)!important;font-weight:900!important;color:#174f91!important}
+  `;d.head.appendChild(style)
+ }
+ if(!annualBox.querySelector('#annualUsageInput')){
+  annualBox.classList.add('annual-entry');
+  annualBox.innerHTML='<label for="annualUsageInput">Annual usage</label><input id="annualUsageInput" type="number" min="12" step="1" inputmode="numeric" placeholder="12,500"><span>kWh</span>';
+  const annualInput=annualBox.querySelector('#annualUsageInput');
+  const weights=[0.066,0.059,0.063,0.071,0.087,0.108,0.119,0.116,0.098,0.083,0.068,0.062];
+  const usageButton=[...savings.querySelectorAll('.mode-toggle button')].find(b=>b.dataset.mode==='usage');
+  const distribute=()=>{
+   const total=Math.round(parseFloat(annualInput.value)||0);if(total<12)return;
+   if(usageButton&&!usageButton.classList.contains('active'))usageButton.click();
+   let assigned=0;const monthly=weights.map((w,i)=>{if(i===11)return total-assigned;const value=Math.max(1,Math.round(total*w));assigned+=value;return value});
+   entries.forEach((el,i)=>{el.value=monthly[i];el.dispatchEvent(new Event('input',{bubbles:true}))});
+  };
+  annualInput.addEventListener('input',distribute);
+  annualInput.addEventListener('change',distribute);
+  entries.forEach(el=>el.addEventListener('input',()=>{if(d.activeElement===annualInput)return;const total=entries.reduce((sum,input)=>sum+(parseFloat(input.value)||0),0);annualInput.value=total>0?Math.round(total):''}));
+  const existingTotal=entries.reduce((sum,input)=>sum+(parseFloat(input.value)||0),0);if(existingTotal>0)annualInput.value=Math.round(existingTotal);
+ }
+ resizeAll(ctx);
+}
+function install(){let n=0;const timer=setInterval(()=>{patchDeck();if(++n>120)clearInterval(timer)},250)}
+base.addEventListener('load',install);window.addEventListener('resize',()=>setTimeout(patchDeck,120));install();
+</script>
+</body>
+</html>
