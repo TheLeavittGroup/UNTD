@@ -38,9 +38,9 @@
           United Sales Deck
           <small>UNTD / OWE Arizona PDF deck</small>
         </a>
-        <a id="iidDeck" href="presentation/iid-sales-deck/">
+        <a id="iidDeck" href="presentation/iid-sales-deck-v2/">
           IID Sales Deck
-          <small>IID utility version with 13.65¢ buying power and 6.98¢ export credit</small>
+          <small>IID utility version with IID-specific rates and calculator</small>
         </a>
       </div>
     </main>
@@ -53,7 +53,7 @@
       const iidDeck=document.getElementById('iidDeck');
       iidDeck.addEventListener('click',event=>{
         event.preventDefault();
-        location.href='presentation/iid-sales-deck/?refresh='+Date.now();
+        location.href='presentation/iid-sales-deck-v2/?refresh='+Date.now();
       });
     </script>
   </body>
