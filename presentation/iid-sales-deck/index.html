@@ -13,7 +13,7 @@
 <iframe id="base" scrolling="no" title="IID Sales Deck"></iframe>
 <script>
 const base=document.getElementById('base');
-base.src='../combined-v14/?build=iid-sales-deck-v2&refresh='+Date.now();
+base.src='../combined-v14/?build=iid-sales-deck-v3&refresh='+Date.now();
 let resizeTimer=0;
 
 function setHeight(frame,height){
@@ -60,6 +60,7 @@ function replaceText(root){
   text=text.replace(/APS and SRP/gi,'IID').replace(/APS\s*\/\s*SRP/gi,'IID').replace(/APS|SRP/gi,'IID');
   text=text.replace(/4\s*(?:-|–|—|to)\s*7\s*(?:PM|P\.M\.)/gi,'4–9 PM');
   text=text.replace(/4:00\s*(?:PM|P\.M\.)\s*(?:-|–|—|to)\s*7:00\s*(?:PM|P\.M\.)/gi,'4:00 PM–9:00 PM');
+  text=text.replace(/Utility prices can increase 5\s*(?:-|–|—|to)\s*7% each year\.?/gi,'IID rates stayed relatively stable for years—until recent increases totaling 59%.');
   textNode.nodeValue=text;
  });
 }
@@ -102,6 +103,34 @@ function patchDeck(){
 
  const utilitySubtitle=savings.querySelector('.monthly-card span');
  if(utilitySubtitle)utilitySubtitle.remove();
+
+ const savingsWalker=d.createTreeWalker(savings,NodeFilter.SHOW_TEXT);
+ const savingsNodes=[];let savingsNode;
+ while((savingsNode=savingsWalker.nextNode()))savingsNodes.push(savingsNode);
+ savingsNodes.forEach(textNode=>{
+  const parent=textNode.parentElement;
+  if(!parent||/^(SCRIPT|STYLE|NOSCRIPT)$/.test(parent.tagName))return;
+  let text=textNode.nodeValue||'';
+  text=text.replace(/Utility prices can increase 5\s*(?:-|–|—|to)\s*7% each year\.?/gi,'IID rates stayed relatively stable for years—until recent increases totaling 59%.');
+  text=text.replace(/\$?0\.\d+\s*(?:\/|per)\s*kWh/gi,'$0.28/kWh');
+  text=text.replace(/\d+(?:\.\d+)?¢\s*(?:\/|per)\s*kWh/gi,'28¢/kWh');
+  textNode.nodeValue=text;
+ });
+
+ const rateInputs=[...savings.querySelectorAll('input')].filter(input=>/rate|kwh|utility|price/i.test(`${input.id} ${input.name} ${input.placeholder} ${input.getAttribute('aria-label')||''}`));
+ rateInputs.forEach(input=>{
+  const current=parseFloat(input.value);
+  input.value=current>1?'28':'0.28';
+  input.defaultValue=input.value;
+  input.dispatchEvent(new Event('input',{bubbles:true}));
+  input.dispatchEvent(new Event('change',{bubbles:true}));
+ });
+
+ [...savings.querySelectorAll('[data-rate],[data-kwh-rate],[data-utility-rate]')].forEach(el=>{
+  if(el.hasAttribute('data-rate'))el.setAttribute('data-rate','0.28');
+  if(el.hasAttribute('data-kwh-rate'))el.setAttribute('data-kwh-rate','0.28');
+  if(el.hasAttribute('data-utility-rate'))el.setAttribute('data-utility-rate','0.28');
+ });
 
  let style=d.getElementById('iidDeckStyles');
  if(!style){style=d.createElement('style');style.id='iidDeckStyles'}
