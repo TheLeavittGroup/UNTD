@@ -13,7 +13,7 @@
 <iframe id="base" scrolling="no" title="IID Sales Deck"></iframe>
 <script>
 const base=document.getElementById('base');
-base.src='../combined-v14/?build=iid-sales-deck-v1&refresh='+Date.now();
+base.src='../combined-v14/?build=iid-sales-deck-v2&refresh='+Date.now();
 let resizeTimer=0;
 
 function setHeight(frame,height){
@@ -58,6 +58,8 @@ function replaceText(root){
   if(!parent||/^(SCRIPT|STYLE|NOSCRIPT)$/.test(parent.tagName))return;
   let text=textNode.nodeValue||'';
   text=text.replace(/APS and SRP/gi,'IID').replace(/APS\s*\/\s*SRP/gi,'IID').replace(/APS|SRP/gi,'IID');
+  text=text.replace(/4\s*(?:-|–|—|to)\s*7\s*(?:PM|P\.M\.)/gi,'4–9 PM');
+  text=text.replace(/4:00\s*(?:PM|P\.M\.)\s*(?:-|–|—|to)\s*7:00\s*(?:PM|P\.M\.)/gi,'4:00 PM–9:00 PM');
   textNode.nodeValue=text;
  });
 }
