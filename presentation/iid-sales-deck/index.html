@@ -13,7 +13,7 @@
 <iframe id="base" scrolling="no" title="IID Sales Deck"></iframe>
 <script>
 const base=document.getElementById('base');
-base.src='../combined-v14/?build=iid-sales-deck-v4&refresh='+Date.now();
+base.src='../combined-v14/?build=iid-sales-deck-v5&refresh='+Date.now();
 let resizeTimer=0;
 
 function setHeight(frame,height){
@@ -66,7 +66,7 @@ function replaceText(root){
 
 function patchSavingsCopy(savings){
  const paragraph=savings.querySelector('.savings-head p');
- if(paragraph)paragraph.textContent='IID rates stayed relatively stable for years—until recent increases totaling 59%. Future utility costs below include an additional 15% rate adjustment.';
+ if(paragraph)paragraph.textContent='IID rates stayed relatively stable for years—until recent increases totaling 59%.';
 }
 
 function patchDeck(){
@@ -112,7 +112,6 @@ function patchDeck(){
 
  const futureCard=savings.querySelector('.future-card');
  if(futureCard){
-  const originalValues=[...futureCard.querySelectorAll('.future-box strong')].map(el=>el.textContent);
   const monthlyEl=savings.querySelector('.monthly-card strong');
   const recalcFuture=()=>{
    const monthly=parseFloat((monthlyEl?.textContent||'').replace(/[^0-9.]/g,''))||0;
@@ -123,7 +122,7 @@ function patchDeck(){
     box.textContent='$'+Math.round(adjusted*Math.pow(1.15,years/5)).toLocaleString();
    });
    const result=futureCard.querySelector('.rate-result');
-   if(result)result.textContent='Future IID estimates include a 15% rate adjustment.';
+   if(result)result.textContent='';
   };
   recalcFuture();
   const observer=new MutationObserver(recalcFuture);
