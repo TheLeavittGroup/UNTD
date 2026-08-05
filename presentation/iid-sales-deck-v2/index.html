@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>IID Sales Deck</title>
+<style>*{box-sizing:border-box}html,body{margin:0;background:#000;min-height:100%}#base{display:block;width:100%;height:28000px;border:0;background:#000}</style>
+</head>
+<body>
+<iframe id="base" scrolling="no" title="IID Sales Deck"></iframe>
+<script>
+const IID_RATE=0.28;
+const base=document.getElementById('base');
+base.src='../iid-sales-deck/?build=iid-savings-v3&refresh='+Date.now();
+let timer=0;
+
+function setHeight(frame,height){
+ const next=Math.ceil(height||0),current=parseInt(frame.style.height,10)||0;
+ if(next>0&&Math.abs(next-current)>4)frame.style.height=next+'px';
+}
+
+function getContext(){
+ try{
+  const docs=[];let doc=base.contentDocument;
+  while(doc){
+   docs.push(doc);
+   const frame=doc.getElementById('base');
+   if(!frame||!frame.contentDocument)break;
+   doc=frame.contentDocument;
+  }
+  const outer=docs[docs.length-1];
+  const deckFrame=outer&&outer.getElementById('deckFrame');
+  const deck=deckFrame&&deckFrame.contentDocument;
+  return{docs,deckFrame,deck};
+ }catch(e){return{}}
+}
+
+function resizeAll(ctx){
+ try{
+  const{docs,deckFrame,deck}=ctx;
+  if(deckFrame&&deck)setHeight(deckFrame,deck.documentElement.scrollHeight);
+  if(docs)for(let i=docs.length-1;i>0;i--){
+   const frame=docs[i-1].getElementById('base');
+   if(frame)setHeight(frame,docs[i].documentElement.scrollHeight);
+  }
+  if(base.contentDocument)setHeight(base,base.contentDocument.documentElement.scrollHeight);
+ }catch(e){}
+}
+
+function numberValue(input){
+ const value=parseFloat(String(input.value||'').replace(/[^0-9.\-]/g,''));
+ return Number.isFinite(value)?Math.max(0,value):0;
+}
+
+function visible(input){
+ const style=input.ownerDocument.defaultView.getComputedStyle(input);
+ return style.display!=='none'&&style.visibility!=='hidden'&&input.offsetParent!==null;
+}
+
+function installIIDCalculator(savings){
+ const inputCard=savings.querySelector('.input-card');
+ const output=savings.querySelector('.monthly-card strong');
+ if(!inputCard||!output)return;
+
+ const rateInputs=[...inputCard.querySelectorAll('.rate-inputs input')];
+ if(rateInputs[0]){
+  rateInputs[0].value='0.28';
+  rateInputs[0].setAttribute('value','0.28');
+  rateInputs[0].readOnly=true;
+ }
+ const rateLabels=[...inputCard.querySelectorAll('.rate-inputs label')];
+ if(rateLabels[0]){
+  const text=[...rateLabels[0].childNodes].find(n=>n.nodeType===3);
+  if(text)text.nodeValue='IID rate ($/kWh)';
+ }
+
+ function calculate(){
+  const usageInputs=[...inputCard.querySelectorAll('input')].filter(i=>!i.closest('.rate-inputs')&&visible(i));
+  let annualUsage=0;
+  if(usageInputs.length>=10){
+   annualUsage=usageInputs.reduce((sum,input)=>sum+numberValue(input),0);
+  }else if(usageInputs.length===1){
+   const input=usageInputs[0];
+   const context=((input.closest('label')?.textContent||'')+' '+(input.placeholder||'')+' '+(input.name||'')+' '+(input.id||'')).toLowerCase();
+   const entered=numberValue(input);
+   annualUsage=/month/.test(context)&&!/annual/.test(context)?entered*12:entered;
+  }else if(usageInputs.length>1){
+   annualUsage=usageInputs.reduce((sum,input)=>sum+numberValue(input),0);
+  }
+  const monthlyBill=annualUsage*IID_RATE/12;
+  output.textContent='$'+Math.round(monthlyBill).toLocaleString('en-US');
+  const subtitle=savings.querySelector('.monthly-card span');
+  if(subtitle)subtitle.textContent='Estimated average monthly IID bill at $0.28/kWh';
+ }
+
+ if(!inputCard.dataset.iidCalculatorInstalled){
+  inputCard.dataset.iidCalculatorInstalled='true';
+  inputCard.addEventListener('input',()=>setTimeout(calculate,0),true);
+  inputCard.addEventListener('change',()=>setTimeout(calculate,0),true);
+  inputCard.addEventListener('click',()=>setTimeout(calculate,20),true);
+ }
+ calculate();
+ setTimeout(calculate,250);
+ setTimeout(calculate,900);
+}
+
+function patch(){
+ const ctx=getContext(),d=ctx.deck;
+ if(!d)return false;
+ const savings=d.querySelector('.slide.savings-upgrade')||[...d.querySelectorAll('.slide')].find(s=>/Be your own power company/i.test(s.textContent||''));
+ if(!savings)return false;
+
+ const paragraph=savings.querySelector('.savings-head p')||[...savings.querySelectorAll('p')].find(p=>/utility prices|solar rate|fixed rate/i.test(p.textContent||''));
+ if(paragraph)paragraph.textContent='IID rates stayed relatively stable for years—until recent increases totaling 59%. Your solar rate stays fixed.';
+
+ installIIDCalculator(savings);
+ resizeAll(ctx);
+ requestAnimationFrame(()=>requestAnimationFrame(()=>resizeAll(getContext())));
+ return true;
+}
+
+function wait(attempt=0){
+ if(patch()){
+  setTimeout(patch,700);
+  setTimeout(patch,1600);
+  return;
+ }
+ if(attempt<120)setTimeout(()=>wait(attempt+1),100);
+}
+
+base.addEventListener('load',()=>wait(),{once:true});
+setTimeout(()=>wait(),120);
+window.addEventListener('resize',()=>{
+ clearTimeout(timer);
+ timer=setTimeout(()=>{patch();resizeAll(getContext())},200);
+},{passive:true});
+</script>
+</body>
+</html>
