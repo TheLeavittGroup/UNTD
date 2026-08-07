@@ -90,13 +90,21 @@ function patchDeck(){
  if(label)label.textContent='Main Reason: IID pays homeowners to have their own storage';
 
  const cards=[...net.querySelectorAll('.simple-card')];
- const buyCard=cards.find(card=>/buy|purchase|utility rate|power/i.test(card.textContent||''))||cards[0];
- const sellCard=net.querySelector('.simple-card.sell')||cards.find(card=>/export|sell/i.test(card.textContent||''))||cards[1];
+ const buyCard=net.querySelector('.simple-card.buy')||cards.find(card=>/buy|purchase|off-peak/i.test(card.textContent||''))||cards[1];
+ const sellCard=net.querySelector('.simple-card.sell')||cards.find(card=>/export|sell/i.test(card.textContent||''))||cards[0];
+ let iidNetRateInput=null;
  if(buyCard){
   const rate=buyCard.querySelector('.simple-rate');
-  if(rate)rate.textContent='13.65¢';
+  if(rate){
+   rate.classList.add('iid-editable-rate');
+   iidNetRateInput=rate.querySelector('#iidNetRateCents');
+   if(!iidNetRateInput){
+    rate.innerHTML='<input id="iidNetRateCents" type="number" inputmode="decimal" min="0" step="0.01" value="13.65" aria-label="Editable IID rate per kilowatt-hour"><span class="iid-rate-unit">¢</span>';
+    iidNetRateInput=rate.querySelector('#iidNetRateCents');
+   }
+  }
   const copy=buyCard.querySelector('.simple-label,.simple-copy,.simple-title');
-  if(copy&&/APS|SRP|IID|buy|purchase|utility/i.test(copy.textContent||''))copy.textContent='IID buying power';
+  if(copy&&/APS|SRP|IID|buy|purchase|utility|off-peak/i.test(copy.textContent||''))copy.textContent='IID buying power';
   const note=buyCard.querySelector('.simple-note');
   if(note)note.remove();
  }
@@ -130,12 +138,14 @@ function patchDeck(){
  const rateInputs=savings.querySelector('.rate-inputs');
  let iidRateInput=savings.querySelector('#iidRateCents');
  if(rateInputs&&!iidRateInput){
-  rateInputs.innerHTML='<label>IID rate per kWh (¢)<input id="iidRateCents" type="number" inputmode="decimal" min="0" step="0.01" placeholder="22.00"></label><label>Future-rate buffer<input type="text" value="15%" readonly aria-label="15 percent future-rate buffer"></label>';
+  const startingRate=iidNetRateInput?.value||'13.65';
+  rateInputs.innerHTML='<label>IID rate per kWh (¢)<input id="iidRateCents" type="number" inputmode="decimal" min="0" step="0.01" value="'+startingRate+'"></label>';
   iidRateInput=savings.querySelector('#iidRateCents');
  }
+ if(iidRateInput&&iidNetRateInput&&!iidRateInput.value)iidRateInput.value=iidNetRateInput.value;
 
  const utilitySubtitle=savings.querySelector('.monthly-card span');
- if(utilitySubtitle)utilitySubtitle.textContent='Includes a 15% future-rate buffer';
+ if(utilitySubtitle)utilitySubtitle.textContent='Based on your usage and entered IID rate';
 
  const monthlyEl=savings.querySelector('.monthly-card strong');
  const futureCard=savings.querySelector('.future-card');
@@ -160,10 +170,18 @@ function patchDeck(){
    const years=[5,10,15,25][index]||0;
    box.textContent=money(bufferedMonthly*Math.pow(1.15,years/5));
   });
-  if(result)result.textContent='IID rate: '+rateCents.toFixed(2)+'¢/kWh • Monthly estimate includes 15% future-rate buffer';
+  if(result)result.textContent='IID rate used: '+rateCents.toFixed(2)+'¢/kWh';
  };
  if(!savings.dataset.iidRateBound){
-  [...monthInputs,iidRateInput].filter(Boolean).forEach(input=>input.addEventListener('input',recalcIID));
+  monthInputs.forEach(input=>input.addEventListener('input',recalcIID));
+  if(iidRateInput)iidRateInput.addEventListener('input',()=>{
+   if(iidNetRateInput)iidNetRateInput.value=iidRateInput.value;
+   recalcIID();
+  });
+  if(iidNetRateInput)iidNetRateInput.addEventListener('input',()=>{
+   if(iidRateInput)iidRateInput.value=iidNetRateInput.value;
+   recalcIID();
+  });
   savings.dataset.iidRateBound='true';
  }
  recalcIID();
@@ -173,6 +191,12 @@ function patchDeck(){
  style.textContent=`
   .main-reasons,.grid-retry-reasons{grid-template-columns:minmax(170px,1.35fr) 1fr 1fr!important}
   .main-reasons-title,.grid-retry-reasons-title,.why-incentive-title{white-space:normal!important;line-height:1.12!important;text-align:left!important;font-size:clamp(11px,1.08vw,17px)!important;padding:.7em 1em!important}
+  .simple-rate.iid-editable-rate{display:flex!important;align-items:baseline!important;justify-content:center!important;gap:.06em!important}
+  #iidNetRateCents{width:4.25ch!important;max-width:72%!important;border:0!important;border-bottom:2px solid currentColor!important;border-radius:0!important;background:transparent!important;color:inherit!important;font:inherit!important;font-weight:inherit!important;letter-spacing:-.04em!important;line-height:.95!important;text-align:center!important;outline:none!important;padding:0!important;appearance:textfield!important;-moz-appearance:textfield!important;touch-action:manipulation!important}
+  #iidNetRateCents:focus{border-bottom-color:#17375f!important;background:rgba(255,255,255,.42)!important}
+  #iidNetRateCents::-webkit-inner-spin-button,#iidNetRateCents::-webkit-outer-spin-button{-webkit-appearance:none!important;margin:0!important}
+  .iid-rate-unit{font:inherit!important;color:inherit!important}
+  .savings-upgrade .rate-inputs{grid-template-columns:1fr!important}
   @media(max-width:600px){
    .main-reasons,.grid-retry-reasons{grid-template-columns:1.35fr 1fr 1fr!important}
    .main-reasons-title,.grid-retry-reasons-title,.why-incentive-title{font-size:6.2px!important;line-height:1.08!important;padding:.45em!important}
