@@ -60,19 +60,22 @@ function visible(input){
 }
 
 function installIIDCalculator(savings){
- savings.dataset.iidV2OwnsCalculator='true';
  let inputCard=savings.querySelector('.input-card');
  const output=savings.querySelector('.monthly-card strong');
- if(!inputCard||!output)return;
+ if(!inputCard||!output)return false;
+ if(!inputCard.querySelector('.mode-toggle')||inputCard.querySelectorAll('.month-entry').length<12)return false;
+
+ savings.dataset.iidV2OwnsCalculator='true';
 
  const subtitle=savings.querySelector('.monthly-card span');
  if(subtitle)subtitle.remove();
  const result=savings.querySelector('.rate-result');
  if(result){result.textContent='';result.style.display='none'}
 
- if(inputCard.dataset.iidV2CalculatorReady==='true'&&typeof inputCard._iidCalculate==='function'){
+ const liveRate=inputCard.querySelector('#iidRateCents');
+ if(inputCard.dataset.iidV2CalculatorReady==='true'&&typeof inputCard._iidCalculate==='function'&&liveRate===inputCard._iidRateInput&&liveRate?.isConnected){
   inputCard._iidCalculate();
-  return;
+  return true;
  }
 
  const cleanCard=inputCard.cloneNode(true);
@@ -153,8 +156,10 @@ function installIIDCalculator(savings){
   input.addEventListener('change',calculate);
  });
 
+ inputCard._iidRateInput=rateInput;
  inputCard._iidCalculate=calculate;
  calculate();
+ return true;
 }
 
 function patch(){
@@ -166,7 +171,7 @@ function patch(){
  const paragraph=savings.querySelector('.savings-head p')||[...savings.querySelectorAll('p')].find(p=>/utility prices|solar rate|fixed rate/i.test(p.textContent||''));
  if(paragraph)paragraph.textContent='IID rates stayed relatively stable for years—until recent increases totaling 59%. Your solar rate stays fixed.';
 
- installIIDCalculator(savings);
+ if(!installIIDCalculator(savings))return false;
  resizeAll(ctx);
  requestAnimationFrame(()=>requestAnimationFrame(()=>resizeAll(getContext())));
  return true;
