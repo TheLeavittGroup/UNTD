@@ -105,6 +105,9 @@ function patchDeck(){
   if(copy&&/APS|SRP|IID|export|sell/i.test(copy.textContent||''))copy.textContent='IID selling power';
  }
 
+ const demandLine=net.querySelector('.demand-line');
+ if(demandLine)demandLine.innerHTML='Use stored battery power during <span>IID’s 4–9 PM on-peak window</span> to avoid higher-cost grid energy.';
+
  patchSavingsCopy(savings);
 
  const utilitySubtitle=savings.querySelector('.monthly-card span');
