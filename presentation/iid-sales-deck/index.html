@@ -135,6 +135,7 @@ function patchDeck(){
 
  patchSavingsCopy(savings);
 
+ if(savings.dataset.iidV2OwnsCalculator!=='true'){
  const rateInputs=savings.querySelector('.rate-inputs');
  let iidRateInput=savings.querySelector('#iidRateCents');
  if(rateInputs&&!iidRateInput){
@@ -185,6 +186,7 @@ function patchDeck(){
   savings.dataset.iidRateBound='true';
  }
  recalcIID();
+ }
 
  let style=d.getElementById('iidDeckStyles');
  if(!style){style=d.createElement('style');style.id='iidDeckStyles'}
