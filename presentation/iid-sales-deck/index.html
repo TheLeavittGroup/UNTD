@@ -123,28 +123,46 @@ function patchDeck(){
 
  patchSavingsCopy(savings);
 
- const utilitySubtitle=savings.querySelector('.monthly-card span');
- if(utilitySubtitle)utilitySubtitle.remove();
-
- const futureCard=savings.querySelector('.future-card');
- if(futureCard){
-  const monthlyEl=savings.querySelector('.monthly-card strong');
-  const recalcFuture=()=>{
-   const monthly=parseFloat((monthlyEl?.textContent||'').replace(/[^0-9.]/g,''))||0;
-   const adjusted=monthly*1.15;
-   const boxes=[...futureCard.querySelectorAll('.future-box strong')];
-   boxes.forEach((box,index)=>{
-    const years=[5,10,15,25][index]||0;
-    box.textContent='$'+Math.round(adjusted*Math.pow(1.15,years/5)).toLocaleString();
-   });
-   const result=futureCard.querySelector('.rate-result');
-   if(result)result.textContent='';
-  };
-  recalcFuture();
-  const observer=new MutationObserver(recalcFuture);
-  if(monthlyEl)observer.observe(monthlyEl,{childList:true,characterData:true,subtree:true});
-  savings.querySelectorAll('input').forEach(input=>input.addEventListener('input',()=>setTimeout(recalcFuture,0)));
+ const rateInputs=savings.querySelector('.rate-inputs');
+ let iidRateInput=savings.querySelector('#iidRateCents');
+ if(rateInputs&&!iidRateInput){
+  rateInputs.innerHTML='<label>IID rate per kWh (¢)<input id="iidRateCents" type="number" inputmode="decimal" min="0" step="0.01" placeholder="22.00"></label><label>Future-rate buffer<input type="text" value="15%" readonly aria-label="15 percent future-rate buffer"></label>';
+  iidRateInput=savings.querySelector('#iidRateCents');
  }
+
+ const utilitySubtitle=savings.querySelector('.monthly-card span');
+ if(utilitySubtitle)utilitySubtitle.textContent='Includes a 15% future-rate buffer';
+
+ const monthlyEl=savings.querySelector('.monthly-card strong');
+ const futureCard=savings.querySelector('.future-card');
+ const monthInputs=[...savings.querySelectorAll('.month-kwh')];
+ const money=value=>Number.isFinite(value)?new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(value):'$0';
+ const recalcIID=()=>{
+  const annual=monthInputs.reduce((sum,input)=>sum+(parseFloat(input.value)||0),0);
+  const annualUsage=savings.querySelector('#annualUsage');
+  if(annualUsage)annualUsage.textContent=Math.round(annual).toLocaleString()+' kWh';
+  const rateCents=parseFloat(iidRateInput?.value)||0;
+  const boxes=futureCard?[...futureCard.querySelectorAll('.future-box strong')]:[];
+  const result=futureCard&&futureCard.querySelector('.rate-result');
+  if(!(annual>0&&rateCents>0)){
+   if(monthlyEl)monthlyEl.textContent='$0';
+   boxes.forEach(box=>box.textContent='$0');
+   if(result)result.textContent='Enter monthly usage and the IID rate per kWh.';
+   return;
+  }
+  const bufferedMonthly=(annual/12)*(rateCents/100)*1.15;
+  if(monthlyEl)monthlyEl.textContent=money(bufferedMonthly);
+  boxes.forEach((box,index)=>{
+   const years=[5,10,15,25][index]||0;
+   box.textContent=money(bufferedMonthly*Math.pow(1.15,years/5));
+  });
+  if(result)result.textContent='IID rate: '+rateCents.toFixed(2)+'¢/kWh • Monthly estimate includes 15% future-rate buffer';
+ };
+ if(!savings.dataset.iidRateBound){
+  [...monthInputs,iidRateInput].filter(Boolean).forEach(input=>input.addEventListener('input',recalcIID));
+  savings.dataset.iidRateBound='true';
+ }
+ recalcIID();
 
  let style=d.getElementById('iidDeckStyles');
  if(!style){style=d.createElement('style');style.id='iidDeckStyles'}
