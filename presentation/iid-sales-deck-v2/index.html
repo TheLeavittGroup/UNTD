@@ -13,7 +13,7 @@
 <iframe id="base" scrolling="no" title="IID Sales Deck"></iframe>
 <script>
 const base=document.getElementById('base');
-base.src='../iid-sales-deck/?build=iid-savings-v4&refresh='+Date.now();
+base.src='../iid-sales-deck/?build=iid-savings-v5&refresh='+Date.now();
 let timer=0;
 
 function setHeight(frame,height){
@@ -63,8 +63,20 @@ function installIIDCalculator(savings){
  let inputCard=savings.querySelector('.input-card');
  const output=savings.querySelector('.monthly-card strong');
  if(!inputCard||!output)return false;
- if(!inputCard.querySelector('.mode-toggle')||inputCard.querySelectorAll('.month-entry').length<12)return false;
 
+ const liveAnnual=inputCard.querySelector('#iidAnnualUsage');
+ const liveRate=inputCard.querySelector('#iidRateCents');
+ if(inputCard.dataset.iidV2AnnualReady==='true'&&typeof inputCard._iidCalculate==='function'&&liveAnnual===inputCard._iidAnnualInput&&liveRate===inputCard._iidRateInput&&liveAnnual?.isConnected&&liveRate?.isConnected){
+  savings.dataset.iidV2OwnsCalculator='true';
+  const subtitle=savings.querySelector('.monthly-card span');
+  if(subtitle)subtitle.remove();
+  const result=savings.querySelector('.rate-result');
+  if(result){result.textContent='';result.style.display='none'}
+  inputCard._iidCalculate();
+  return true;
+ }
+
+ if(!inputCard.querySelector('.mode-toggle')||inputCard.querySelectorAll('.month-entry').length<12)return false;
  savings.dataset.iidV2OwnsCalculator='true';
 
  const subtitle=savings.querySelector('.monthly-card span');
@@ -72,38 +84,42 @@ function installIIDCalculator(savings){
  const result=savings.querySelector('.rate-result');
  if(result){result.textContent='';result.style.display='none'}
 
- const liveRate=inputCard.querySelector('#iidRateCents');
- if(inputCard.dataset.iidV2CalculatorReady==='true'&&typeof inputCard._iidCalculate==='function'&&liveRate===inputCard._iidRateInput&&liveRate?.isConnected){
-  inputCard._iidCalculate();
-  return true;
- }
-
  const cleanCard=inputCard.cloneNode(true);
  inputCard.replaceWith(cleanCard);
  inputCard=cleanCard;
- inputCard.dataset.iidV2CalculatorReady='true';
+ inputCard.dataset.iidV2AnnualReady='true';
+
+ const modeToggle=inputCard.querySelector('.mode-toggle');
+ if(modeToggle)modeToggle.remove();
+
+ const inputHead=inputCard.querySelector('.input-head');
+ const title=inputCard.querySelector('#modeTitle');
+ if(title)title.textContent='Enter annual electricity use';
+ const annualTotal=inputCard.querySelector('.annual-total');
+ if(annualTotal)annualTotal.remove();
+ if(inputHead)inputHead.style.marginBottom='3%';
+
+ const usageGrid=inputCard.querySelector('.month-grid');
+ if(!usageGrid)return false;
+ usageGrid.innerHTML='<label>Annual usage (kWh)<input id="iidAnnualUsage" type="number" inputmode="decimal" min="0" step="1" placeholder="kWh" aria-label="Annual electricity usage in kilowatt-hours"></label>';
+ usageGrid.style.gridTemplateColumns='1fr';
 
  const rateInputs=inputCard.querySelector('.rate-inputs');
- if(!rateInputs)return;
+ if(!rateInputs)return false;
  rateInputs.innerHTML='<label>IID rate ($/kWh)<input id="iidRateCents" type="number" inputmode="decimal" min="0" step="0.001" value="0.28" aria-label="Editable IID rate in dollars per kilowatt-hour"></label>';
  rateInputs.style.gridTemplateColumns='1fr';
 
+ const annualInput=usageGrid.querySelector('#iidAnnualUsage');
  const rateInput=rateInputs.querySelector('#iidRateCents');
  rateInput.readOnly=false;
  rateInput.disabled=false;
  rateInput.removeAttribute('readonly');
  rateInput.removeAttribute('disabled');
 
- const entries=[...inputCard.querySelectorAll('.month-entry')];
- const buttons=[...inputCard.querySelectorAll('.mode-toggle button')];
- const title=inputCard.querySelector('#modeTitle');
- const annualUsageEl=inputCard.querySelector('#annualUsage');
  const graph=savings.querySelector('.savings-graph');
  const red=savings.querySelector('.graph-red');
  const yellow=savings.querySelector('.graph-yellow');
  const graphLabel=savings.querySelector('.graph-label');
- let mode=(buttons.find(button=>button.classList.contains('active'))?.dataset.mode)||'usage';
-
  const money=value=>Number.isFinite(value)?new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(value):'$0';
 
  function updateGraph(monthly){
@@ -116,21 +132,9 @@ function installIIDCalculator(savings){
  }
 
  function calculate(){
-  const values=entries.map(input=>numberValue(input));
+  const annualUsage=numberValue(annualInput);
   const enteredRate=numberValue(rateInput);
-  let annualUsage=0;
-  let baseMonthly=0;
-
-  if(mode==='bills'){
-   const annualBills=values.reduce((sum,value)=>sum+value,0);
-   annualUsage=enteredRate>0?annualBills/enteredRate:0;
-   baseMonthly=annualBills/12;
-  }else{
-   annualUsage=values.reduce((sum,value)=>sum+value,0);
-   baseMonthly=annualUsage*enteredRate/12;
-  }
-
-  if(annualUsageEl)annualUsageEl.textContent=Math.round(annualUsage).toLocaleString('en-US')+' kWh';
+  const baseMonthly=annualUsage*enteredRate/12;
   const monthlyBill=(baseMonthly>0&&enteredRate>0)?baseMonthly*1.15:0;
   output.textContent=money(monthlyBill);
 
@@ -142,20 +146,12 @@ function installIIDCalculator(savings){
   updateGraph(monthlyBill);
  }
 
- buttons.forEach(button=>button.addEventListener('click',()=>{
-  mode=button.dataset.mode||'usage';
-  buttons.forEach(item=>item.classList.toggle('active',item===button));
-  if(title)title.textContent=mode==='bills'?'Enter monthly power bills':'Enter monthly electricity use';
-  entries.forEach(input=>{input.value='';input.placeholder=mode==='bills'?'$':'kWh'});
-  if(annualUsageEl)annualUsageEl.textContent='0 kWh';
-  calculate();
- }));
-
- [...entries,rateInput].forEach(input=>{
+ [annualInput,rateInput].forEach(input=>{
   input.addEventListener('input',calculate);
   input.addEventListener('change',calculate);
  });
 
+ inputCard._iidAnnualInput=annualInput;
  inputCard._iidRateInput=rateInput;
  inputCard._iidCalculate=calculate;
  calculate();
