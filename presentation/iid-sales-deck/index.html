@@ -108,6 +108,19 @@ function patchDeck(){
  const demandLine=net.querySelector('.demand-line');
  if(demandLine)demandLine.innerHTML='Use stored battery power during <span>IID’s 4–9 PM on-peak window</span> to avoid higher-cost grid energy.';
 
+ const installer=d.querySelector('.slide.installer-links')||[...d.querySelectorAll('.slide')].find(s=>/Google Reviews/i.test(s.textContent||''));
+ if(installer){
+  const googleLogo=[...installer.querySelectorAll('.credential-logo')].find(el=>/Google/i.test(el.textContent||''));
+  if(googleLogo){
+   const stars=googleLogo.querySelector('.stars');
+   if(stars)stars.innerHTML='★★★★★ <b>4.4</b>';
+   const reviews=googleLogo.querySelector('small');
+   if(reviews)reviews.textContent='2,000+ Google Reviews';
+  }
+  const localTitle=installer.querySelector('.az-facts-title');
+  if(localTitle)localTitle.textContent='Built locally. Built to handle everything in-house.';
+ }
+
  patchSavingsCopy(savings);
 
  const utilitySubtitle=savings.querySelector('.monthly-card span');
