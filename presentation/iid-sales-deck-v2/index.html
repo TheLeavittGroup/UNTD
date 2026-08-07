@@ -13,7 +13,7 @@
 <iframe id="base" scrolling="no" title="IID Sales Deck"></iframe>
 <script>
 const base=document.getElementById('base');
-base.src='../iid-sales-deck/?build=iid-savings-v3&refresh='+Date.now();
+base.src='../iid-sales-deck/?build=iid-savings-v4&refresh='+Date.now();
 let timer=0;
 
 function setHeight(frame,height){
@@ -60,81 +60,101 @@ function visible(input){
 }
 
 function installIIDCalculator(savings){
- const inputCard=savings.querySelector('.input-card');
+ savings.dataset.iidV2OwnsCalculator='true';
+ let inputCard=savings.querySelector('.input-card');
  const output=savings.querySelector('.monthly-card strong');
  if(!inputCard||!output)return;
 
- let rateInput=inputCard.querySelector('.rate-inputs input');
- if(!rateInput)return;
- if(!rateInput.dataset.iidEditableReady){
-  const editable=rateInput.cloneNode(true);
-  rateInput.replaceWith(editable);
-  rateInput=editable;
-  rateInput.value='0.28';
-  rateInput.setAttribute('value','0.28');
-  rateInput.dataset.iidEditableReady='true';
+ const subtitle=savings.querySelector('.monthly-card span');
+ if(subtitle)subtitle.remove();
+ const result=savings.querySelector('.rate-result');
+ if(result){result.textContent='';result.style.display='none'}
+
+ if(inputCard.dataset.iidV2CalculatorReady==='true'&&typeof inputCard._iidCalculate==='function'){
+  inputCard._iidCalculate();
+  return;
  }
+
+ const cleanCard=inputCard.cloneNode(true);
+ inputCard.replaceWith(cleanCard);
+ inputCard=cleanCard;
+ inputCard.dataset.iidV2CalculatorReady='true';
+
+ const rateInputs=inputCard.querySelector('.rate-inputs');
+ if(!rateInputs)return;
+ rateInputs.innerHTML='<label>IID rate ($/kWh)<input id="iidRateCents" type="number" inputmode="decimal" min="0" step="0.001" value="0.28" aria-label="Editable IID rate in dollars per kilowatt-hour"></label>';
+ rateInputs.style.gridTemplateColumns='1fr';
+
+ const rateInput=rateInputs.querySelector('#iidRateCents');
  rateInput.readOnly=false;
  rateInput.disabled=false;
  rateInput.removeAttribute('readonly');
  rateInput.removeAttribute('disabled');
- rateInput.type='number';
- rateInput.inputMode='decimal';
- rateInput.min='0';
- rateInput.step='0.001';
- rateInput.setAttribute('aria-label','Editable IID rate in dollars per kilowatt-hour');
- rateInput.style.setProperty('pointer-events','auto','important');
- rateInput.style.setProperty('cursor','text','important');
- rateInput.style.setProperty('user-select','text','important');
- rateInput.style.setProperty('-webkit-user-select','text','important');
 
- const rateLabels=[...inputCard.querySelectorAll('.rate-inputs label')];
- if(rateLabels[0]){
-  const text=[...rateLabels[0].childNodes].find(n=>n.nodeType===3);
-  if(text)text.nodeValue='IID rate ($/kWh)';
+ const entries=[...inputCard.querySelectorAll('.month-entry')];
+ const buttons=[...inputCard.querySelectorAll('.mode-toggle button')];
+ const title=inputCard.querySelector('#modeTitle');
+ const annualUsageEl=inputCard.querySelector('#annualUsage');
+ const graph=savings.querySelector('.savings-graph');
+ const red=savings.querySelector('.graph-red');
+ const yellow=savings.querySelector('.graph-yellow');
+ const graphLabel=savings.querySelector('.graph-label');
+ let mode=(buttons.find(button=>button.classList.contains('active'))?.dataset.mode)||'usage';
+
+ const money=value=>Number.isFinite(value)?new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(value):'$0';
+
+ function updateGraph(monthly){
+  if(!graph)return;
+  graph.style.opacity='1';
+  const level=Math.max(12,Math.min(88,22+(monthly/20)));
+  if(red)red.style.clipPath='polygon(0 '+Math.max(35,95-level)+'%,100% 5%,100% 100%,0 100%)';
+  if(yellow)yellow.style.width=Math.max(35,Math.min(78,42+(monthly/35)))+'%';
+  if(graphLabel)graphLabel.textContent=monthly>0?'WITHOUT SOLAR • '+money(monthly)+'/MO':'WITHOUT SOLAR';
  }
 
  function calculate(){
-  const usageInputs=[...inputCard.querySelectorAll('input')].filter(i=>i!==rateInput&&!i.closest('.rate-inputs')&&visible(i));
+  const values=entries.map(input=>numberValue(input));
+  const enteredRate=numberValue(rateInput);
   let annualUsage=0;
-  if(usageInputs.length>=10){
-   annualUsage=usageInputs.reduce((sum,input)=>sum+numberValue(input),0);
-  }else if(usageInputs.length===1){
-   const input=usageInputs[0];
-   const context=((input.closest('label')?.textContent||'')+' '+(input.placeholder||'')+' '+(input.name||'')+' '+(input.id||'')).toLowerCase();
-   const entered=numberValue(input);
-   annualUsage=/month/.test(context)&&!/annual/.test(context)?entered*12:entered;
-  }else if(usageInputs.length>1){
-   annualUsage=usageInputs.reduce((sum,input)=>sum+numberValue(input),0);
+  let baseMonthly=0;
+
+  if(mode==='bills'){
+   const annualBills=values.reduce((sum,value)=>sum+value,0);
+   annualUsage=enteredRate>0?annualBills/enteredRate:0;
+   baseMonthly=annualBills/12;
+  }else{
+   annualUsage=values.reduce((sum,value)=>sum+value,0);
+   baseMonthly=annualUsage*enteredRate/12;
   }
 
-  const enteredRate=numberValue(rateInput);
-  const monthlyBill=annualUsage*enteredRate*1.15/12;
-  output.textContent='$'+Math.round(monthlyBill).toLocaleString('en-US');
+  if(annualUsageEl)annualUsageEl.textContent=Math.round(annualUsage).toLocaleString('en-US')+' kWh';
+  const monthlyBill=(baseMonthly>0&&enteredRate>0)?baseMonthly*1.15:0;
+  output.textContent=money(monthlyBill);
 
-  const rateText=enteredRate.toFixed(3).replace(/0+$/,'').replace(/\.$/,'');
-  const subtitle=savings.querySelector('.monthly-card span');
-  if(subtitle)subtitle.textContent='Estimated average monthly IID bill at $'+rateText+'/kWh';
-
-  const futureCard=savings.querySelector('.future-card');
-  const boxes=futureCard?[...futureCard.querySelectorAll('.future-box strong')]:[];
-  boxes.forEach((box,index)=>{
-   const years=[5,10,15,25][index]||0;
-   const amount=monthlyBill>0?monthlyBill*Math.pow(1.15,years/5):0;
-   box.textContent='$'+Math.round(amount).toLocaleString('en-US');
+  [[5,'y5'],[10,'y10'],[15,'y15'],[25,'y25']].forEach(([years,id])=>{
+   const future=savings.querySelector('#'+id);
+   if(future)future.textContent=money(monthlyBill*Math.pow(1.15,years/5));
   });
-  const result=futureCard&&futureCard.querySelector('.rate-result');
-  if(result)result.textContent='';
+
+  updateGraph(monthlyBill);
  }
 
- if(!inputCard.dataset.iidCalculatorInstalledV2){
-  inputCard.dataset.iidCalculatorInstalledV2='true';
-  inputCard.addEventListener('input',()=>setTimeout(calculate,0),true);
-  inputCard.addEventListener('change',()=>setTimeout(calculate,0),true);
- }
+ buttons.forEach(button=>button.addEventListener('click',()=>{
+  mode=button.dataset.mode||'usage';
+  buttons.forEach(item=>item.classList.toggle('active',item===button));
+  if(title)title.textContent=mode==='bills'?'Enter monthly power bills':'Enter monthly electricity use';
+  entries.forEach(input=>{input.value='';input.placeholder=mode==='bills'?'$':'kWh'});
+  if(annualUsageEl)annualUsageEl.textContent='0 kWh';
+  calculate();
+ }));
+
+ [...entries,rateInput].forEach(input=>{
+  input.addEventListener('input',calculate);
+  input.addEventListener('change',calculate);
+ });
+
+ inputCard._iidCalculate=calculate;
  calculate();
- setTimeout(calculate,250);
- setTimeout(calculate,900);
 }
 
 function patch(){
