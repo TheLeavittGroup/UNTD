@@ -13,7 +13,7 @@
 <iframe id="base" scrolling="no" title="IID Sales Deck"></iframe>
 <script>
 const base=document.getElementById('base');
-base.src='../iid-sales-deck/?build=iid-savings-v5&refresh='+Date.now();
+base.src='../iid-sales-deck/?build=iid-savings-v6&refresh='+Date.now();
 let timer=0;
 
 function setHeight(frame,height){
@@ -161,6 +161,11 @@ function installIIDCalculator(savings){
 function patch(){
  const ctx=getContext(),d=ctx.deck;
  if(!d)return false;
+
+ const moving=d.querySelector('.slide.move')||[...d.querySelectorAll('.slide')].find(s=>/Moving with Solar/i.test(s.textContent||''));
+ const movingList=moving&&moving.querySelector('ul');
+ if(movingList)movingList.innerHTML='<li>New homeowner calls us up when they’re ready and switches power payment in their name like they would with the utility.</li><li>Home buyers prefer homes with lower expenses</li><li>Solar can increase the value of your home</li><li>Solar homes sell faster than homes without solar</li>';
+
  const savings=d.querySelector('.slide.savings-upgrade')||[...d.querySelectorAll('.slide')].find(s=>/Be your own power company/i.test(s.textContent||''));
  if(!savings)return false;
 
