@@ -97,6 +97,8 @@ function patchDeck(){
   if(rate)rate.textContent='13.65¢';
   const copy=buyCard.querySelector('.simple-label,.simple-copy,.simple-title');
   if(copy&&/APS|SRP|IID|buy|purchase|utility/i.test(copy.textContent||''))copy.textContent='IID buying power';
+  const note=buyCard.querySelector('.simple-note');
+  if(note)note.remove();
  }
  if(sellCard){
   const rate=sellCard.querySelector('.simple-rate');
@@ -110,6 +112,8 @@ function patchDeck(){
 
  const installer=d.querySelector('.slide.installer-links')||[...d.querySelectorAll('.slide')].find(s=>/Google Reviews/i.test(s.textContent||''));
  if(installer){
+  const heading=installer.querySelector('.installer-head h1');
+  if(heading)heading.innerHTML='Proven at Scale: <strong>1,000+</strong> installs a month';
   const googleLogo=[...installer.querySelectorAll('.credential-logo')].find(el=>/Google/i.test(el.textContent||''));
   if(googleLogo){
    const stars=googleLogo.querySelector('.stars');
