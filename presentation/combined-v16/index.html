@@ -10,13 +10,15 @@
 <style>*{box-sizing:border-box}html,body{margin:0;background:#000;min-height:100%}#base{display:block;width:100%;height:28000px;border:0;background:#000}</style>
 </head>
 <body>
-<iframe id="base" src="../combined-v15/?build=grid-copy-clean-v16" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<iframe id="base" src="../combined-v15/?build=grid-copy-clean-v17" scrolling="no" title="Daddy's Sales Deck"></iframe>
 <script>
 const base=document.getElementById('base');
+const generationCopy='Those two round balls in between San Diego and Los Angeles.';
 const replacements=[
- ['Big breasts you see when driving from San Diego to Newport.','Those giant power pinwheels you see on the drive from San Diego to Newport.'],
- ['Those giant spinny fans you see on the drive and say, yep, that is electricity.','Those giant power pinwheels you see on the drive from San Diego to Newport.'],
- ['Those giant spinny fans photobombing the drive from San Diego to Newport.','Those giant power pinwheels you see on the drive from San Diego to Newport.']
+ ['Big breasts you see when driving from San Diego to Newport.',generationCopy],
+ ['Those giant spinny fans you see on the drive and say, yep, that is electricity.',generationCopy],
+ ['Those giant spinny fans photobombing the drive from San Diego to Newport.',generationCopy],
+ ['Those giant power pinwheels you see on the drive from San Diego to Newport.',generationCopy]
 ];
 function walkDocs(doc,docs=[]){try{if(!doc||docs.includes(doc))return docs;docs.push(doc);doc.querySelectorAll('iframe').forEach(frame=>{try{if(frame.contentDocument)walkDocs(frame.contentDocument,docs)}catch(e){}})}catch(e){}return docs}
 function cleanDoc(doc){try{const walker=doc.createTreeWalker(doc.body||doc,NodeFilter.SHOW_TEXT);let node;while(node=walker.nextNode()){let text=node.nodeValue||'';replacements.forEach(([oldText,newText])=>{if(text.includes(oldText))text=text.replaceAll(oldText,newText)});node.nodeValue=text}}catch(e){}}
