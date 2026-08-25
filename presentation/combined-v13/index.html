@@ -7,49 +7,21 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>Daddy's Sales Deck</title>
-<style>
-*{box-sizing:border-box}
-html,body{margin:0;background:#000;min-height:100%;overflow-x:hidden}
-#stage{position:relative;width:100%;overflow:hidden;background:#000}
-#deck{display:block;border:0;background:#000;transform-origin:top left}
-@media(min-width:601px){#deck{width:100%;transform:none}}
-</style>
+<style>*{box-sizing:border-box}html,body{margin:0;background:#000;min-height:100%}#base{display:block;width:100%;height:23000px;border:0;background:#000}</style>
 </head>
 <body>
-<div id="stage"><iframe id="deck" scrolling="no" title="Daddy's Sales Deck"></iframe></div>
+<iframe id="base" src="../combined-v12/?build=grid-copy-clean-1" scrolling="no" title="Daddy's Sales Deck"></iframe>
 <script>
-const BUILD='20260715-iphone-scale-2';
-const DESIGN_WIDTH=1200;
-const stage=document.getElementById('stage');
-const deck=document.getElementById('deck');
-const isPhone=()=>window.matchMedia('(max-width:600px)').matches;
-deck.src='../combined-v12/?build='+BUILD;
-let timer=0;
-function contentHeight(){
- try{return Math.max(deck.contentDocument.documentElement.scrollHeight,deck.contentDocument.body.scrollHeight)}catch(e){return 0}
-}
-function layout(){
- clearTimeout(timer);
- if(isPhone()){
-  const scale=window.innerWidth/DESIGN_WIDTH;
-  deck.style.width=DESIGN_WIDTH+'px';
-  deck.style.transform='scale('+scale+')';
-  const h=contentHeight();
-  if(h>0){deck.style.height=h+'px';stage.style.height=Math.ceil(h*scale)+'px'}
- }else{
-  deck.style.width='100%';
-  deck.style.transform='none';
-  const h=contentHeight();
-  if(h>0){deck.style.height=h+'px';stage.style.height=h+'px'}
- }
-}
-function settle(attempt=0){
- layout();
- if(attempt<30)timer=setTimeout(()=>settle(attempt+1),150);
-}
-deck.addEventListener('load',()=>settle());
-window.addEventListener('resize',()=>{clearTimeout(timer);timer=setTimeout(()=>settle(),120)},{passive:true});
-setTimeout(()=>settle(),100);
+const base=document.getElementById('base');
+const OLD='Big breasts you see when driving from San Diego to Newport.';
+const NEW='Those giant spinny fans photobombing the drive from San Diego to Newport.';
+function walkDocs(doc,docs=[]){try{if(!doc||docs.includes(doc))return docs;docs.push(doc);doc.querySelectorAll('iframe').forEach(frame=>{try{if(frame.contentDocument)walkDocs(frame.contentDocument,docs)}catch(e){}})}catch(e){}return docs}
+function replaceText(doc){try{const walker=doc.createTreeWalker(doc.body||doc,NodeFilter.SHOW_TEXT);let node;while(node=walker.nextNode()){if(node.nodeValue&&node.nodeValue.includes(OLD))node.nodeValue=node.nodeValue.replaceAll(OLD,NEW)}doc.querySelectorAll('*').forEach(el=>{['title','aria-label','data-copy'].forEach(attr=>{const val=el.getAttribute&&el.getAttribute(attr);if(val&&val.includes(OLD))el.setAttribute(attr,val.replaceAll(OLD,NEW))})})}catch(e){}}
+function resize(){try{const docs=walkDocs(base.contentDocument,[]);for(let i=docs.length-1;i>=1;i--){const frames=docs[i-1].querySelectorAll('iframe');frames.forEach(f=>{try{if(f.contentDocument===docs[i])f.style.height=docs[i].documentElement.scrollHeight+'px'}catch(e){}})}if(base.contentDocument)base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
+function patch(){try{walkDocs(base.contentDocument,[]).forEach(replaceText)}catch(e){}resize()}
+base.addEventListener('load',()=>{setTimeout(patch,250);setTimeout(patch,1000);setTimeout(patch,2500)});
+setInterval(patch,1500);
+window.addEventListener('resize',()=>setTimeout(resize,100));
 </script>
 </body>
 </html>
