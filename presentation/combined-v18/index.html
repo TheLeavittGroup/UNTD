@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Daddy's Sales Deck</title>
+<style>*{box-sizing:border-box}html,body{margin:0;background:#000;min-height:100%}#base{display:block;width:100%;height:31000px;border:0;background:#000}</style>
+</head>
+<body>
+<iframe id="base" src="../combined-v16/?build=aps-rates-stacked-v18" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<script>
+const base=document.getElementById('base');
+const generationCopy='Those two round balls in between San Diego and Los Angeles.';
+const replacements=[
+ ['Big breasts you see when driving from San Diego to Newport.',generationCopy],
+ ['Those giant spinny fans you see on the drive and say, yep, that is electricity.',generationCopy],
+ ['Those giant spinny fans photobombing the drive from San Diego to Newport.',generationCopy],
+ ['Those giant power pinwheels you see on the drive from San Diego to Newport.',generationCopy]
+];
+function walkDocs(doc,docs=[]){try{if(!doc||docs.includes(doc))return docs;docs.push(doc);doc.querySelectorAll('iframe').forEach(frame=>{try{if(frame.contentDocument)walkDocs(frame.contentDocument,docs)}catch(e){}})}catch(e){}return docs}
+function cleanDoc(doc){try{const walker=doc.createTreeWalker(doc.body||doc,NodeFilter.SHOW_TEXT);let node;while(node=walker.nextNode()){let text=node.nodeValue||'';replacements.forEach(([oldText,newText])=>{if(text.includes(oldText))text=text.replaceAll(oldText,newText)});node.nodeValue=text}}catch(e){}}
+function resize(){try{const docs=walkDocs(base.contentDocument,[]);for(let i=docs.length-1;i>=1;i--){const frames=docs[i-1].querySelectorAll('iframe');frames.forEach(f=>{try{if(f.contentDocument===docs[i])f.style.height=docs[i].documentElement.scrollHeight+'px'}catch(e){}})}if(base.contentDocument)base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
+function ratePanel(kind){
+ const winter=kind==='winter';
+ return `<div class="aps-rate-panel ${winter?'winter':'summer'}"><h3>${winter?'Winter Rates':'Summer Rates'}</h3><div class="aps-chart"><div class="aps-chart-title">Time-of-Use 4pm-7pm Weekdays with Demand Charge</div><div class="aps-sub ${winter?'snow':'sun'}">${winter?'Winter Rates (November - April billing cycles)':'Summer Rates (May - October billing cycles)'}</div><div class="legend"><span><i class="off"></i>Off-Peak</span>${winter?'<span><i class="super"></i>Super Off-Peak</span>':''}<span><i class="peak"></i>On-Peak</span><span><i class="demand"></i>Demand</span></div><div class="axis"><span>20¢</span><span>10¢</span><span>0</span></div><div class="line"></div><div class="base-line"></div><div class="green g1"></div>${winter?'<div class="blue"></div>':''}<div class="pink"></div><div class="green g2"></div><div class="rate offrate"><b>Off-Peak</b><strong>${winter?'5.938':'5.943'}¢</strong><em>Per<br>kWh</em></div>${winter?'<div class="rate superrate"><b>Super Off-Peak</b><strong>3.495¢</strong><em>Per<br>kWh</em></div>':''}<div class="rate peakrate"><b>On-Peak</b><strong>${winter?'9.932':'14.227'}¢</strong><em>Per<br>kWh</em></div><div class="tick t0">12am</div><div class="tick t12">12pm</div><div class="tick t4">4</div><div class="tick t7">7</div><div class="tick t24">12am</div><div class="demand-box"><span>Once Per Month<br>Demand Charge</span><strong>$${winter?'13.747':'19.585'}</strong><em>Per kW</em><small>Your highest on-peak usage hour (e.g., 5-6pm) charged 1x per month</small></div></div></div>`
+}
+function addRateSlide(d){
+ if(!d||d.getElementById('apsRatePlanSlide'))return;
+ const slides=[...d.querySelectorAll('.slide')];
+ const target=slides.find(s=>/Arizona.?s\s+largest\s+installer|Arizona.*largest.*installer|largest\s+installer|largest\s+solar\s+installer/i.test(s.textContent||''));
+ const before=target||slides.find(s=>/BBB|Our World Energy|credential|review/i.test(s.textContent||''))||slides[1]||null;
+ if(!before||!before.parentNode)return;
+ if(!d.getElementById('apsRatePlanStyles')){
+  const style=d.createElement('style');style.id='apsRatePlanStyles';style.textContent=`
+   .aps-rate-slide{background:#fff!important;color:#202124!important;padding:2.4% 3.2%!important;overflow:hidden!important}
+   .aps-rate-shell{height:100%;display:grid;grid-template-rows:auto 1fr;gap:1.2%}
+   .aps-rate-shell h1{margin:0;font-size:clamp(30px,3.5vw,54px)!important;line-height:1;color:#202124!important;font-weight:500!important;letter-spacing:-.03em!important}
+   .aps-rate-grid{display:grid;grid-template-columns:1fr;grid-template-rows:1fr 1fr;gap:1.7%;height:100%;min-height:0}
+   .aps-rate-panel{display:grid;grid-template-rows:auto 1fr;gap:.6%;min-height:0}
+   .aps-rate-panel h3{margin:0;font-size:clamp(18px,1.75vw,28px);font-weight:500;color:#202124;line-height:1}
+   .aps-chart{position:relative;background:#074662;color:white;border-radius:0;padding:2.2% 2.6% 1.2%;overflow:hidden;min-height:0;box-shadow:0 7px 18px rgba(0,0,0,.12)}
+   .aps-chart-title{font-size:clamp(17px,1.65vw,28px);font-weight:850;line-height:1.08;letter-spacing:.01em;padding-right:21%}.aps-sub{margin-top:1.1%;font-size:clamp(11px,1vw,17px);font-weight:800}.aps-sub:before{content:'☀';color:#ffc530;margin-right:.45em;font-size:1.25em}.aps-sub.snow:before{content:'❄';color:#39b7ff}
+   .legend{position:absolute;right:3.1%;top:7%;display:grid;gap:.35em;font-size:clamp(8px,.58vw,11px);font-weight:800}.legend span{display:flex;align-items:center;gap:.45em}.legend i{width:.9em;height:.9em;display:inline-block}.off{background:#20a923}.peak{background:#c3336d}.demand{background:#ffc82f}.super{background:#8bcbe0}
+   .axis{position:absolute;left:4.3%;top:34%;height:36%;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;font-size:clamp(8px,.65vw,12px);font-weight:750}.axis:after{content:'';position:absolute;left:122%;top:0;width:2px;height:100%;background:#fff}.base-line{position:absolute;left:9%;right:4%;top:70%;height:2px;background:#fff}.line{position:absolute;left:9%;right:4%;top:70%;height:1px;background:rgba(255,255,255,.5)}
+   .green,.blue,.pink{position:absolute;bottom:30%;height:16%}.green{background:#1fab20}.g1{left:9%;width:39%}.g2{right:4%;width:27%}.blue{left:48%;width:20%;height:12%;background:#8bcbe0}.pink{right:27%;width:12%;height:34%;background:#c3336d;border-radius:10px 10px 0 0}.winter .pink{height:27%}.summer .g1{width:66%}.summer .g2{width:27%}.summer .pink{right:31%;width:10%}
+   .rate{position:absolute;display:flex;align-items:flex-end;gap:.32em;color:white}.rate b{position:absolute;top:-1.05em;left:0;font-size:clamp(9px,.78vw,14px)}.rate strong{font-size:clamp(28px,2.65vw,48px);font-weight:300;letter-spacing:-.04em}.rate em{font-size:clamp(8px,.62vw,12px);font-style:normal;line-height:1.05;margin-bottom:.55em}.offrate{left:20%;top:35%}.superrate{left:49%;top:41%}.peakrate{right:17%;top:31%}.rate:after{content:'';position:absolute;width:4px;height:52px;background:#fff;left:50%;top:91%;transform:translateX(-50%)}.rate:before{content:'';position:absolute;width:16px;height:16px;border:8px solid #063f59;background:#fff;border-radius:50%;left:50%;top:calc(91% + 46px);transform:translateX(-50%);z-index:4}
+   .tick{position:absolute;top:76%;font-size:clamp(8px,.62vw,12px);font-weight:850}.t0{left:9%}.t12{left:48%}.t4{right:34%}.t7{right:26%}.t24{right:4%}.demand-box{position:absolute;left:48%;right:9%;bottom:4%;height:18%;background:#ffc82f;color:#074662;border-radius:14px;padding:1.1% 2%;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.8em}.demand-box:before{content:'';position:absolute;left:58%;top:-40%;width:0;height:0;border-left:34px solid transparent;border-right:34px solid transparent;border-bottom:52px solid #ffc82f}.demand-box span{font-size:clamp(8px,.67vw,13px);font-weight:950;line-height:1.12;z-index:1}.demand-box strong{font-size:clamp(24px,2.55vw,46px);font-weight:300;z-index:1}.demand-box em{font-size:clamp(9px,.8vw,15px);font-style:normal;z-index:1}.demand-box small{grid-column:1/-1;color:#074662;font-size:clamp(6px,.48vw,9px);font-style:italic;font-weight:800;z-index:1}
+   @media(max-width:700px){.aps-rate-slide{padding:5% 4%!important}.aps-rate-shell h1{font-size:32px!important}.aps-rate-grid{gap:2.2%}.aps-chart-title{font-size:15px}.aps-sub{font-size:11px}.rate strong{font-size:23px}.demand-box{left:34%;right:5%}}
+  `;d.head.appendChild(style)
+ }
+ const slide=d.createElement('section');slide.className='slide aps-rate-slide';slide.id='apsRatePlanSlide';slide.innerHTML=`<div class="aps-rate-shell"><h1>APS Current Rate Plan Pricing</h1><div class="aps-rate-grid">${ratePanel('summer')}${ratePanel('winter')}</div></div>`;
+ before.parentNode.insertBefore(slide,before);
+}
+function patch(){try{const docs=walkDocs(base.contentDocument,[]);docs.forEach(cleanDoc);docs.forEach(addRateSlide)}catch(e){}resize()}
+base.addEventListener('load',()=>{setTimeout(patch,250);setTimeout(patch,1000);setTimeout(patch,2500)});
+setInterval(patch,1400);
+window.addEventListener('resize',()=>setTimeout(resize,100));
+</script>
+</body>
+</html>
