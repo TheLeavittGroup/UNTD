@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Daddy's Sales Deck</title>
+<style>*{box-sizing:border-box}html,body{margin:0;background:#000;min-height:100%}#base{display:block;width:100%;height:28000px;border:0;background:#000}</style>
+</head>
+<body>
+<iframe id="base" src="../combined-v15/?build=grid-copy-clean-v16" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<script>
+const base=document.getElementById('base');
+const replacements=[
+ ['Big breasts you see when driving from San Diego to Newport.','Those giant power pinwheels you see on the drive from San Diego to Newport.'],
+ ['Those giant spinny fans you see on the drive and say, yep, that is electricity.','Those giant power pinwheels you see on the drive from San Diego to Newport.'],
+ ['Those giant spinny fans photobombing the drive from San Diego to Newport.','Those giant power pinwheels you see on the drive from San Diego to Newport.']
+];
+function walkDocs(doc,docs=[]){try{if(!doc||docs.includes(doc))return docs;docs.push(doc);doc.querySelectorAll('iframe').forEach(frame=>{try{if(frame.contentDocument)walkDocs(frame.contentDocument,docs)}catch(e){}})}catch(e){}return docs}
+function cleanDoc(doc){try{const walker=doc.createTreeWalker(doc.body||doc,NodeFilter.SHOW_TEXT);let node;while(node=walker.nextNode()){let text=node.nodeValue||'';replacements.forEach(([oldText,newText])=>{if(text.includes(oldText))text=text.replaceAll(oldText,newText)});node.nodeValue=text}}catch(e){}}
+function resize(){try{const docs=walkDocs(base.contentDocument,[]);for(let i=docs.length-1;i>=1;i--){const frames=docs[i-1].querySelectorAll('iframe');frames.forEach(f=>{try{if(f.contentDocument===docs[i])f.style.height=docs[i].documentElement.scrollHeight+'px'}catch(e){}})}if(base.contentDocument)base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
+function patch(){try{walkDocs(base.contentDocument,[]).forEach(cleanDoc)}catch(e){}resize()}
+base.addEventListener('load',()=>{setTimeout(patch,250);setTimeout(patch,1000);setTimeout(patch,2500)});
+setInterval(patch,1400);
+window.addEventListener('resize',()=>setTimeout(resize,100));
+</script>
+</body>
+</html>
