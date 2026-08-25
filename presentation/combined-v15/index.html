@@ -64,6 +64,10 @@ function patchDeck(){
  const savings=d.querySelector('.slide.savings-upgrade')||[...d.querySelectorAll('.slide')].find(s=>/Be your own power company/i.test(s.textContent||''));
  if(!grid||!net||!moving||!options||!savings)return false;
 
+ [...grid.querySelectorAll('.power-face.back strong,strong')].forEach(el=>{
+  if(/Big breasts/i.test(el.textContent||''))el.textContent='Those giant spinny fans you see on the drive and say, yep, that is electricity.';
+ });
+
  const label=grid.querySelector('.main-reasons-title,.grid-retry-reasons-title,.why-incentive-title');
  if(label)label.textContent='Main Reason: APS and SRP pay homeowners to have their own storage';
 
