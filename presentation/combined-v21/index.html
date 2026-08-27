@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Daddy's Sales Deck</title>
+<style>*{box-sizing:border-box}html,body{margin:0;background:#000;min-height:100%}#base{display:block;width:100%;height:29000px;border:0;background:#000}</style>
+</head>
+<body>
+<iframe id="base" src="../combined-v16/?build=official-aps-rate-link-v21" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<script>
+const base=document.getElementById('base');
+const APS_RATE_URL='https://www.aps.com/en/Residential/Service-Plans/Compare-Service-Plans/Time-of-Use-4pm-7pm-Weekdays-with-Demand-Charge';
+const generationCopy='Those two round balls in between San Diego and Los Angeles.';
+const replacements=[
+ ['Big breasts you see when driving from San Diego to Newport.',generationCopy],
+ ['Those giant spinny fans you see on the drive and say, yep, that is electricity.',generationCopy],
+ ['Those giant spinny fans photobombing the drive from San Diego to Newport.',generationCopy],
+ ['Those giant power pinwheels you see on the drive from San Diego to Newport.',generationCopy]
+];
+function walkDocs(doc,docs=[]){try{if(!doc||docs.includes(doc))return docs;docs.push(doc);doc.querySelectorAll('iframe').forEach(frame=>{try{if(frame.contentDocument)walkDocs(frame.contentDocument,docs)}catch(e){}})}catch(e){}return docs}
+function cleanDoc(doc){try{const walker=doc.createTreeWalker(doc.body||doc,NodeFilter.SHOW_TEXT);let node;while(node=walker.nextNode()){let text=node.nodeValue||'';replacements.forEach(([oldText,newText])=>{if(text.includes(oldText))text=text.replaceAll(oldText,newText)});node.nodeValue=text}}catch(e){}}
+function resize(){try{const docs=walkDocs(base.contentDocument,[]);for(let i=docs.length-1;i>=1;i--){docs[i-1].querySelectorAll('iframe').forEach(f=>{try{if(f.contentDocument===docs[i])f.style.height=docs[i].documentElement.scrollHeight+'px'}catch(e){}})}if(base.contentDocument)base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
+function addRateLinkSlide(d){
+ if(!d||d.getElementById('apsOfficialRateLinkSlide'))return;
+ const slides=[...d.querySelectorAll('.slide')];
+ const target=slides.find(s=>/Arizona.?s\s+largest\s+installer|Arizona.*largest.*installer|largest\s+installer|largest\s+solar\s+installer/i.test(s.textContent||''));
+ const before=target||slides.find(s=>/BBB|Our World Energy|credential|review/i.test(s.textContent||''))||slides[1]||null;
+ if(!before||!before.parentNode)return;
+ if(!d.getElementById('apsRateLinkStyles')){
+  const style=d.createElement('style');style.id='apsRateLinkStyles';style.textContent=`
+   .aps-rate-link-slide{background:radial-gradient(circle at 78% 8%,rgba(89,180,255,.18),transparent 34%),linear-gradient(145deg,#06111f,#0a2138 58%,#03101d)!important;color:#fff!important;padding:5.2% 6%!important;overflow:hidden!important}
+   .aps-rate-link-wrap{height:100%;display:grid;grid-template-columns:1.04fr .96fr;gap:5%;align-items:center}
+   .aps-rate-copy .eyebrow{display:inline-flex;align-items:center;gap:.55em;margin:0 0 1em;padding:.55em .9em;border:1px solid rgba(255,211,108,.45);border-radius:999px;color:#ffd36c;background:rgba(255,211,108,.08);font-size:clamp(10px,.9vw,14px);letter-spacing:.14em;text-transform:uppercase;font-weight:950}
+   .aps-rate-copy h1{margin:0!important;color:#fff!important;font-size:clamp(42px,5.6vw,82px)!important;line-height:.9!important;letter-spacing:-.06em!important;font-weight:950!important;max-width:11em!important}
+   .aps-rate-copy p{margin:1.1em 0 0;color:#bcd3ee!important;font-size:clamp(15px,1.35vw,21px)!important;line-height:1.35!important;font-weight:750!important;max-width:36em!important}
+   .aps-rate-card{border:1px solid rgba(255,255,255,.16);border-radius:30px;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.055));box-shadow:0 28px 90px rgba(0,0,0,.45);padding:7%;display:grid;gap:1em}
+   .aps-rate-card h2{margin:0!important;color:#fff!important;font-size:clamp(25px,3.2vw,48px)!important;letter-spacing:-.04em!important;line-height:1.02!important}
+   .aps-rate-card ul{margin:.2em 0 0;padding:0;list-style:none;display:grid;gap:.75em}
+   .aps-rate-card li{display:flex;gap:.7em;align-items:flex-start;color:#d9e8fb;font-size:clamp(13px,1.05vw,18px);line-height:1.25;font-weight:800}
+   .aps-rate-card li:before{content:'✓';color:#56e39f;font-weight:950;flex:0 0 auto}
+   .aps-rate-button{display:flex!important;align-items:center!important;justify-content:center!important;min-height:64px;margin-top:.7em;border-radius:999px;background:linear-gradient(135deg,#ffe6a5,#ffd36c)!important;color:#111!important;text-decoration:none!important;font-weight:950!important;font-size:clamp(15px,1.15vw,20px)!important;box-shadow:0 16px 40px rgba(255,211,108,.24);border:0!important;padding:0 1.4em!important;text-align:center!important}
+   .aps-rate-button span{display:inline-block}.aps-rate-button:after{content:'↗';margin-left:.55em;font-size:1.1em}
+   .aps-rate-url{color:#8fb8e4!important;font-size:clamp(9px,.72vw,12px)!important;font-weight:800!important;word-break:break-all;margin:.4em 0 0!important}
+   .aps-rate-note{grid-column:1/-1;margin:1.5% 0 0;padding:1em 1.2em;border-radius:18px;background:rgba(86,227,159,.1);border:1px solid rgba(86,227,159,.25);color:#c7f9dd;font-size:clamp(12px,1vw,16px);font-weight:850;text-align:center}
+   @media(max-width:800px){.aps-rate-link-slide{padding:7% 5%!important}.aps-rate-link-wrap{grid-template-columns:1fr;gap:3%}.aps-rate-copy h1{font-size:48px!important}.aps-rate-card{border-radius:22px;padding:5%}.aps-rate-button{min-height:52px}}
+  `;d.head.appendChild(style)
+ }
+ const slide=d.createElement('section');
+ slide.className='slide aps-rate-link-slide';
+ slide.id='apsOfficialRateLinkSlide';
+ slide.innerHTML=`<div class="aps-rate-link-wrap"><div class="aps-rate-copy"><div class="eyebrow">Official APS Rates</div><h1>Current rate plan pricing.</h1><p>Use the official APS page during the appointment so the homeowner sees the live pricing straight from the utility instead of a recreated screenshot.</p></div><div class="aps-rate-card"><h2>Time-of-Use 4pm-7pm Weekdays with Demand Charge</h2><ul><li>Current summer, winter, on-peak, off-peak, super off-peak, and demand charge pricing</li><li>Official APS source for the exact plan being discussed</li><li>Opens separately so you can show the customer the current utility page</li></ul><a class="aps-rate-button" href="${APS_RATE_URL}" target="_blank" rel="noopener noreferrer"><span>Open Official APS Rate Plan</span></a><p class="aps-rate-url">${APS_RATE_URL}</p></div><div class="aps-rate-note">Use this before the installer proof slide so the customer sees APS current pricing first.</div></div>`;
+ before.parentNode.insertBefore(slide,before);
+}
+function patch(){try{const docs=walkDocs(base.contentDocument,[]);docs.forEach(cleanDoc);docs.forEach(addRateLinkSlide)}catch(e){}resize()}
+base.addEventListener('load',()=>{setTimeout(patch,250);setTimeout(patch,1000);setTimeout(patch,2500)});
+setInterval(patch,1400);
+window.addEventListener('resize',()=>setTimeout(resize,100));
+</script>
+</body>
+</html>
