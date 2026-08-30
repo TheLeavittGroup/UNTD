@@ -42,6 +42,10 @@
           IID Sales Deck
           <small>IID utility version with IID-specific rates and calculator</small>
         </a>
+        <a id="azBatteryPitch" href="presentation/arizona-interactive-battery-pitch/">
+          Arizona Interactive Battery Pitch
+          <small>Tap-through APS battery pitch with step-by-step sales cues</small>
+        </a>
       </div>
     </main>
     <script>
@@ -54,6 +58,11 @@
       iidDeck.addEventListener('click',event=>{
         event.preventDefault();
         location.href='presentation/iid-sales-deck-v2/?refresh='+Date.now();
+      });
+      const azBatteryPitch=document.getElementById('azBatteryPitch');
+      azBatteryPitch.addEventListener('click',event=>{
+        event.preventDefault();
+        location.href='presentation/arizona-interactive-battery-pitch/?refresh='+Date.now();
       });
     </script>
   </body>
