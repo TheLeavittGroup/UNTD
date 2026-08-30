@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Arizona Interactive Battery Pitch</title>
+<style>
+  :root{--bg:#0d0f12;--card:#171a1f;--text:#f7f7f5;--muted:#9aa0a8;--line:#2a2f36}
+  *{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif}body{overflow:hidden}
+  #app{height:100%;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 18px env(safe-area-inset-bottom)}
+  .top{padding:14px 2px 8px;display:flex;align-items:center;justify-content:space-between}.title{font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.counter{font-size:13px;color:var(--muted)}
+  .stage{flex:1;display:flex;align-items:center;justify-content:center;position:relative}.card{width:100%;max-width:680px;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:28px 24px 26px;box-shadow:0 18px 50px rgba(0,0,0,.35)}
+  .step{font-size:13px;color:var(--muted);font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}.goal{font-size:17px;color:var(--muted);margin-bottom:18px;line-height:1.35}.say{font-size:28px;line-height:1.2;font-weight:800;letter-spacing:-.02em}.say .em{opacity:.72}.cue{margin-top:22px;padding-top:18px;border-top:1px solid var(--line);font-size:16px;line-height:1.4;color:#d8dadd}.cue b{color:#fff}.branch{margin-top:18px;padding:16px 17px;border-radius:16px;background:#111419;border:1px solid var(--line);font-size:15px;line-height:1.4}.branch strong{display:block;margin-bottom:7px;color:#fff}.navhint{padding:10px 4px 14px;display:flex;justify-content:space-between;color:#747b84;font-size:12px}.tapzone{position:fixed;top:0;bottom:0;width:50%;z-index:20}#prevZone{left:0}#nextZone{right:0}.dots{display:flex;gap:5px;justify-content:center;padding-bottom:4px;position:relative;z-index:30;pointer-events:none}.dot{width:5px;height:5px;border-radius:50%;background:#343a42}.dot.active{background:#fff}
+  @media(max-width:430px){.card{padding:24px 20px 22px;border-radius:22px}.say{font-size:24px}.goal{font-size:16px}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top"><div class="title">Arizona Interactive Battery Pitch</div><div class="counter" id="counter"></div></div>
+  <div class="stage"><div class="card"><div class="step" id="step"></div><div class="goal" id="goal"></div><div class="say" id="say"></div><div class="cue" id="cue"></div><div class="branch" id="branch" style="display:none"></div></div></div>
+  <div class="dots" id="dots"></div><div class="navhint"><span>← tap left to go back</span><span>tap right to continue →</span></div>
+</div>
+<div id="prevZone" class="tapzone"></div><div id="nextZone" class="tapzone"></div>
+<script>
+const slides=[
+{step:"1 · Pattern interrupt",goal:"Sound local, casual, and already busy nearby.",say:`“Hey, I’m Aidan with Our World Energy. <span class="em">I have some work going in down the road, and I’ve noticed the neighbors aren’t super stoked about what they’re paying APS right now.</span>”`,cue:`<b>Do not over-explain.</b> Make APS the problem.`},
+{step:"2 · Get agreement",goal:"Make them verbally acknowledge the APS pain.",say:`“Are you guys noticing higher payments to them too?”`,cue:`If they say <b>yes</b>, move immediately.`,branch:`<strong>If they say “not really”</strong>“Gotcha. That’s actually why I’m checking instead of assuming. I’m just seeing which homes make sense based on usage.”`},
+{step:"3 · Eligibility hook",goal:"Make this feel like you are qualifying the house, not pitching a product.",say:`“Yeah, that’s exactly why I’m here — <span class="em">to see which homes are eligible for our company to provide battery storage.</span>”`,cue:`Pause here. Let <b>eligible</b> create curiosity.`},
+{step:"4 · Separate yourself from solar reps",goal:"Break their expectation that this is the standard solar pitch.",say:`“Yeah, homeowners have been educating themselves and realizing that <span class="em">solar isn’t the best way to save money anymore.</span>”`,cue:`Say it casually. The point is the <b>pattern interrupt</b>.`},
+{step:"5 · Explain the new idea",goal:"Make the concept stupid-simple before talking hardware.",say:`“What people are doing instead is taking the cheap power APS already gives them during off-peak hours, storing it, and then using that stored power when APS gets expensive.”`,cue:`Mental shortcut: <b>buy cheap → store → use expensive hours.</b>`},
+{step:"6 · One-line summary",goal:"Give them the phrase they’ll remember.",say:`“Basically — <span class="em">buy the cheap power, avoid the expensive power.</span>”`,cue:`Then stop talking. Let them ask, <b>“How does that work?”</b>`},
+{step:"7 · Battery reveal",goal:"Now explain what eligibility actually unlocks.",say:`“Pretty simple. If the home is eligible and you guys use enough power, our company will cover the cost of enough batteries to cover your full APS bill.”`,cue:`Keep the delivery matter-of-fact.`},
+{step:"8 · Price contrast",goal:"Create a simple APS-vs-battery payment comparison.",say:`“Then instead of paying that APS bill every month, you’d pay us around <span class="em">$100 per battery</span>, depending on what the home needs.”`,cue:`Use <b>around</b> and <b>depending on what the home needs</b>.`},
+{step:"9 · Transition immediately",goal:"Stop selling once they understand the concept.",say:`“My job is super, super simple. All I do is see how much power you guys use, and if you use enough, it may make sense for us to do.”`,cue:`You are now <b>checking eligibility</b>, not presenting.`},
+{step:"10 · Bill pull",goal:"Give them a two-choice question that assumes the next step.",say:`“Do you get your APS bill in the mail, or do you get it online?”`,cue:`Do not ask <b>“Can I see your bill?”</b>`},
+{step:"11 · Close the loop",goal:"Get movement immediately.",say:`“Cool, go grab that for me real quick, and that way I can show you what I’m talking about.”`,cue:`Then <b>stop talking.</b>`},
+{step:"12 · Only if they ask about solar",goal:"Answer briefly and return to the battery qualification.",say:`“No, you don’t necessarily need solar. I do recommend looking at adding a few panels mainly for backup, so if APS has an extended outage you have a way to produce power during the day and recharge the batteries.”`,cue:`Then return to: <b>“But first I just need to see if the battery side makes sense for the house.”</b>`,branch:`<strong>Rule</strong>Do not bring solar up first. This is a branch only if they ask.`}
+];
+let i=0;const els={step:document.getElementById('step'),goal:document.getElementById('goal'),say:document.getElementById('say'),cue:document.getElementById('cue'),branch:document.getElementById('branch'),counter:document.getElementById('counter'),dots:document.getElementById('dots')};
+function render(){const s=slides[i];els.step.innerHTML=s.step;els.goal.innerHTML=s.goal;els.say.innerHTML=s.say;els.cue.innerHTML=s.cue;if(s.branch){els.branch.innerHTML=s.branch;els.branch.style.display='block'}else els.branch.style.display='none';els.counter.textContent=`${i+1} / ${slides.length}`;els.dots.innerHTML=slides.map((_,idx)=>`<span class="dot ${idx===i?'active':''}"></span>`).join('')}
+function next(){if(i<slides.length-1){i++;render()}}function prev(){if(i>0){i--;render()}}
+document.getElementById('nextZone').addEventListener('click',next);document.getElementById('prevZone').addEventListener('click',prev);document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')next();if(e.key==='ArrowLeft')prev()});let x0=null;document.addEventListener('touchstart',e=>x0=e.touches[0].clientX,{passive:true});document.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>45){dx<0?next():prev()}x0=null},{passive:true});render();
+</script>
+</body>
+</html>
