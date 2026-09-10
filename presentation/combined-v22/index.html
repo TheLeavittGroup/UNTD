@@ -10,7 +10,7 @@
 <style>*{box-sizing:border-box}html,body{margin:0;background:#000;min-height:100%}#base{display:block;width:100%;height:32000px;border:0;background:#000}</style>
 </head>
 <body>
-<iframe id="base" src="../combined-v21/?build=annual-usage-direct-v22" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<iframe id="base" src="../combined-v21/?build=annual-usage-direct-v22-battery-sizing" scrolling="no" title="Daddy's Sales Deck"></iframe>
 <script>
 const base=document.getElementById('base');
 function walkDocs(doc,docs=[]){try{if(!doc||docs.includes(doc))return docs;docs.push(doc);doc.querySelectorAll('iframe').forEach(frame=>{try{if(frame.contentDocument)walkDocs(frame.contentDocument,docs)}catch(e){}})}catch(e){}return docs}
@@ -56,8 +56,48 @@ function addAnnualUsageInput(d){
   input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();apply()}});
  }catch(e){}
 }
+function addBatterySizing(d){
+ try{
+  if(!d||d.getElementById('batterySizingTool'))return;
+  const savings=d.querySelector('.slide.savings-upgrade')||[...d.querySelectorAll('.slide')].find(s=>/Be your own power company/i.test(s.textContent||''));
+  if(!savings)return;
+  const annual=savings.querySelector('.annual-total');
+  if(!annual||!annual.parentNode)return;
+  let style=d.getElementById('batterySizingStyles');
+  if(!style){
+   style=d.createElement('style');style.id='batterySizingStyles';style.textContent=`
+    .battery-sizing-tool{margin:10px 0 0;padding:10px 11px;border:1px solid rgba(17,17,17,.14);border-radius:12px;background:rgba(17,17,17,.045);color:#111}
+    .battery-sizing-title{font-size:11px;font-weight:950;letter-spacing:.02em;text-transform:uppercase;margin-bottom:7px}
+    .battery-sizing-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .battery-sizing-grid label{display:flex;flex-direction:column;gap:4px;font-size:9px;font-weight:900;color:#333}
+    .battery-sizing-grid input{width:100%;height:34px;border:1px solid #c9d1dc;border-radius:8px;background:#fff;color:#111;padding:0 10px;font-size:15px;font-weight:900;outline:none}
+    .battery-sizing-grid input:focus{border-color:#2258c7;box-shadow:0 0 0 2px rgba(34,88,199,.12)}
+    .battery-sizing-result{margin-top:8px;padding:9px 10px;border-radius:9px;background:#111;color:#fff;font-size:10px;font-weight:850;line-height:1.25}
+    .battery-sizing-result strong{font-size:17px}
+    .battery-sizing-note{margin:5px 0 0!important;font-size:7.5px!important;line-height:1.2!important;color:#707070!important;font-weight:700!important}
+    @media(max-width:600px){.battery-sizing-tool{margin-top:5px;padding:5px 6px;border-radius:7px}.battery-sizing-title{font-size:6px;margin-bottom:4px}.battery-sizing-grid{gap:5px}.battery-sizing-grid label{font-size:5.5px;gap:2px}.battery-sizing-grid input{height:22px;border-radius:5px;padding:0 5px;font-size:9px}.battery-sizing-result{margin-top:5px;padding:5px 6px;border-radius:5px;font-size:6px}.battery-sizing-result strong{font-size:9px}.battery-sizing-note{font-size:4.8px!important;margin-top:3px!important}}
+   `;d.head.appendChild(style);
+  }
+  const tool=d.createElement('div');
+  tool.id='batterySizingTool';tool.className='battery-sizing-tool';
+  tool.innerHTML=`<div class="battery-sizing-title">Battery sizing</div><div class="battery-sizing-grid"><label>Highest on-peak demand (kW)<input id="batteryDemandKw" type="number" inputmode="decimal" min="0" step="0.1" placeholder="9.6"></label><label>Monthly on-peak usage (kWh)<input id="batteryOnPeakKwh" type="number" inputmode="decimal" min="0" step="1" placeholder="331"></label></div><div class="battery-sizing-result" id="batterySizingResult">Enter demand and on-peak usage.</div><p class="battery-sizing-note">Uses 11.5 kW continuous output per Powerwall 3 and 405 kWh/month as a one-full-cycle-per-day energy check (13.5 kWh × 30 days). Final engineering/design can require a different quantity.</p>`;
+  const direct=savings.querySelector('.direct-annual-wrap');
+  if(direct&&direct.parentNode)direct.parentNode.insertBefore(tool,direct.nextSibling);else annual.parentNode.insertBefore(tool,annual.nextSibling);
+  const demand=tool.querySelector('#batteryDemandKw'),onPeak=tool.querySelector('#batteryOnPeakKwh'),result=tool.querySelector('#batterySizingResult');
+  const calc=()=>{
+   const demandKw=Math.max(0,parseFloat(demand.value)||0);
+   const onPeakKwh=Math.max(0,parseFloat(onPeak.value)||0);
+   if(!(demandKw>0)&&!(onPeakKwh>0)){result.textContent='Enter demand and on-peak usage.';return}
+   const demandCount=demandKw>0?Math.ceil(demandKw/11.5):0;
+   const energyCount=onPeakKwh>0?Math.ceil(onPeakKwh/405):0;
+   const needed=Math.max(1,demandCount,energyCount);
+   result.innerHTML=`Recommended minimum: <strong>${needed} Powerwall${needed===1?'':'s'}</strong><br>Demand: ${demandCount||'—'} · On-peak energy: ${energyCount||'—'}`;
+  };
+  demand.addEventListener('input',calc);onPeak.addEventListener('input',calc);
+ }catch(e){}
+}
 function resize(){try{const docs=walkDocs(base.contentDocument,[]);for(let i=docs.length-1;i>=1;i--){docs[i-1].querySelectorAll('iframe').forEach(f=>{try{if(f.contentDocument===docs[i])f.style.height=docs[i].documentElement.scrollHeight+'px'}catch(e){}})}if(base.contentDocument)base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
-function patch(){try{walkDocs(base.contentDocument,[]).forEach(addAnnualUsageInput)}catch(e){}resize()}
+function patch(){try{const docs=walkDocs(base.contentDocument,[]);docs.forEach(addAnnualUsageInput);docs.forEach(addBatterySizing)}catch(e){}resize()}
 base.addEventListener('load',()=>{setTimeout(patch,300);setTimeout(patch,1000);setTimeout(patch,2500)});
 setInterval(patch,1500);
 window.addEventListener('resize',()=>setTimeout(resize,120));
