@@ -10,7 +10,7 @@
 <style>*{box-sizing:border-box}html,body{margin:0;background:#000;min-height:100%}#base{display:block;width:100%;height:32000px;border:0;background:#000}</style>
 </head>
 <body>
-<iframe id="base" src="../combined-v21/?build=annual-usage-direct-v22-move-copy" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<iframe id="base" src="../combined-v21/?build=annual-usage-direct-v22-move-zillow-combined" scrolling="no" title="Daddy's Sales Deck"></iframe>
 <script>
 const base=document.getElementById('base');
 function walkDocs(doc,docs=[]){try{if(!doc||docs.includes(doc))return docs;docs.push(doc);doc.querySelectorAll('iframe').forEach(frame=>{try{if(frame.contentDocument)walkDocs(frame.contentDocument,docs)}catch(e){}})}catch(e){}return docs}
@@ -74,6 +74,30 @@ function updateMovingSlide(d){
   const title=moving.querySelector('.title,h1');if(title)title.textContent='What happens if I move?';
   const list=moving.querySelector('ul');
   if(list)list.innerHTML='<li><strong>It stays with the home.</strong> Nothing has to be removed or moved with you.</li><li><strong>The new homeowner simply calls us and transfers the power agreement into their name</strong> — similar to putting the utility bill in their name.</li><li><strong>It does not complicate the move.</strong> The home simply keeps its lower-cost way of getting power.</li><li><strong>Battery backup + a lower power bill are strong selling features</strong> that can make the home more attractive to buyers.</li>';
+  const zillow=d.querySelector('.slide.zillow')||[...d.querySelectorAll('.slide')].find(s=>/property value/i.test(s.textContent||'')&&/Zillow/i.test(s.textContent||''));
+  if(zillow)zillow.style.setProperty('display','none','important');
+  const photo=moving.querySelector('.moving-photo');if(photo)photo.style.setProperty('display','none','important');
+  if(!d.getElementById('movingZillowCombinedStyles')){
+   const style=d.createElement('style');style.id='movingZillowCombinedStyles';style.textContent=`
+    .move .moving-zillow-proof{position:absolute;right:6%;top:27%;width:34%;padding:3.2%;border:1px solid #dce4ef;border-radius:18px;background:#fff;color:#17243a;box-shadow:0 12px 34px rgba(18,59,116,.14);z-index:20}
+    .move .moving-zillow-proof .mz-kicker{font-size:12px;font-weight:950;letter-spacing:.12em;color:#1f5fc4;margin-bottom:8px}
+    .move .moving-zillow-proof h3{font-size:27px;line-height:1.02;letter-spacing:-.035em;margin:0 0 10px;color:#102f5b}
+    .move .moving-zillow-proof p{font-size:13px;line-height:1.35;margin:0 0 14px;color:#526278;font-weight:700}
+    .move .moving-zillow-proof a{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;background:#2258c7;color:#fff;border-radius:9px;padding:11px 14px;font-size:12px;font-weight:950}
+    @media(max-width:600px){
+     .move .moving-zillow-proof{right:5%!important;top:29%!important;width:34%!important;padding:2.1%!important;border-radius:9px!important;box-shadow:0 5px 14px rgba(18,59,116,.14)!important}
+     .move .moving-zillow-proof .mz-kicker{font-size:5.5px!important;margin-bottom:3px!important}
+     .move .moving-zillow-proof h3{font-size:12px!important;line-height:1.02!important;margin:0 0 4px!important}
+     .move .moving-zillow-proof p{font-size:5.5px!important;line-height:1.18!important;margin:0 0 5px!important}
+     .move .moving-zillow-proof a{font-size:5.5px!important;padding:5px 6px!important;border-radius:5px!important}
+    }`;
+   d.head.appendChild(style);
+  }
+  if(!moving.querySelector('#movingZillowProof')){
+   const proof=d.createElement('aside');proof.id='movingZillowProof';proof.className='moving-zillow-proof';
+   proof.innerHTML='<div class="mz-kicker">ZILLOW STUDY</div><h3>Solar can add resale value.</h3><p>Zillow found homes with solar sold for more on average in its nationwide analysis.</p><a href="https://www.zillow.com/research/solar-panels-house-sell-more-23798/" target="_blank" rel="noopener noreferrer">View Zillow Study ↗</a>';
+   moving.appendChild(proof);
+  }
  }catch(e){}
 }
 function resize(){try{const docs=walkDocs(base.contentDocument,[]);for(let i=docs.length-1;i>=1;i--){docs[i-1].querySelectorAll('iframe').forEach(f=>{try{if(f.contentDocument===docs[i])f.style.height=docs[i].documentElement.scrollHeight+'px'}catch(e){}})}if(base.contentDocument)base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
