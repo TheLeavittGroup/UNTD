@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Daddy's Sales Deck</title>
+<style>*{box-sizing:border-box}html,body{margin:0;background:#000;min-height:100%}#base{display:block;width:100%;height:32000px;border:0;background:#000}</style>
+</head>
+<body>
+<iframe id="base" src="../combined-v21/?build=annual-usage-direct-v22" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<script>
+const base=document.getElementById('base');
+function walkDocs(doc,docs=[]){try{if(!doc||docs.includes(doc))return docs;docs.push(doc);doc.querySelectorAll('iframe').forEach(frame=>{try{if(frame.contentDocument)walkDocs(frame.contentDocument,docs)}catch(e){}})}catch(e){}return docs}
+function addAnnualUsageInput(d){
+ try{
+  if(!d||d.getElementById('directAnnualUsageInput'))return;
+  const savings=d.querySelector('.slide.savings-upgrade')||[...d.querySelectorAll('.slide')].find(s=>/Be your own power company/i.test(s.textContent||''));
+  if(!savings)return;
+  const entries=[...savings.querySelectorAll('.month-entry')];
+  if(entries.length!==12)return;
+  const annualTotal=savings.querySelector('.annual-total');
+  if(!annualTotal||!annualTotal.parentNode)return;
+  let style=d.getElementById('directAnnualUsageStyles');
+  if(!style){
+   style=d.createElement('style');style.id='directAnnualUsageStyles';style.textContent=`
+    .direct-annual-wrap{display:flex;align-items:flex-end;gap:10px;margin:8px 0 10px;padding:9px 11px;border:1px solid rgba(34,88,199,.22);border-radius:12px;background:rgba(34,88,199,.055)}
+    .direct-annual-wrap label{display:flex;flex-direction:column;gap:4px;flex:1;color:#333;font-size:10px;font-weight:900;letter-spacing:.03em;text-transform:uppercase}
+    .direct-annual-wrap input{width:100%;height:34px;border:1px solid #c9d1dc;border-radius:8px;background:#fff;color:#111;padding:0 10px;font-size:15px;font-weight:900;outline:none}
+    .direct-annual-wrap input:focus{border-color:#2258c7;box-shadow:0 0 0 2px rgba(34,88,199,.12)}
+    .direct-annual-wrap button{height:34px;padding:0 13px;border:0;border-radius:8px;background:#2258c7;color:#fff;font-size:11px;font-weight:950;white-space:nowrap}
+    .direct-annual-hint{font-size:9px!important;color:#777!important;margin:0!important;line-height:1.15!important;text-transform:none!important;letter-spacing:0!important;font-weight:700!important}
+    @media(max-width:600px){.direct-annual-wrap{gap:5px;margin:4px 0 5px;padding:5px 6px;border-radius:7px}.direct-annual-wrap label{font-size:6px;gap:2px}.direct-annual-wrap input{height:22px;border-radius:5px;padding:0 5px;font-size:9px}.direct-annual-wrap button{height:22px;padding:0 7px;border-radius:5px;font-size:6px}.direct-annual-hint{font-size:5.5px!important}}
+   `;d.head.appendChild(style);
+  }
+  const wrap=d.createElement('div');wrap.className='direct-annual-wrap';wrap.innerHTML=`<label>Or enter annual usage directly<input id="directAnnualUsageInput" type="number" inputmode="decimal" min="0" step="1" placeholder="Annual kWh"><span class="direct-annual-hint">Use this when you already know the customer's 12-month total.</span></label><button type="button" id="applyDirectAnnualUsage">Apply annual kWh</button>`;
+  annualTotal.parentNode.insertBefore(wrap,annualTotal.nextSibling);
+  const input=wrap.querySelector('#directAnnualUsageInput'),button=wrap.querySelector('#applyDirectAnnualUsage');
+  const apply=()=>{
+   const annual=parseFloat(input.value);
+   if(!(annual>0))return;
+   const usageButton=savings.querySelector('.mode-toggle button[data-mode="usage"]');
+   if(usageButton&&!usageButton.classList.contains('active'))usageButton.click();
+   const monthly=annual/12;
+   entries.forEach((el,i)=>{
+    const value=i===11?annual-(monthly*11):monthly;
+    el.value=(Math.round(value*10)/10).toString();
+   });
+   entries.forEach(el=>el.dispatchEvent(new Event('input',{bubbles:true})));
+   const annualDisplay=savings.querySelector('#annualUsage');
+   if(annualDisplay)annualDisplay.textContent=Math.round(annual).toLocaleString('en-US')+' kWh';
+  };
+  button.addEventListener('click',apply);
+  input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();apply()}});
+ }catch(e){}
+}
+function resize(){try{const docs=walkDocs(base.contentDocument,[]);for(let i=docs.length-1;i>=1;i--){docs[i-1].querySelectorAll('iframe').forEach(f=>{try{if(f.contentDocument===docs[i])f.style.height=docs[i].documentElement.scrollHeight+'px'}catch(e){}})}if(base.contentDocument)base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
+function patch(){try{walkDocs(base.contentDocument,[]).forEach(addAnnualUsageInput)}catch(e){}resize()}
+base.addEventListener('load',()=>{setTimeout(patch,300);setTimeout(patch,1000);setTimeout(patch,2500)});
+setInterval(patch,1500);
+window.addEventListener('resize',()=>setTimeout(resize,120));
+</script>
+</body>
+</html>
