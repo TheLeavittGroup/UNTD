@@ -10,7 +10,7 @@
 <style>*{box-sizing:border-box}html,body{margin:0;background:#000;min-height:100%}#base{display:block;width:100%;height:28000px;border:0;background:#000}</style>
 </head>
 <body>
-<iframe id="base" src="../combined-v15/?build=grid-copy-clean-v17" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<iframe id="base" src="../combined-v15/?build=grid-copy-clean-v18-arbitrage" scrolling="no" title="Daddy's Sales Deck"></iframe>
 <script>
 const base=document.getElementById('base');
 const generationCopy='Those two round balls in between San Diego and Los Angeles.';
@@ -22,8 +22,23 @@ const replacements=[
 ];
 function walkDocs(doc,docs=[]){try{if(!doc||docs.includes(doc))return docs;docs.push(doc);doc.querySelectorAll('iframe').forEach(frame=>{try{if(frame.contentDocument)walkDocs(frame.contentDocument,docs)}catch(e){}})}catch(e){}return docs}
 function cleanDoc(doc){try{const walker=doc.createTreeWalker(doc.body||doc,NodeFilter.SHOW_TEXT);let node;while(node=walker.nextNode()){let text=node.nodeValue||'';replacements.forEach(([oldText,newText])=>{if(text.includes(oldText))text=text.replaceAll(oldText,newText)});node.nodeValue=text}}catch(e){}}
+function rebuildArbitrage(doc){
+ try{
+  const slide=doc.querySelector('.slide.net-simple')||[...doc.querySelectorAll('.slide')].find(s=>/The Power of Net Metering|The Power of Battery Arbitrage/i.test(s.textContent||''));
+  if(!slide)return;
+  if(!doc.getElementById('batteryArbitrageStyles')){
+   const st=doc.createElement('style');st.id='batteryArbitrageStyles';st.textContent=`
+    .net-simple.arbitrage-clean{position:relative!important;background:#f5f8fc!important;color:#111!important;padding:5.5% 5.5%!important;overflow:hidden!important;min-height:720px!important}
+    .arbitrage-clean *{box-sizing:border-box}.arbitrage-clean .arb-title{margin:0 0 3%!important;color:#000!important;font-size:48px!important;line-height:1!important;font-weight:950!important;letter-spacing:-.04em!important}.arbitrage-clean .arb-grid{display:grid!important;grid-template-columns:1fr 1fr 1fr!important;gap:18px!important}.arbitrage-clean .arb-card{background:#fff!important;border:1px solid #d9e1ec!important;border-radius:18px!important;padding:24px!important;box-shadow:0 8px 24px rgba(15,45,85,.08)!important;min-height:300px!important}.arbitrage-clean .arb-label{font-size:12px!important;font-weight:950!important;letter-spacing:.1em!important;color:#65758b!important;text-transform:uppercase!important;margin-bottom:12px!important}.arbitrage-clean .arb-big{font-size:34px!important;line-height:1.05!important;font-weight:950!important;color:#0b2f61!important;margin-bottom:12px!important}.arbitrage-clean .arb-copy{font-size:15px!important;line-height:1.35!important;font-weight:750!important;color:#34465d!important;margin:0 0 16px!important}.arbitrage-clean .arb-link{display:inline-flex!important;text-decoration:none!important;background:#174d96!important;color:#fff!important;border-radius:9px!important;padding:10px 13px!important;font-size:12px!important;font-weight:950!important}.arbitrage-clean .arb-foot{margin-top:16px!important;font-size:11px!important;line-height:1.3!important;color:#64748b!important;font-weight:700!important}.arbitrage-clean .green{color:#16934a!important}
+    @media(max-width:600px){.net-simple.arbitrage-clean{padding:5%!important;min-height:390px!important}.arbitrage-clean .arb-title{font-size:25px!important;margin-bottom:3%!important}.arbitrage-clean .arb-grid{gap:7px!important}.arbitrage-clean .arb-card{padding:10px!important;border-radius:9px!important;min-height:175px!important}.arbitrage-clean .arb-label{font-size:5.5px!important;margin-bottom:5px!important}.arbitrage-clean .arb-big{font-size:15px!important;margin-bottom:5px!important}.arbitrage-clean .arb-copy{font-size:6.5px!important;margin-bottom:7px!important}.arbitrage-clean .arb-link{font-size:5.5px!important;padding:5px 6px!important;border-radius:5px!important}.arbitrage-clean .arb-foot{font-size:5px!important;margin-top:7px!important}}`;
+   doc.head.appendChild(st);
+  }
+  slide.classList.add('arbitrage-clean');
+  slide.innerHTML=`<h1 class="arb-title">The Power of Battery Arbitrage.</h1><div class="arb-grid"><section class="arb-card"><div class="arb-label">BUY POWER LOW</div><div class="arb-big"><span class="green">3.495¢</span> super off-peak<br>5.94¢ off-peak</div><p class="arb-copy">APS Demand Plan: charge or use energy during the cheapest windows, then use the battery when grid power is more expensive.</p><a class="arb-link" href="https://www.aps.com/en/Residential/Service-Plans/Compare-Service-Plans/Time-of-Use-4pm-7pm-Weekdays-with-Demand-Charge" target="_blank" rel="noopener">View APS Rate Chart ↗</a></section><section class="arb-card"><div class="arb-label">AVOID DEMAND</div><div class="arb-big"><span class="green">$19.585/kW</span><br>summer demand</div><p class="arb-copy">APS measures the highest one-hour demand from 4–7 p.m. weekdays. Use stored energy in that window to reduce grid demand. Winter demand is $13.747/kW.</p><a class="arb-link" href="https://www.aps.com/demand" target="_blank" rel="noopener">How APS Demand Works ↗</a></section><section class="arb-card"><div class="arb-label">EXPORT EXCESS SOLAR</div><div class="arb-big"><span class="green">6.17¢/kWh</span><br>posted RCP rate</div><p class="arb-copy">APS credits qualifying excess solar exported to the grid under its RCP renewable rider.</p><a class="arb-link" href="https://www.aps.com/en/Residential/Service-Plans/Compare-Service-Plans/Renewable-Energy-Riders" target="_blank" rel="noopener">View APS Export Rider ↗</a></section></div><p class="arb-foot">APS published rates shown: Demand Plan energy/demand rates and RCP export information. Super off-peak is winter weekdays 10 a.m.–3 p.m. Export eligibility depends on the customer’s renewable rider and system configuration.</p>`;
+ }catch(e){}
+}
 function resize(){try{const docs=walkDocs(base.contentDocument,[]);for(let i=docs.length-1;i>=1;i--){const frames=docs[i-1].querySelectorAll('iframe');frames.forEach(f=>{try{if(f.contentDocument===docs[i])f.style.height=docs[i].documentElement.scrollHeight+'px'}catch(e){}})}if(base.contentDocument)base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
-function patch(){try{walkDocs(base.contentDocument,[]).forEach(cleanDoc)}catch(e){}resize()}
+function patch(){try{walkDocs(base.contentDocument,[]).forEach(d=>{cleanDoc(d);rebuildArbitrage(d)})}catch(e){}resize()}
 base.addEventListener('load',()=>{setTimeout(patch,250);setTimeout(patch,1000);setTimeout(patch,2500)});
 setInterval(patch,1400);
 window.addEventListener('resize',()=>setTimeout(resize,100));
