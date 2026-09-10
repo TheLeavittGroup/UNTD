@@ -10,7 +10,7 @@
 <style>*{box-sizing:border-box}html,body{margin:0;background:#000;min-height:100%}#base{display:block;width:100%;height:32000px;border:0;background:#000}</style>
 </head>
 <body>
-<iframe id="base" src="../combined-v21/?build=annual-usage-direct-v22-simple" scrolling="no" title="Daddy's Sales Deck"></iframe>
+<iframe id="base" src="../combined-v21/?build=annual-usage-direct-v22-simple-expansion" scrolling="no" title="Daddy's Sales Deck"></iframe>
 <script>
 const base=document.getElementById('base');
 function walkDocs(doc,docs=[]){try{if(!doc||docs.includes(doc))return docs;docs.push(doc);doc.querySelectorAll('iframe').forEach(frame=>{try{if(frame.contentDocument)walkDocs(frame.contentDocument,docs)}catch(e){}})}catch(e){}return docs}
@@ -23,92 +23,22 @@ function addSimpleTools(d){
   if(entries.length!==12)return;
   const annualTotal=savings.querySelector('.annual-total');
   if(!annualTotal||!annualTotal.parentNode)return;
-
-  const style=d.createElement('style');
-  style.id='simpleUsageToolsStyles';
-  style.textContent=`
-   .simple-tools{display:grid;grid-template-columns:1fr 1.25fr;gap:10px;margin:8px 0 10px}
-   .simple-tool{border:1px solid #d7dee8;border-radius:12px;background:#f7f9fc;padding:10px}
-   .simple-tool-title{font-size:10px;font-weight:950;color:#173b74;text-transform:uppercase;letter-spacing:.04em;margin:0 0 7px}
-   .simple-row{display:grid;grid-template-columns:1fr auto;gap:7px;align-items:end}
-   .simple-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-   .simple-tool label{display:flex;flex-direction:column;gap:3px;font-size:8px;font-weight:850;color:#45546b}
-   .simple-tool input{width:100%;height:32px;border:1px solid #c8d2df;border-radius:7px;background:#fff;color:#111;padding:0 9px;font-size:14px;font-weight:900;outline:none}
-   .simple-tool input:focus{border-color:#2258c7;box-shadow:0 0 0 2px rgba(34,88,199,.1)}
-   .simple-tool button{height:32px;border:0;border-radius:7px;background:#2258c7;color:#fff;padding:0 12px;font-size:9px;font-weight:950;white-space:nowrap}
-   .simple-battery-result{margin-top:7px;padding:7px 9px;border-radius:7px;background:#102f5b;color:#fff;font-size:9px;font-weight:850;line-height:1.2;text-align:center}
-   .simple-battery-result strong{font-size:14px}
-   .simple-note{margin:5px 0 0!important;color:#768397!important;font-size:6.5px!important;line-height:1.2!important;font-weight:700!important;text-align:center}
-   @media(max-width:600px){
-    .simple-tools{grid-template-columns:1fr 1fr;gap:5px;margin:4px 0 5px}
-    .simple-tool{padding:5px;border-radius:7px}.simple-tool-title{font-size:5.8px;margin-bottom:4px}
-    .simple-row,.simple-grid{gap:4px}.simple-tool label{font-size:4.8px;gap:2px}
-    .simple-tool input{height:21px;border-radius:5px;padding:0 5px;font-size:8px}.simple-tool button{height:21px;border-radius:5px;padding:0 6px;font-size:5px}
-    .simple-battery-result{margin-top:4px;padding:4px 5px;border-radius:5px;font-size:5px}.simple-battery-result strong{font-size:8px}.simple-note{font-size:4.2px!important;margin-top:3px!important}
-   }
-  `;
+  const style=d.createElement('style');style.id='simpleUsageToolsStyles';style.textContent=`
+   .simple-tools{display:grid;grid-template-columns:1fr 1.25fr;gap:10px;margin:8px 0 10px}.simple-tool{border:1px solid #d7dee8;border-radius:12px;background:#f7f9fc;padding:10px}.simple-tool-title{font-size:10px;font-weight:950;color:#173b74;text-transform:uppercase;letter-spacing:.04em;margin:0 0 7px}.simple-row{display:grid;grid-template-columns:1fr auto;gap:7px;align-items:end}.simple-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.simple-tool label{display:flex;flex-direction:column;gap:3px;font-size:8px;font-weight:850;color:#45546b}.simple-tool input{width:100%;height:32px;border:1px solid #c8d2df;border-radius:7px;background:#fff;color:#111;padding:0 9px;font-size:14px;font-weight:900;outline:none}.simple-tool input:focus{border-color:#2258c7;box-shadow:0 0 0 2px rgba(34,88,199,.1)}.simple-tool button{height:32px;border:0;border-radius:7px;background:#2258c7;color:#fff;padding:0 12px;font-size:9px;font-weight:950;white-space:nowrap}.simple-battery-result{margin-top:7px;padding:7px 9px;border-radius:7px;background:#102f5b;color:#fff;font-size:9px;font-weight:850;line-height:1.2;text-align:center}.simple-battery-result strong{font-size:14px}.simple-note{margin:5px 0 0!important;color:#768397!important;font-size:6.5px!important;line-height:1.2!important;font-weight:700!important;text-align:center}@media(max-width:600px){.simple-tools{grid-template-columns:1fr 1fr;gap:5px;margin:4px 0 5px}.simple-tool{padding:5px;border-radius:7px}.simple-tool-title{font-size:5.8px;margin-bottom:4px}.simple-row,.simple-grid{gap:4px}.simple-tool label{font-size:4.8px;gap:2px}.simple-tool input{height:21px;border-radius:5px;padding:0 5px;font-size:8px}.simple-tool button{height:21px;border-radius:5px;padding:0 6px;font-size:5px}.simple-battery-result{margin-top:4px;padding:4px 5px;border-radius:5px;font-size:5px}.simple-battery-result strong{font-size:8px}.simple-note{font-size:4.2px!important;margin-top:3px!important}}`;
   d.head.appendChild(style);
-
-  const tools=d.createElement('div');
-  tools.id='simpleUsageTools';
-  tools.className='simple-tools';
-  tools.innerHTML=`
-   <div class="simple-tool">
-    <div class="simple-tool-title">Annual usage</div>
-    <div class="simple-row">
-     <label>Total annual kWh<input id="directAnnualUsageInput" type="number" inputmode="decimal" min="0" step="1" placeholder="12-month kWh"></label>
-     <button type="button" id="applyDirectAnnualUsage">Apply</button>
-    </div>
-   </div>
-   <div class="simple-tool">
-    <div class="simple-tool-title">Battery sizing</div>
-    <div class="simple-grid">
-     <label>Highest demand (kW)<input id="batteryDemandKw" type="number" inputmode="decimal" min="0" step="0.1" placeholder="9.6"></label>
-     <label>On-peak usage (kWh)<input id="batteryOnPeakKwh" type="number" inputmode="decimal" min="0" step="1" placeholder="331"></label>
-    </div>
-    <div class="simple-battery-result" id="batterySizingResult">Enter demand + on-peak usage</div>
-    <p class="simple-note">Sizing check: 11.5 kW demand and 405 kWh/month per Powerwall. Final design may vary.</p>
-   </div>`;
-
+  const tools=d.createElement('div');tools.id='simpleUsageTools';tools.className='simple-tools';tools.innerHTML=`<div class="simple-tool"><div class="simple-tool-title">Annual usage</div><div class="simple-row"><label>Total annual kWh<input id="directAnnualUsageInput" type="number" inputmode="decimal" min="0" step="1" placeholder="12-month kWh"></label><button type="button" id="applyDirectAnnualUsage">Apply</button></div></div><div class="simple-tool"><div class="simple-tool-title">Battery sizing</div><div class="simple-grid"><label>Highest demand (kW)<input id="batteryDemandKw" type="number" inputmode="decimal" min="0" step="0.1" placeholder="9.6"></label><label>On-peak usage (kWh)<input id="batteryOnPeakKwh" type="number" inputmode="decimal" min="0" step="1" placeholder="331"></label></div><div class="simple-battery-result" id="batterySizingResult">Enter demand + on-peak usage</div><p class="simple-note">Demand determines Powerwall/inverter count. Extra energy capacity uses Expansion units.</p></div>`;
   annualTotal.parentNode.insertBefore(tools,annualTotal.nextSibling);
-
-  const annualInput=tools.querySelector('#directAnnualUsageInput');
-  const applyButton=tools.querySelector('#applyDirectAnnualUsage');
-  const applyAnnual=()=>{
-   const annual=parseFloat(annualInput.value);
-   if(!(annual>0))return;
-   const usageButton=savings.querySelector('.mode-toggle button[data-mode="usage"]');
-   if(usageButton&&!usageButton.classList.contains('active'))usageButton.click();
-   const monthly=annual/12;
-   entries.forEach((el,i)=>{const value=i===11?annual-(monthly*11):monthly;el.value=(Math.round(value*10)/10).toString()});
-   entries.forEach(el=>el.dispatchEvent(new Event('input',{bubbles:true})));
-   const annualDisplay=savings.querySelector('#annualUsage');
-   if(annualDisplay)annualDisplay.textContent=Math.round(annual).toLocaleString('en-US')+' kWh';
-  };
-  applyButton.addEventListener('click',applyAnnual);
-  annualInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();applyAnnual()}});
-
-  const demand=tools.querySelector('#batteryDemandKw');
-  const onPeak=tools.querySelector('#batteryOnPeakKwh');
-  const result=tools.querySelector('#batterySizingResult');
-  const calc=()=>{
-   const demandKw=Math.max(0,parseFloat(demand.value)||0);
-   const onPeakKwh=Math.max(0,parseFloat(onPeak.value)||0);
-   if(!(demandKw>0)&&!(onPeakKwh>0)){result.textContent='Enter demand + on-peak usage';return}
-   const demandCount=demandKw>0?Math.ceil(demandKw/11.5):0;
-   const energyCount=onPeakKwh>0?Math.ceil(onPeakKwh/405):0;
-   const needed=Math.max(1,demandCount,energyCount);
-   result.innerHTML=`Recommended: <strong>${needed} Powerwall${needed===1?'':'s'}</strong>`;
-  };
-  demand.addEventListener('input',calc);
-  onPeak.addEventListener('input',calc);
+  const annualInput=tools.querySelector('#directAnnualUsageInput'),applyButton=tools.querySelector('#applyDirectAnnualUsage');
+  const applyAnnual=()=>{const annual=parseFloat(annualInput.value);if(!(annual>0))return;const usageButton=savings.querySelector('.mode-toggle button[data-mode="usage"]');if(usageButton&&!usageButton.classList.contains('active'))usageButton.click();const monthly=annual/12;entries.forEach((el,i)=>{const value=i===11?annual-(monthly*11):monthly;el.value=(Math.round(value*10)/10).toString()});entries.forEach(el=>el.dispatchEvent(new Event('input',{bubbles:true})));const annualDisplay=savings.querySelector('#annualUsage');if(annualDisplay)annualDisplay.textContent=Math.round(annual).toLocaleString('en-US')+' kWh'};
+  applyButton.addEventListener('click',applyAnnual);annualInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();applyAnnual()}});
+  const demand=tools.querySelector('#batteryDemandKw'),onPeak=tools.querySelector('#batteryOnPeakKwh'),result=tools.querySelector('#batterySizingResult');
+  const calc=()=>{const demandKw=Math.max(0,parseFloat(demand.value)||0),onPeakKwh=Math.max(0,parseFloat(onPeak.value)||0);if(!(demandKw>0)&&!(onPeakKwh>0)){result.textContent='Enter demand + on-peak usage';return}const powerwalls=Math.max(1,demandKw>0?Math.ceil(demandKw/11.5):1);const baseEnergy=powerwalls*405;const expansions=onPeakKwh>baseEnergy?Math.ceil((onPeakKwh-baseEnergy)/405):0;let text=`<strong>${powerwalls} Powerwall${powerwalls===1?'':'s'}</strong>`;if(expansions>0)text+=` + <strong>${expansions} Expansion${expansions===1?'':'s'}</strong>`;result.innerHTML=`Recommended: ${text}`};
+  demand.addEventListener('input',calc);onPeak.addEventListener('input',calc);
  }catch(e){}
 }
 function resize(){try{const docs=walkDocs(base.contentDocument,[]);for(let i=docs.length-1;i>=1;i--){docs[i-1].querySelectorAll('iframe').forEach(f=>{try{if(f.contentDocument===docs[i])f.style.height=docs[i].documentElement.scrollHeight+'px'}catch(e){}})}if(base.contentDocument)base.style.height=base.contentDocument.documentElement.scrollHeight+'px'}catch(e){}}
 function patch(){try{walkDocs(base.contentDocument,[]).forEach(addSimpleTools)}catch(e){}resize()}
-base.addEventListener('load',()=>{setTimeout(patch,300);setTimeout(patch,1000);setTimeout(patch,2500)});
-setInterval(patch,1500);
-window.addEventListener('resize',()=>setTimeout(resize,120));
+base.addEventListener('load',()=>{setTimeout(patch,300);setTimeout(patch,1000);setTimeout(patch,2500)});setInterval(patch,1500);window.addEventListener('resize',()=>setTimeout(resize,120));
 </script>
 </body>
 </html>
